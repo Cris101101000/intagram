@@ -1,0 +1,218 @@
+{
+  "audit_landing_title": "Descubre si tu Instagram está funcionando.",
+  "audit_landing_subtitle": "Analiza tu perfil en 30 segundos y obtén un score de 0 a 100 comparado con negocios de tu sector.",
+
+  "audit_loading_msg_1": "Analizando tu perfil de Instagram...",
+  "audit_loading_msg_2": "Calculando tu tasa de engagement...",
+  "audit_loading_msg_3": "Comparando con negocios de tu sector...",
+  "audit_loading_msg_4": "Preparando tu score...",
+
+  "audit_loading_new_msg_1": "Revisando tu bio y foto de perfil...",
+  "audit_loading_new_msg_2": "Analizando la frecuencia de tus publicaciones...",
+  "audit_loading_new_msg_3": "Evaluando tu presencia digital...",
+  "audit_loading_new_msg_4": "Preparando tu diagnóstico...",
+
+  "audit_loading_returning_msg_1": "Revisando los cambios en tu perfil...",
+  "audit_loading_returning_msg_2": "Comparando con tu auditoría anterior...",
+  "audit_loading_returning_msg_3": "Calculando tu evolución...",
+  "audit_loading_returning_msg_4": "Actualizando tu score...",
+
+  "audit_capture_blur_title": "Tu resultado está listo.",
+  "audit_capture_blur_subtitle": "Desbloquea tu diagnóstico completo gratis.",
+
+  "audit_capture_diagnostico_title": "Desbloquea tu diagnóstico completo",
+  "audit_capture_diagnostico_subtitle": "Descubre qué está fallando y cómo mejorarlo.",
+
+  "audit_capture_arranque_title": "Desbloquea tu plan de arranque",
+  "audit_capture_arranque_subtitle": "Descubre cómo empezar con buen pie en Instagram.",
+
+  "audit_score_critico_label": "Crítico",
+  "audit_score_critico_range": "0–39",
+  "audit_score_critico_message": "Tu Instagram necesita atención urgente. Estás perdiendo clientes potenciales cada día.",
+  "audit_score_critico_headline": "Tu Instagram está trabajando en tu contra.",
+
+  "audit_score_regular_label": "Regular",
+  "audit_score_regular_range": "40–59",
+  "audit_score_regular_message": "Tu Instagram tiene bases pero necesita mejoras clave para convertir seguidores en clientes.",
+  "audit_score_regular_headline": "Tu Instagram tiene potencial sin explotar.",
+
+  "audit_score_bueno_label": "Bueno",
+  "audit_score_bueno_range": "60–79",
+  "audit_score_bueno_message": "Tu Instagram funciona bien. Con ajustes estratégicos puedes pasar al siguiente nivel.",
+  "audit_score_bueno_headline": "Tu Instagram está en buen camino.",
+
+  "audit_score_excelente_label": "Excelente",
+  "audit_score_excelente_range": "80–100",
+  "audit_score_excelente_message": "Tu Instagram es una máquina de atraer clientes. Sigue así y optimiza los detalles.",
+  "audit_score_excelente_headline": "Tu Instagram es una referencia en tu sector.",
+
+  "audit_block_profile_title": "Perfil",
+  "audit_block_profile_description": "Tu perfil es tu carta de presentación. Una bio clara, una foto profesional y un enlace estratégico marcan la diferencia.",
+
+  "audit_block_content_title": "Contenido",
+  "audit_block_content_description": "La calidad y consistencia de tu contenido determinan si tus seguidores se quedan y actúan.",
+
+  "audit_block_engagement_title": "Engagement",
+  "audit_block_engagement_description": "El engagement mide qué tan conectada está tu audiencia con tu marca. Más interacción = más visibilidad.",
+
+  "audit_block_growth_title": "Crecimiento",
+  "audit_block_growth_description": "Un crecimiento saludable indica que tu estrategia está atrayendo al público correcto.",
+
+  "audit_block_conversion_title": "Conversión",
+  "audit_block_conversion_description": "De nada sirve tener seguidores si no se convierten en clientes. Aquí medimos tu capacidad de convertir.",
+
+  "audit_block_arranque_presencia_title": "Presencia Digital",
+  "audit_block_arranque_presencia_description": "Tu presencia digital es la base de todo. Sin ella, tus clientes potenciales no te encuentran.",
+
+  "audit_block_arranque_primeros_pasos_title": "Primeros Pasos",
+  "audit_block_arranque_primeros_pasos_description": "Los primeros contenidos definen tu identidad de marca. Hazlo bien desde el inicio.",
+
+  "audit_block_arranque_fundamentos_title": "Fundamentos",
+  "audit_block_arranque_fundamentos_description": "Los fundamentos correctos desde el día uno aceleran tu crecimiento y evitan errores costosos.",
+
+  "audit_block_evolucion_consistencia_title": "Consistencia",
+  "audit_block_evolucion_consistencia_description": "La consistencia es lo que separa a los negocios que crecen de los que se estancan.",
+
+  "audit_block_evolucion_comunidad_title": "Comunidad",
+  "audit_block_evolucion_comunidad_description": "Una comunidad activa es el activo más valioso de tu marca en redes sociales.",
+
+  "audit_block_evolucion_estrategia_title": "Estrategia",
+  "audit_block_evolucion_estrategia_description": "Una estrategia clara convierte seguidores casuales en clientes fieles.",
+
+  "audit_critical_no_profile_pic": "No tienes foto de perfil. Los perfiles sin foto generan un 80% menos de confianza.",
+  "audit_critical_no_bio": "Tu bio está vacía. Es lo primero que ven tus clientes potenciales.",
+  "audit_critical_no_website": "No tienes enlace en tu bio. Estás perdiendo tráfico hacia tu negocio.",
+  "audit_critical_no_posts": "No tienes publicaciones. Tu perfil parece inactivo o abandonado.",
+  "audit_critical_low_frequency": "Publicas menos de 1 vez por semana. La inconsistencia mata el alcance.",
+  "audit_critical_low_engagement": "Tu engagement está por debajo del 1%. Tu contenido no conecta con tu audiencia.",
+  "audit_critical_no_reels": "No usas Reels. Estás perdiendo la mayor fuente de alcance orgánico de Instagram.",
+  "audit_critical_no_stories_highlights": "No tienes historias destacadas. Pierdes la oportunidad de mostrar tu propuesta de valor.",
+  "audit_critical_follower_loss": "Estás perdiendo seguidores. Algo está alejando a tu audiencia.",
+  "audit_critical_no_cta": "Tu bio no tiene llamado a la acción. Los visitantes no saben qué hacer.",
+
+  "audit_linda_intro": "Basado en tu auditoría, esto es lo que Linda puede hacer por ti:",
+  "audit_linda_solution_content": "Crear contenido optimizado para tu sector usando IA.",
+  "audit_linda_solution_schedule": "Programar publicaciones automáticamente para mantener la consistencia.",
+  "audit_linda_solution_engagement": "Responder comentarios y mensajes para aumentar tu engagement.",
+  "audit_linda_solution_strategy": "Diseñar una estrategia de contenido personalizada para tu negocio.",
+  "audit_linda_solution_analytics": "Monitorear tus métricas y ajustar la estrategia en tiempo real.",
+
+  "audit_action_plan_critico_title": "Plan de Acción: Rescate urgente",
+  "audit_action_plan_critico_description": "Tu Instagram necesita intervención inmediata. Estos son los pasos prioritarios para recuperar tu presencia.",
+
+  "audit_action_plan_regular_title": "Plan de Acción: Optimización estratégica",
+  "audit_action_plan_regular_description": "Tu Instagram tiene fundamentos. Ahora toca optimizar para convertir seguidores en clientes.",
+
+  "audit_action_plan_bueno_title": "Plan de Acción: Aceleración de crecimiento",
+  "audit_action_plan_bueno_description": "Tu Instagram funciona bien. Estos ajustes te llevarán al siguiente nivel.",
+
+  "audit_action_plan_excelente_title": "Plan de Acción: Dominio total",
+  "audit_action_plan_excelente_description": "Tu Instagram es excelente. Estos refinamientos te mantendrán como referente.",
+
+  "audit_action_plan_arranque_title": "Plan de Acción: Lanzamiento estratégico",
+  "audit_action_plan_arranque_description": "Tu Instagram está comenzando. Sigue estos pasos para arrancar con fuerza.",
+
+  "audit_cta_diagnostico_title": "¿Listo para transformar tu Instagram?",
+  "audit_cta_diagnostico_subtitle": "Linda puede implementar este plan de acción por ti. Prueba gratis por 7 días.",
+  "audit_cta_arranque_title": "¿Listo para arrancar con todo?",
+  "audit_cta_arranque_subtitle": "Linda te ayuda a crear tu presencia en Instagram desde cero. Prueba gratis por 7 días.",
+
+  "audit_error_private_title": "Perfil privado detectado",
+  "audit_error_private_message": "No podemos analizar perfiles privados. Cambia tu perfil a público e intenta de nuevo.",
+  "audit_error_not_found_title": "Perfil no encontrado",
+  "audit_error_not_found_message": "No encontramos el perfil @{{username}}. Verifica que el username sea correcto.",
+  "audit_error_timeout_title": "Tiempo agotado",
+  "audit_error_timeout_message": "El análisis está tardando más de lo esperado. Por favor intenta de nuevo.",
+  "audit_error_generic_title": "Error inesperado",
+  "audit_error_generic_message": "Algo salió mal al analizar tu perfil. Por favor intenta de nuevo.",
+
+  "audit_signal_profile_pic": "Foto de perfil",
+  "audit_signal_bio_quality": "Calidad de bio",
+  "audit_signal_website_link": "Enlace en bio",
+  "audit_signal_post_frequency": "Frecuencia de publicación",
+  "audit_signal_content_mix": "Variedad de contenido",
+  "audit_signal_reels_usage": "Uso de Reels",
+  "audit_signal_stories_highlights": "Historias destacadas",
+  "audit_signal_engagement_rate": "Tasa de engagement",
+  "audit_signal_follower_growth": "Crecimiento de seguidores",
+  "audit_signal_response_rate": "Tasa de respuesta",
+
+  "audit_metric_followers": "Seguidores",
+  "audit_metric_following": "Siguiendo",
+  "audit_metric_posts": "Publicaciones",
+  "audit_metric_engagement_rate": "Tasa de Engagement",
+  "audit_metric_avg_likes": "Promedio de likes",
+  "audit_metric_avg_comments": "Promedio de comentarios",
+  "audit_metric_posting_frequency": "Frecuencia de publicación",
+  "audit_metric_reels_percentage": "Porcentaje de Reels",
+  "audit_metric_follower_growth_rate": "Tasa de crecimiento",
+
+  "audit_metric_followers_desc": "Número total de seguidores de tu cuenta.",
+  "audit_metric_following_desc": "Número de cuentas que sigues.",
+  "audit_metric_posts_desc": "Número total de publicaciones en tu perfil.",
+  "audit_metric_engagement_rate_desc": "Porcentaje de interacción respecto a tus seguidores.",
+  "audit_metric_avg_likes_desc": "Promedio de likes en tus últimas publicaciones.",
+  "audit_metric_avg_comments_desc": "Promedio de comentarios en tus últimas publicaciones.",
+  "audit_metric_posting_frequency_desc": "Número promedio de publicaciones por semana.",
+  "audit_metric_reels_percentage_desc": "Porcentaje de tu contenido que son Reels.",
+  "audit_metric_follower_growth_rate_desc": "Porcentaje de crecimiento de seguidores en los últimos 30 días.",
+
+  "audit_share_title": "Mi Instagram Score",
+  "audit_share_message": "Acabo de descubrir mi Instagram Score. ¿Quieres conocer el tuyo?",
+
+  "audit_reaudit_available": "Tu nueva auditoría está disponible.",
+  "audit_reaudit_days_remaining": "Faltan {{days}} días para tu próxima auditoría.",
+
+  "audit_signal_status_good": "Bien",
+  "audit_signal_status_warning": "Mejorable",
+  "audit_signal_status_critical": "Crítico",
+
+  "audit_arranque_profile_title": "Lo que vemos en tu perfil hoy",
+  "audit_arranque_profile_badge": "Perfil en construcción",
+  "audit_arranque_profile_followers": "Seguidores",
+  "audit_arranque_profile_posts": "Publicaciones totales",
+  "audit_arranque_profile_last_post": "Último post hace {{days}} días",
+  "audit_arranque_profile_no_posts": "Sin publicaciones aún",
+  "audit_arranque_profile_format_mix": "Mix de formatos",
+  "audit_arranque_profile_explanation": "Para calcular tu score necesitamos al menos 6 posts con interacciones y actividad reciente. Lo bueno es que eso es exactamente lo que vamos a construir juntos.",
+
+  "audit_arranque_growth_title": "Las 3 métricas que van a definir tu crecimiento",
+  "audit_arranque_growth_er_name": "Engagement Rate (ER)",
+  "audit_arranque_growth_er_what": "Mide qué porcentaje de tus seguidores interactúa con tu contenido (likes + comentarios).",
+  "audit_arranque_growth_er_why": "Un ER alto significa que tu contenido conecta. Instagram premia esto con más alcance orgánico.",
+  "audit_arranque_growth_er_linda": "Linda crea contenido optimizado para tu sector que genera interacción real desde el primer post.",
+  "audit_arranque_growth_cr_name": "Comment Rate (CR)",
+  "audit_arranque_growth_cr_what": "Mide qué porcentaje de tus seguidores deja comentarios en tus publicaciones.",
+  "audit_arranque_growth_cr_why": "Los comentarios son la señal más fuerte para el algoritmo. Más comentarios = más visibilidad.",
+  "audit_arranque_growth_cr_linda": "Linda responde comentarios automáticamente y genera conversaciones que activan el algoritmo.",
+  "audit_arranque_growth_rvr_name": "Reels View Rate (RVR)",
+  "audit_arranque_growth_rvr_what": "Mide cuántas veces se ven tus Reels en relación a tus seguidores.",
+  "audit_arranque_growth_rvr_why": "Los Reels son la mayor fuente de alcance orgánico en Instagram. Un buen RVR atrae nuevos seguidores.",
+  "audit_arranque_growth_rvr_linda": "Linda te ayuda a planificar y optimizar Reels que capturan atención en los primeros 3 segundos.",
+
+  "audit_arranque_plan_title": "Tu plan de arranque con BeweOS (30 días)",
+  "audit_arranque_plan_week1_number": "Semana 1",
+  "audit_arranque_plan_week1_objective": "Activar la base",
+  "audit_arranque_plan_week1_action1": "Conectar tu Instagram a BeweOS",
+  "audit_arranque_plan_week1_action2": "Configurar Linda IA con tu sector y estilo",
+  "audit_arranque_plan_week1_action3": "Publicar tu primer post optimizado",
+  "audit_arranque_plan_week2_number": "Semana 2",
+  "audit_arranque_plan_week2_objective": "Construir consistencia",
+  "audit_arranque_plan_week2_action1": "Publicar 2-3 posts con Linda",
+  "audit_arranque_plan_week2_action2": "Revisar y responder DMs pendientes",
+  "audit_arranque_plan_week2_action3": "Registrar leads en el CRM",
+  "audit_arranque_plan_week3_number": "Semana 3",
+  "audit_arranque_plan_week3_objective": "Generar datos reales",
+  "audit_arranque_plan_week3_action1": "Publicar tu primer Reel",
+  "audit_arranque_plan_week3_action2": "Activar respuestas automáticas a comentarios",
+  "audit_arranque_plan_week3_action3": "Analizar qué contenido funciona mejor",
+  "audit_arranque_plan_week4_number": "Semana 4",
+  "audit_arranque_plan_week4_objective": "Listo para la auditoría",
+  "audit_arranque_plan_week4_action1": "Revisar leads en el CRM",
+  "audit_arranque_plan_week4_action2": "Publicar 2-3 posts más",
+  "audit_arranque_plan_week4_action3": "Listo para tu primer score real",
+
+  "audit_arranque_cta_title": "¿Listo para arrancar con todo?",
+  "audit_arranque_cta_subtitle": "Linda te ayuda a crear tu presencia en Instagram desde cero. Prueba gratis por 7 días.",
+  "audit_arranque_cta_button": "Empezar prueba gratis"
+}

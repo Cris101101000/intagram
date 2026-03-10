@@ -1,12 +1,28 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { LandingHero } from '@/features/audit/ui/input/components';
+import { UsernameInput } from '@/features/audit/ui/input/components';
+
 export default function Home() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = (username: string) => {
+    setIsLoading(true);
+    router.push(`/audit/${username}`);
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-h1 font-inter font-bold text-base-oscura">
-        Auditoría de Instagram
-      </h1>
-      <p className="text-body text-gray-500 mt-bewe-2">
-        Herramienta en construcción
-      </p>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-soft-aqua">
+      {/* BeweOS Logo */}
+      <div className="absolute top-6 left-6">
+        <span className="font-inter font-bold text-h3 text-base-oscura">BeweOS</span>
+      </div>
+
+      <LandingHero />
+      <UsernameInput onSubmit={handleSubmit} isLoading={isLoading} />
     </main>
   );
 }

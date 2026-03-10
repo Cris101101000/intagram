@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@beweco/aurora-ui": "^0.1.64",
@@ -16,6 +17,7 @@
     "@heroui/theme": "2.4.15",
     "@heroui/use-theme": "2.1.9",
     "@iconify/react": "6.0.0",
+    "@supabase/supabase-js": "^2.99.0",
     "framer-motion": "12.14.0",
     "next": "^16.1.6",
     "react": "^18.3.1",
@@ -23,14 +25,17 @@
     "recharts": "^2.8.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.13.10",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.22.0",
     "eslint-config-next": "15.2.4",
+    "jest": "^30.3.0",
     "postcss": "^8.5.3",
     "tailwindcss": "3.4.17",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.8.2"
   }
 }
