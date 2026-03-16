@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useCallback, useEffect } from 'react';
 import {
@@ -12,7 +13,7 @@ import {
   Footer,
 } from '@/features/audit/ui/landing/components';
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -48,5 +49,13 @@ export default function Home() {
       <CtaSection onSubmit={handleSubmit} isLoading={isLoading} />
       <Footer />
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
   );
 }
