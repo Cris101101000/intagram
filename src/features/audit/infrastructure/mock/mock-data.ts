@@ -265,7 +265,7 @@ function buildArranquePausadoResult(): AuditResult {
     metrics: { engagementRate: 0, commentRate: 0, reelsViewRate: 0, hasReels: false },
     normalizedMetrics: { erNormalized: 0, crNormalized: 0, rvrNormalized: 0, erWeight: 0.4, crWeight: 0.3, rvrWeight: 0.3 },
     healthSignals: {
-      frequency: { value: 0.3, label: 'Muy baja' },
+      frequency: { value: 0.3, label: 'Baja' },
       formatMix: { distribution: { Image: 100 }, label: 'Dependiente de un formato' },
       recency: { daysSinceLastPost: 120, label: 'Inactivo' },
       consistency: { stddev: 12, label: 'Muy irregular' },
