@@ -266,7 +266,7 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
             postsCount={auditResult.profile.postsCount}
             criticalCount={auditResult.criticalPoints.length}
             profilePicUrl={auditResult.profile.profilePicUrl}
-            daysSinceLastPost={auditResult.recency?.daysSinceLastPost}
+            daysSinceLastPost={auditResult.healthSignals?.recency?.daysSinceLastPost}
             onSubmit={handleCaptureSubmit}
             isLoading={captureLoading}
           />
