@@ -1,34 +1,24 @@
 'use client';
 
-import { Divider } from '@heroui/react';
+import { useEffect, useRef } from 'react';
 import { AuditResult } from '@/features/audit/domain/interfaces/audit';
+import { AuroraBackground } from '@/features/audit/ui/_shared/components/AuroraBackground';
 import { ScoreBlock } from './ScoreBlock';
 import { MetricsBlock } from './MetricsBlock';
-import { HealthSignals } from './HealthSignals';
 import { SectorRanking } from './SectorRanking';
 import { CriticalPoints } from './CriticalPoints';
 import { LindaSolutions } from './LindaSolutions';
 import { ActionPlan } from './ActionPlan';
-import { TrialCTA } from './TrialCTA';
+import { CTAPhoneNotifs } from '@/features/audit/ui/_shared/components/CTAPhoneNotifs';
+import { BenchmarkSources } from '@/features/audit/ui/_shared/components/BenchmarkSources';
+import { ShareSlide } from '@/features/audit/ui/_shared/components/ShareSlide';
+import { BeweFooter } from '@/features/audit/ui/_shared/components/BeweFooter';
+import { LEVEL_CONFIG } from '../constants/level-config';
 
 interface DiagnosticoResultsProps {
   auditResult: AuditResult;
 }
 
-/**
- * Sector benchmarks for ER, CR, and RVR.
- * In production these would come from an API or config based on sector.
- */
-const DEFAULT_BENCHMARKS = {
-  engagementRate: 3.5,
-  commentRate: 0.8,
-  reelsViewRate: 15.0,
-};
-
-/**
- * Compute a rough percentile from the score.
- * 0-40 => top 80-60%, 41-60 => top 60-40%, 61-80 => top 40-20%, 81-100 => top 20-5%
- */
 function computePercentile(score: number): number {
   if (score <= 40) return Math.round(80 - (score / 40) * 20);
   if (score <= 60) return Math.round(60 - ((score - 40) / 20) * 20);
@@ -36,8 +26,43 @@ function computePercentile(score: number): number {
   return Math.round(20 - ((score - 80) / 20) * 15);
 }
 
+function useScrollReveal() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    const els = container.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+    );
+
+    els.forEach((el, i) => {
+      (el as HTMLElement).style.transitionDelay = `${(i % 4) * 0.08}s`;
+      obs.observe(el);
+    });
+
+    return () => obs.disconnect();
+  }, []);
+
+  return containerRef;
+}
+
 export function DiagnosticoResults({ auditResult }: DiagnosticoResultsProps) {
   const {
+    username,
+    profile,
     score,
     level,
     sector,
@@ -50,56 +75,107 @@ export function DiagnosticoResults({ auditResult }: DiagnosticoResultsProps) {
   } = auditResult;
 
   const percentile = computePercentile(score);
+  const containerRef = useScrollReveal();
+  const cfg = LEVEL_CONFIG[level];
 
   return (
-    <div className="flex flex-col gap-bewe-7 w-full max-w-container mx-auto px-bewe-4 py-bewe-7">
-      {/* Block 1 - Score + Context */}
-      <ScoreBlock
+    <AuroraBackground containerRef={containerRef}>
+      {/* Section 1 — Score hero */}
+      <section className="relative" style={{ padding: '64px 0 80px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <ScoreBlock
+            username={username}
+            score={score}
+            level={level}
+            sector={sector}
+            postsAnalyzed={postsAnalyzed}
+            analysisWindow={analysisWindow}
+            hasReels={metrics.hasReels}
+            profilePicUrl={profile.profilePicUrl}
+          />
+        </div>
+      </section>
+
+      {/* Section 2 — Metrics (with integrated health signals) */}
+      <section style={{ padding: '72px 0' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <MetricsBlock
+            metrics={metrics}
+            normalizedMetrics={normalizedMetrics}
+            healthSignals={healthSignals}
+            sector={sector}
+            score={score}
+            followersCount={profile.followersCount}
+            postsAnalyzed={postsAnalyzed}
+          />
+        </div>
+      </section>
+
+      {/* Section 3 — Sector Ranking */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <SectorRanking
+            score={score}
+            percentile={percentile}
+            sector={sector}
+            level={level}
+          />
+        </div>
+      </section>
+
+      {/* Section 4 — Critical Points */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <CriticalPoints criticalPoints={criticalPoints} level={level} />
+        </div>
+      </section>
+
+      {/* Section 5 — Linda Solutions */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[1060px] px-6">
+          <LindaSolutions
+            criticalPoints={criticalPoints}
+            username={username}
+            profilePicUrl={profile.profilePicUrl}
+            fullName={profile.fullName}
+            biography={profile.biography}
+          />
+        </div>
+      </section>
+
+      {/* Section 6 — Action Plan */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <ActionPlan level={level} />
+        </div>
+      </section>
+
+      {/* Section 7 — CTA */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <CTAPhoneNotifs username={username} sector={sector} page="diagnostico" />
+        </div>
+      </section>
+
+      {/* Section 8 — Benchmark Sources */}
+      <section style={{ padding: '0 0 48px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <BenchmarkSources />
+        </div>
+      </section>
+      {/* Footer */}
+      <BeweFooter />
+
+      {/* ShareSlide — triggered by MetricsBlock H2 */}
+      <ShareSlide
+        username={username}
+        profilePicUrl={profile.profilePicUrl}
         score={score}
         level={level}
         sector={sector}
-        postsAnalyzed={postsAnalyzed}
-        analysisWindow={analysisWindow}
-        hasReels={metrics.hasReels}
+        route={auditResult.route}
+        triggerSelector="[data-share-trigger]"
       />
-
-      <Divider />
-
-      {/* Block 2a - Metrics */}
-      <MetricsBlock
-        metrics={metrics}
-        normalizedMetrics={normalizedMetrics}
-        sector={sector}
-        benchmarks={DEFAULT_BENCHMARKS}
-      />
-
-      {/* Block 2b - Health Signals */}
-      <HealthSignals healthSignals={healthSignals} />
-
-      <Divider />
-
-      {/* Block 3 - Sector Ranking */}
-      <SectorRanking
-        percentile={percentile}
-        sector={sector}
-        level={level}
-      />
-
-      <Divider />
-
-      {/* Block 4 - Critical Points */}
-      <CriticalPoints criticalPoints={criticalPoints} />
-
-      {/* Block 5 - Linda Solutions */}
-      <LindaSolutions criticalPoints={criticalPoints} />
-
-      <Divider />
-
-      {/* Block 6a - Action Plan */}
-      <ActionPlan level={level} />
-
-      {/* Block 6b - Trial CTA */}
-      <TrialCTA />
-    </div>
+    </AuroraBackground>
   );
 }

@@ -1,6 +1,5 @@
 export { ScoreBlock } from './ScoreBlock';
 export { MetricsBlock } from './MetricsBlock';
-export { HealthSignals } from './HealthSignals';
 export { SectorRanking } from './SectorRanking';
 export { CriticalPoints } from './CriticalPoints';
 export { LindaSolutions } from './LindaSolutions';

@@ -1,45 +1,43 @@
 import { Sector, SectorBenchmark } from '../interfaces/benchmark';
 
-const CATEGORY_TO_SECTOR: Record<string, Sector> = {
-  'Beauty, Cosmetic & Personal Care': 'Belleza',
-  'Beauty Salon': 'Belleza',
-  'Hair Salon': 'Belleza',
-  'Skin Care Service': 'Belleza',
-  'Clothing (Brand)': 'Moda',
-  'Fashion Designer': 'Moda',
-  'Shopping & Retail': 'Moda',
-  'Gym/Physical Fitness Center': 'Fitness',
-  'Personal Trainer': 'Fitness',
-  'Sports & Recreation': 'Fitness',
-  'Restaurant': 'Gastronomia',
-  'Food & Beverage': 'Gastronomia',
-  'Cafe': 'Gastronomia',
-  'Bakery': 'Gastronomia',
-  'Computers & Internet Website': 'Tecnologia',
-  'Software': 'Tecnologia',
-  'Science, Technology & Engineering': 'Tecnologia',
-  'Travel Agency': 'Viajes',
-  'Hotel': 'Viajes',
-  'Tour Agency': 'Viajes',
-  'Education': 'Educacion',
-  'Tutor/Teacher': 'Educacion',
-  'School': 'Educacion',
-  'Entertainment': 'Entretenimiento',
-  'Musician/Band': 'Entretenimiento',
-  'Artist': 'Entretenimiento',
-  'Consulting Agency': 'Negocios',
-  'Business Service': 'Negocios',
-  'Marketing Agency': 'Negocios',
-  'Health/Beauty': 'Salud',
-  'Doctor': 'Salud',
-  'Medical & Health': 'Salud',
-};
+// Keywords in username/bio/fullName → sector (checked in order, first match wins)
+const KEYWORD_TO_SECTOR: [RegExp, Sector][] = [
+  // Belleza
+  [/\b(nails?|u[ñn]as?|manicur|pedicur|gel|acr[ií]lic|esmalte|lash|pesta[ñn]|cejas?|brow|makeup|maquillaj|beauty|belleza|peluquer[ií]?a?|estilista|stylist|salon|sal[oó]n|barber|barber[ií]a|spa|facial|skincare|piel|cabello|hair|extensiones|keratina|tattoo|tatuaj|piercing|depilaci[oó]n|microblading)\b/i, 'Belleza'],
+  // Moda
+  [/\b(moda|fashion|ropa|cloth|boutique|tienda|joyer[ií]a|jewelry|accesorios|zapatos|shoes|textil|outfit|style|estilo|bolsos|bags|lencer[ií]a|lingerie|camisetas|sneakers)\b/i, 'Moda'],
+  // Fitness
+  [/\b(gym|fitness|entrena|workout|crossfit|yoga|pilates|personal.?trainer|deporte|sport|boxeo|funcional|gimnasio|zumba|calistenia|running|marat[oó]n)\b/i, 'Fitness'],
+  // Gastronomia
+  [/\b(comida|food|restaurant|restaurante|cocina|chef|reposter[ií]a|pastel|cake|pizza|sushi|caf[eé]|coffee|panader[ií]a|bakery|burger|hamburgues|taco|helado|catering|gastro|cerveza|beer|vino|wine|postres?|dessert|brunch|bar\b|cantina|carnicer[ií]a|empanada)\b/i, 'Gastronomia'],
+  // Tecnologia
+  [/\b(tech|software|desarrollo|developer|programaci[oó]n|app|digital|web|c[oó]digo|code|startup|saas|ia\b|inteligencia.?artificial|ciberseguridad|cloud|datos|data)\b/i, 'Tecnologia'],
+  // Viajes
+  [/\b(travel|viaje|turismo|tourism|hotel|hostal|aventura|destino|excursi[oó]n|tour|playa|beach|mochiler|camping)\b/i, 'Viajes'],
+  // Educacion
+  [/\b(academia|escuela|school|cursos?|clases?|formaci[oó]n|coaching|coach\b|mentor|aprende|ense[ñn]|taller|workshop|capacitaci[oó]n|tutor|educaci[oó]n|pedagog|idiomas|ingl[eé]s|matem[aá]tica)\b/i, 'Educacion'],
+  // Entretenimiento
+  [/\b(music|m[uú]sic|band|fot[oó]graf|photo|video|film|event|evento|dj\b|arte|artist|dise[ñn]o|design|creativo|creative|cine|teatro|podcast|stream|influencer|content.?creator)\b/i, 'Entretenimiento'],
+  // Salud
+  [/\b(salud|health|m[eé]dic|doctor|dental|dent|nutri|psic[oó]log|therap|terapi|cl[ií]nica|clinic|bienestar|wellness|hol[ií]stic|fisioterapi|quiropr[aá]ctic|veterinar|farmacia|optic)\b/i, 'Salud'],
+];
 
 const DEFAULT_SECTOR: Sector = 'Negocios';
 
-export function resolveSector(businessCategory?: string): Sector {
-  if (!businessCategory) return DEFAULT_SECTOR;
-  return CATEGORY_TO_SECTOR[businessCategory] ?? DEFAULT_SECTOR;
+export function resolveSector(
+  _businessCategory?: string,
+  context?: { username?: string; fullName?: string; biography?: string },
+): Sector {
+  if (context) {
+    const text = [context.username, context.fullName, context.biography]
+      .filter(Boolean)
+      .join(' ');
+    for (const [regex, sector] of KEYWORD_TO_SECTOR) {
+      if (regex.test(text)) return sector;
+    }
+  }
+
+  return DEFAULT_SECTOR;
 }
 
 export const SECTOR_BENCHMARKS: Record<Sector, SectorBenchmark> = {

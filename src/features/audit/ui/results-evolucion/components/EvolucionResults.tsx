@@ -1,80 +1,102 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { AuditResult, ScoreLevel } from '@/features/audit/domain/interfaces/audit';
+import { useEffect, useRef } from 'react';
+import { AuditResult } from '@/features/audit/domain/interfaces/audit';
 import { EvolutionData } from '@/features/audit/application/use-cases/get-evolution';
-import { useTranslation } from '@/shared/ui/hooks/useTranslation';
-import { ScoreComparison } from './ScoreComparison';
-import { MetricsComparison } from './MetricsComparison';
-import { Achievements } from './Achievements';
-import { ShareCTA } from './ShareCTA';
-import { NextSteps } from './NextSteps';
+import { AuroraBackground } from '@/features/audit/ui/_shared/components/AuroraBackground';
+import { EvolutionHero } from './EvolutionHero';
+import { EvolutionMetrics } from './EvolutionMetrics';
+import { EvolutionRanking } from './EvolutionRanking';
+import { EvolutionAchievements } from './EvolutionAchievements';
+import { EvolutionTips } from './EvolutionTips';
+import { EvolutionCTA } from './EvolutionCTA';
+import { BeweFooter } from '@/features/audit/ui/_shared/components/BeweFooter';
 
 interface EvolucionResultsProps {
   auditResult: AuditResult;
   evolutionData: EvolutionData;
 }
 
-export function EvolucionResults({ auditResult, evolutionData }: EvolucionResultsProps) {
-  const { t } = useTranslation('audit');
+function useScrollReveal() {
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Derive previous level from previous score
-  const previousLevel = (() => {
-    const s = evolutionData.previous.score;
-    if (s >= 80) return ScoreLevel.EXCELENTE;
-    if (s >= 60) return ScoreLevel.BUENO;
-    if (s >= 40) return ScoreLevel.REGULAR;
-    return ScoreLevel.CRITICO;
-  })();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    const els = container.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+    );
+
+    els.forEach((el, i) => {
+      (el as HTMLElement).style.transitionDelay = `${(i % 4) * 0.08}s`;
+      obs.observe(el);
+    });
+
+    return () => obs.disconnect();
+  }, []);
+
+  return containerRef;
+}
+
+export function EvolucionResults({ auditResult, evolutionData }: EvolucionResultsProps) {
+  const containerRef = useScrollReveal();
+  const { improved } = evolutionData;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="flex flex-col w-full max-w-container mx-auto px-bewe-4 md:px-bewe-6"
-    >
-      {/* Block 1: Score Comparison */}
-      <ScoreComparison
-        currentScore={auditResult.score}
-        previousScore={evolutionData.previous.score}
-        currentLevel={auditResult.level}
-        previousLevel={previousLevel}
-      />
+    <AuroraBackground variant={improved ? 'default' : 'warm'} containerRef={containerRef}>
+      {/* Section 1 — Hero */}
+      <section className="relative" style={{ padding: '64px 0 80px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <EvolutionHero data={evolutionData} profilePicUrl={auditResult.profile.profilePicUrl} />
+        </div>
+      </section>
 
-      {/* Divider */}
-      <hr className="border-gray-100" />
+      {/* Section 2 — Metrics */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <EvolutionMetrics data={evolutionData} />
+        </div>
+      </section>
 
-      {/* Block 2: Metrics Comparison */}
-      <MetricsComparison
-        currentMetrics={auditResult.metrics}
-        previousMetrics={evolutionData.previous.metrics}
-        currentSignals={auditResult.healthSignals}
-      />
+      {/* Section 3 — Sector Ranking comparison */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <EvolutionRanking data={evolutionData} />
+        </div>
+      </section>
 
-      {/* Divider */}
-      <hr className="border-gray-100" />
+      {/* Section 4 — Achievements or Tips */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          {improved ? (
+            <EvolutionAchievements data={evolutionData} />
+          ) : (
+            <EvolutionTips data={evolutionData} />
+          )}
+        </div>
+      </section>
 
-      {/* Block 3: Achievements (only if there are improvements) */}
-      <Achievements achievements={evolutionData.achievements} />
+      {/* Section 4 — CTA */}
+      <section style={{ padding: '0 0 72px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <EvolutionCTA data={evolutionData} />
+        </div>
+      </section>
 
-      {/* Block 4: Share CTA (no sales pitch for returning users) */}
-      <ShareCTA
-        username={auditResult.username}
-        currentScore={auditResult.score}
-        previousScore={evolutionData.previous.score}
-      />
-
-      {/* Divider */}
-      <hr className="border-gray-100" />
-
-      {/* Block 5: Next Steps */}
-      <NextSteps
-        currentScore={auditResult.score}
-        previousScore={evolutionData.previous.score}
-        metrics={auditResult.metrics}
-        healthSignals={auditResult.healthSignals}
-      />
-    </motion.div>
+      {/* Footer */}
+      <BeweFooter />
+    </AuroraBackground>
   );
 }

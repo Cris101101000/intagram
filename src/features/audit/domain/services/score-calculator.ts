@@ -1,4 +1,4 @@
-import { PostData, AuditMetrics, NormalizedMetrics } from '../interfaces/audit';
+import { PostData, AuditMetrics, NormalizedMetrics, HealthSignals } from '../interfaces/audit';
 import { Sector, SectorBenchmark } from '../interfaces/benchmark';
 import { SECTOR_BENCHMARKS } from '../constants/benchmarks';
 
@@ -58,13 +58,72 @@ export function calculateNormalizedMetrics(
   };
 }
 
-export function calculateFinalScore(metrics: AuditMetrics, sector: Sector): number {
+// ---------------------------------------------------------------------------
+// Health signal modifier
+// ---------------------------------------------------------------------------
+
+function calculateHealthModifier(signals: HealthSignals): number {
+  let modifier = 0;
+
+  // Frequency: how often they post
+  switch (signals.frequency.label) {
+    case 'Alta': modifier += 5; break;
+    case 'Media': break; // neutral
+    case 'Baja': modifier -= 10; break;
+  }
+
+  // Recency: how recently they posted
+  switch (signals.recency.label) {
+    case 'Activo': modifier += 5; break;
+    case 'Irregular': modifier -= 5; break;
+    case 'Inactivo': modifier -= 15; break;
+  }
+
+  // Consistency: regularity of posting schedule
+  switch (signals.consistency.label) {
+    case 'Consistente': modifier += 5; break;
+    case 'Irregular': modifier -= 3; break;
+    case 'Muy irregular': modifier -= 8; break;
+  }
+
+  // Trend: is engagement improving or declining
+  switch (signals.trend.label) {
+    case 'Mejorando': modifier += 5; break;
+    case 'Estable': break; // neutral
+    case 'Cayendo': modifier -= 8; break;
+  }
+
+  // Format mix: variety of content types
+  switch (signals.formatMix.label) {
+    case 'Variado': modifier += 3; break;
+    case 'Dependiente de un formato': modifier -= 5; break;
+  }
+
+  return modifier;
+}
+
+// ---------------------------------------------------------------------------
+// Final score
+// ---------------------------------------------------------------------------
+
+export function calculateFinalScore(
+  metrics: AuditMetrics,
+  sector: Sector,
+  healthSignals?: HealthSignals,
+): number {
   const benchmark = SECTOR_BENCHMARKS[sector];
   const normalized = calculateNormalizedMetrics(metrics, benchmark);
   const raw =
     normalized.erNormalized * normalized.erWeight +
     normalized.crNormalized * normalized.crWeight +
     normalized.rvrNormalized * normalized.rvrWeight;
-  const score = Math.round(raw * 100);
+
+  let score = Math.round(raw * 100);
+
+  // Apply health signal modifier if available
+  if (healthSignals) {
+    score += calculateHealthModifier(healthSignals);
+  }
+
   return Math.max(1, Math.min(100, score));
 }

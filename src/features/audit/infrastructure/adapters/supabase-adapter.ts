@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { StoragePort } from '../../application/ports/storage-port';
-import { AuditResult, PreviousAudit } from '../../domain/interfaces/audit';
+import { AuditResult, PreviousAudit, InstagramProfile } from '../../domain/interfaces/audit';
 import { LeadData, StoredLead } from '../../domain/interfaces/lead';
 
 export class SupabaseAdapter implements StoragePort {
@@ -21,34 +21,93 @@ export class SupabaseAdapter implements StoragePort {
     });
   }
 
-  // ── Audits ──────────────────────────────────────────────────────
+  // ── Sessions ──────────────────────────────────────────────────────
 
-  async saveAudit(audit: AuditResult): Promise<string> {
+  async createSession(
+    username: string,
+    userAgent?: string,
+    ip?: string,
+    locale?: string,
+  ): Promise<string> {
+    const { data, error } = await this.client
+      .from('sessions')
+      .insert({
+        username,
+        user_agent: userAgent ?? null,
+        ip_address: ip ?? null,
+        locale: locale ?? 'es',
+      })
+      .select('id')
+      .single();
+
+    if (error) throw new Error(`Failed to create session: ${error.message}`);
+    return data.id as string;
+  }
+
+  async completeSession(sessionId: string): Promise<void> {
+    const { error } = await this.client
+      .from('sessions')
+      .update({ completed_at: new Date().toISOString() })
+      .eq('id', sessionId);
+
+    if (error) throw new Error(`Failed to complete session: ${error.message}`);
+  }
+
+  // ── Instagram Profiles ────────────────────────────────────────────
+
+  async saveProfile(profile: InstagramProfile): Promise<string> {
+    const { data, error } = await this.client
+      .from('instagram_profiles')
+      .insert({
+        username: profile.username,
+        full_name: profile.fullName,
+        biography: profile.biography,
+        followers: profile.followersCount,
+        follows: profile.followsCount,
+        posts_count: profile.postsCount,
+        profile_pic: profile.profilePicUrl,
+        is_verified: profile.isVerified,
+        is_private: profile.isPrivate,
+        is_business: profile.isBusinessAccount,
+        business_category: profile.businessCategoryName ?? null,
+      })
+      .select('id')
+      .single();
+
+    if (error) throw new Error(`Failed to save profile: ${error.message}`);
+    return data.id as string;
+  }
+
+  // ── Audits ────────────────────────────────────────────────────────
+
+  async saveAudit(
+    audit: AuditResult,
+    sessionId?: string,
+    profileId?: string,
+  ): Promise<{ id: string; accessToken: string }> {
     const { data, error } = await this.client
       .from('audits')
       .insert({
         username: audit.username,
-        profile: audit.profile,
+        session_id: sessionId ?? null,
+        ig_profile_id: profileId ?? null,
+        score: audit.score,
+        score_level: audit.level,
+        route: audit.route,
         metrics: audit.metrics,
         normalized_metrics: audit.normalizedMetrics,
         health_signals: audit.healthSignals,
         critical_points: audit.criticalPoints,
-        score: audit.score,
-        score_level: audit.level,
-        route: audit.route,
         sector: audit.sector,
         posts_analyzed: audit.postsAnalyzed,
         analysis_window: audit.analysisWindow,
         previous_audit_id: audit.previousAudit?.id ?? null,
       })
-      .select('id')
+      .select('id, access_token')
       .single();
 
-    if (error) {
-      throw new Error(`Failed to save audit: ${error.message}`);
-    }
-
-    return data.id as string;
+    if (error) throw new Error(`Failed to save audit: ${error.message}`);
+    return { id: data.id as string, accessToken: data.access_token as string };
   }
 
   async getLastAudit(username: string): Promise<PreviousAudit | null> {
@@ -60,13 +119,8 @@ export class SupabaseAdapter implements StoragePort {
       .limit(1)
       .maybeSingle();
 
-    if (error) {
-      throw new Error(`Failed to query last audit: ${error.message}`);
-    }
-
-    if (!data) {
-      return null;
-    }
+    if (error) throw new Error(`Failed to query last audit: ${error.message}`);
+    if (!data) return null;
 
     return {
       id: data.id as string,
@@ -76,11 +130,38 @@ export class SupabaseAdapter implements StoragePort {
     };
   }
 
-  // ── Leads ───────────────────────────────────────────────────────
+  async getAuditByToken(accessToken: string): Promise<AuditResult | null> {
+    const { data, error } = await this.client
+      .from('audits')
+      .select('*')
+      .eq('access_token', accessToken)
+      .maybeSingle();
+
+    if (error) throw new Error(`Failed to query audit by token: ${error.message}`);
+    if (!data) return null;
+
+    return {
+      username: data.username as string,
+      profile: {} as InstagramProfile, // profile is stored separately
+      score: Number(data.score),
+      level: data.score_level,
+      route: data.route,
+      metrics: data.metrics,
+      normalizedMetrics: data.normalized_metrics,
+      healthSignals: data.health_signals,
+      criticalPoints: data.critical_points,
+      sector: data.sector as string,
+      postsAnalyzed: Number(data.posts_analyzed),
+      analysisWindow: Number(data.analysis_window),
+      createdAt: data.created_at as string,
+    } as AuditResult;
+  }
+
+  // ── Leads ─────────────────────────────────────────────────────────
 
   async saveLead(
     lead: LeadData,
-    auditId: string,
+    auditId: string | null,
     score: number,
     scoreLevel: string,
     sector: string,
@@ -88,12 +169,15 @@ export class SupabaseAdapter implements StoragePort {
     const { data, error } = await this.client
       .from('leads')
       .insert({
-        name: lead.name,
+        first_name: lead.firstName,
+        last_name: lead.lastName,
         email: lead.email,
-        phone: lead.phone,
+        phone_code: lead.phone.code,
+        phone_country: lead.phone.country,
+        phone_number: lead.phone.number,
         username: lead.username,
         gdpr_consent: lead.gdprConsent,
-        audit_id: auditId,
+        audit_id: auditId ?? null,
         score,
         score_level: scoreLevel,
         sector,
@@ -101,10 +185,7 @@ export class SupabaseAdapter implements StoragePort {
       .select('*')
       .single();
 
-    if (error) {
-      throw new Error(`Failed to save lead: ${error.message}`);
-    }
-
+    if (error) throw new Error(`Failed to save lead: ${error.message}`);
     return this.mapToStoredLead(data);
   }
 
@@ -117,25 +198,25 @@ export class SupabaseAdapter implements StoragePort {
       .limit(1)
       .maybeSingle();
 
-    if (error) {
-      throw new Error(`Failed to query lead by email: ${error.message}`);
-    }
-
-    if (!data) {
-      return null;
-    }
+    if (error) throw new Error(`Failed to query lead by email: ${error.message}`);
+    if (!data) return null;
 
     return this.mapToStoredLead(data);
   }
 
-  // ── Helpers ─────────────────────────────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────────────
 
   private mapToStoredLead(row: Record<string, unknown>): StoredLead {
     return {
       id: row.id as string,
-      name: row.name as string,
+      firstName: row.first_name as string,
+      lastName: row.last_name as string,
       email: row.email as string,
-      phone: row.phone as string,
+      phone: {
+        code: row.phone_code as string,
+        country: row.phone_country as string,
+        number: row.phone_number as string,
+      },
       username: row.username as string,
       gdprConsent: Boolean(row.gdpr_consent),
       auditId: row.audit_id as string,

@@ -1,7 +1,14 @@
+export interface PhoneData {
+  code: string;    // e.g. "+57"
+  country: string; // e.g. "CO"
+  number: string;  // e.g. "3001234567"
+}
+
 export interface LeadData {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phone: string;
+  phone: PhoneData;
   username: string;
   gdprConsent: boolean;
 }

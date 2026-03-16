@@ -4,14 +4,15 @@ import { N8nAdapter } from '@/features/audit/infrastructure/adapters/n8n-adapter
 import { captureLead } from '@/features/audit/application/use-cases/capture-lead';
 import { AuditResult } from '@/features/audit/domain/interfaces/audit';
 import { LeadData } from '@/features/audit/domain/interfaces/lead';
+import { shouldUseMock } from '@/features/audit/infrastructure/mock/mock-data';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, username, gdprConsent, auditResult } = body;
+    const { firstName, lastName, email, phone, username, gdprConsent, auditId, auditResult } = body;
 
     // Validate required fields
-    if (!name || !email || !phone || !username) {
+    if (!firstName || !lastName || !email || !phone?.number || !username) {
       return NextResponse.json(
         {
           error: 'missing_fields',
@@ -55,13 +56,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Mock mode – skip Supabase and N8N calls
+    if (shouldUseMock(username)) {
+      return NextResponse.json({ success: true, message: 'Lead capturado exitosamente (demo).' });
+    }
+
     const storagePort = new SupabaseAdapter();
     const crmPort = new N8nAdapter();
 
-    const leadData: LeadData = { name, email, phone, username, gdprConsent };
+    const leadData: LeadData = {
+      firstName,
+      lastName,
+      email,
+      phone: {
+        code: phone.code || '+57',
+        country: phone.country || 'CO',
+        number: phone.number,
+      },
+      username,
+      gdprConsent,
+    };
+
     const result = await captureLead(
       leadData,
       auditResult as AuditResult,
+      auditId || null,
       storagePort,
       crmPort,
     );

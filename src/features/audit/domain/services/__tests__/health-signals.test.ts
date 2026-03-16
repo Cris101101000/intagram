@@ -93,24 +93,24 @@ describe('calculateRecency', () => {
     expect(result.label).toBe('Activo');
   });
 
-  it('should return "Irregular" when last post was 25 days ago', () => {
+  it('should return "Irregular" when last post was 10 days ago', () => {
     const posts: PostData[] = [
-      makePost({ timestamp: daysAgo(25) }),
-      makePost({ timestamp: daysAgo(40) }),
+      makePost({ timestamp: daysAgo(10) }),
+      makePost({ timestamp: daysAgo(20) }),
     ];
 
     const result = calculateRecency(posts);
-    expect(result.daysSinceLastPost).toBeCloseTo(25, 0);
+    expect(result.daysSinceLastPost).toBeCloseTo(10, 0);
     expect(result.label).toBe('Irregular');
   });
 
-  it('should return "Inactivo" when last post was 60 days ago', () => {
+  it('should return "Inactivo" when last post was 20 days ago', () => {
     const posts: PostData[] = [
-      makePost({ timestamp: daysAgo(60) }),
+      makePost({ timestamp: daysAgo(20) }),
     ];
 
     const result = calculateRecency(posts);
-    expect(result.daysSinceLastPost).toBeCloseTo(60, 0);
+    expect(result.daysSinceLastPost).toBeCloseTo(20, 0);
     expect(result.label).toBe('Inactivo');
   });
 

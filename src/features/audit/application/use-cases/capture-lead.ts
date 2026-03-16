@@ -6,6 +6,7 @@ import { AuditResult } from '../../domain/interfaces/audit';
 export async function captureLead(
   leadData: LeadData,
   auditResult: AuditResult,
+  auditId: string | null,
   storagePort: StoragePort,
   crmPort: CrmPort
 ): Promise<LeadResponse> {
@@ -13,14 +14,14 @@ export async function captureLead(
   if (!leadData.gdprConsent) {
     return { success: false, message: 'Se requiere consentimiento para procesar datos.' };
   }
-  if (!leadData.email || !leadData.name || !leadData.phone) {
+  if (!leadData.email || !leadData.firstName || !leadData.phone.number) {
     return { success: false, message: 'Todos los campos son obligatorios.' };
   }
 
   // Save lead
   const storedLead = await storagePort.saveLead(
     leadData,
-    auditResult.username, // this should be auditId but we'll use username for now
+    auditId,
     auditResult.score,
     auditResult.level,
     auditResult.sector

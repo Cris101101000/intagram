@@ -1,9 +1,20 @@
-import { AuditResult, PreviousAudit } from '../../domain/interfaces/audit';
+import { AuditResult, PreviousAudit, InstagramProfile } from '../../domain/interfaces/audit';
 import { LeadData, StoredLead } from '../../domain/interfaces/lead';
 
 export interface StoragePort {
-  saveAudit(audit: AuditResult): Promise<string>; // returns audit ID
+  // Sessions
+  createSession(username: string, userAgent?: string, ip?: string, locale?: string): Promise<string>;
+  completeSession(sessionId: string): Promise<void>;
+
+  // Instagram profiles
+  saveProfile(profile: InstagramProfile): Promise<string>;
+
+  // Audits
+  saveAudit(audit: AuditResult, sessionId?: string, profileId?: string): Promise<{ id: string; accessToken: string }>;
   getLastAudit(username: string): Promise<PreviousAudit | null>;
-  saveLead(lead: LeadData, auditId: string, score: number, scoreLevel: string, sector: string): Promise<StoredLead>;
+  getAuditByToken(accessToken: string): Promise<AuditResult | null>;
+
+  // Leads
+  saveLead(lead: LeadData, auditId: string | null, score: number, scoreLevel: string, sector: string): Promise<StoredLead>;
   getLeadByEmail(email: string): Promise<StoredLead | null>;
 }

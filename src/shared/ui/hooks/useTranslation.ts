@@ -22,9 +22,18 @@ export function useTranslation(namespace: 'common' | 'audit' = 'common', locale?
   const currentLocale = locale ?? DEFAULT_LOCALE;
 
   const t = useCallback(
-    (key: string, fallback?: string): string => {
+    (key: string, params?: Record<string, string> | string): string => {
       const ns = translations[currentLocale]?.[namespace];
-      return ns?.[key] ?? fallback ?? key;
+      let value = ns?.[key] ?? (typeof params === 'string' ? params : key);
+
+      // Support interpolation: {{ key }} → value
+      if (params && typeof params === 'object') {
+        for (const [k, v] of Object.entries(params)) {
+          value = value.replace(new RegExp(`\\{\\{\\s*${k}\\s*\\}\\}`, 'g'), v);
+        }
+      }
+
+      return value;
     },
     [currentLocale, namespace]
   );

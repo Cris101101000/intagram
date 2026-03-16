@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from '@heroui/react';
 import { AuditResult, AuditRoute } from '@/features/audit/domain/interfaces/audit';
@@ -40,6 +41,26 @@ function resolveLoadingVariant(route?: AuditRoute): LoadingVariant {
   return 'standard';
 }
 
+const ERROR_MESSAGES: Record<string, string> = {
+  profile_not_found: 'No encontramos este perfil. Asegúrate de ingresar un usuario válido y público.',
+  profile_private: 'Este perfil es privado o no existe. Asegúrate de que sea público e intenta de nuevo.',
+  rate_limit: 'Has superado el límite de análisis. Intenta de nuevo más tarde.',
+  timeout: 'El análisis tardó demasiado. Intenta de nuevo.',
+};
+
+function resolveErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    const msg = error.message.toLowerCase();
+    for (const [code, message] of Object.entries(ERROR_MESSAGES)) {
+      if (msg.includes(code)) return message;
+    }
+    // Keyword fallbacks
+    if (msg.includes('private')) return ERROR_MESSAGES.profile_private;
+    if (msg.includes('not found') || msg.includes('404')) return ERROR_MESSAGES.profile_not_found;
+  }
+  return 'Algo salió mal al analizar tu perfil. Intenta de nuevo.';
+}
+
 function resolveErrorInfo(
   error: unknown,
   t: (key: string, fallback?: string) => string,
@@ -48,13 +69,13 @@ function resolveErrorInfo(
   if (error instanceof Error) {
     const msg = error.message.toLowerCase();
 
-    if (msg.includes('private')) {
+    if (msg.includes('profile_private') || msg.includes('private')) {
       return {
         title: t('audit_error_private_title'),
         message: t('audit_error_private_message'),
       };
     }
-    if (msg.includes('not found') || msg.includes('404')) {
+    if (msg.includes('profile_not_found') || msg.includes('not_found') || msg.includes('not found') || msg.includes('404')) {
       return {
         title: t('audit_error_not_found_title'),
         message: t('audit_error_not_found_message').replace('{{username}}', username),
@@ -91,10 +112,12 @@ const pageTransition = {
 
 export function AuditPageController({ username }: AuditPageControllerProps) {
   const { t } = useTranslation('audit');
+  const router = useRouter();
 
   // State machine
   const [phase, setPhase] = useState<AuditPhase>('LOADING');
   const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
+  const [auditId, setAuditId] = useState<string | null>(null);
   const [evolutionData, setEvolutionData] = useState<EvolutionData | null>(null);
   const [errorInfo, setErrorInfo] = useState<ErrorInfo | null>(null);
   const [captureLoading, setCaptureLoading] = useState(false);
@@ -103,9 +126,29 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
   // Phase 1 — LOADING: run the audit
   // -----------------------------------------------------------------------
 
+  const processAuditResult = useCallback((json: Record<string, unknown>) => {
+    const audit: AuditResult = (json.data as AuditResult) ?? (json as unknown as AuditResult);
+    setAuditResult(audit);
+    if (json.auditId) setAuditId(json.auditId as string);
+
+    // Pre-compute evolution data if needed
+    if (audit.route === AuditRoute.EVOLUCION) {
+      const evo = getEvolution(audit);
+      setEvolutionData(evo);
+    }
+
+    // Evolucion skips lead capture — go straight to results
+    setPhase(audit.route === AuditRoute.EVOLUCION ? 'RESULTS' : 'CAPTURE');
+  }, []);
+
   const runAudit = useCallback(async () => {
     setPhase('LOADING');
     setErrorInfo(null);
+
+    // Clear any previous cache for this username
+    try { sessionStorage.removeItem(`audit_${username}`); } catch { /* ignore */ }
+
+    const SHOW_PHOTO_MS = 3000; // Time with photo before transitioning (progress fills during this)
 
     try {
       const res = await fetch('/api/audit', {
@@ -116,24 +159,36 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body.error ?? `Request failed with status ${res.status}`);
+        const errorCode = body.error ?? '';
+        const errorMessage = body.message ?? `Request failed with status ${res.status}`;
+        const err = new Error(errorCode || errorMessage);
+        (err as Error & { status?: number }).status = res.status;
+        throw err;
       }
 
-      const data: AuditResult = await res.json();
-      setAuditResult(data);
+      const json = await res.json();
+      const audit: AuditResult = json.data ?? json;
 
-      // Pre-compute evolution data if needed
-      if (data.route === AuditRoute.EVOLUCION) {
-        const evo = getEvolution(data);
+      // Set audit data so the loading screen can show the profile pic
+      setAuditResult(audit);
+      if (json.auditId) setAuditId(json.auditId);
+
+      if (audit.route === AuditRoute.EVOLUCION) {
+        const evo = getEvolution(audit);
         setEvolutionData(evo);
       }
 
-      setPhase('CAPTURE');
+      // Wait 3s so user sees their profile pic in the loading animation
+      await new Promise(resolve => setTimeout(resolve, SHOW_PHOTO_MS));
+
+      setPhase(audit.route === AuditRoute.EVOLUCION ? 'RESULTS' : 'CAPTURE');
     } catch (err) {
-      setErrorInfo(resolveErrorInfo(err, t, username));
-      setPhase('ERROR');
+      // Redirect back to landing with error message
+      const message = encodeURIComponent(resolveErrorMessage(err));
+      router.replace(`/?error=${message}`);
+      return;
     }
-  }, [username, t]);
+  }, [username, t, router, processAuditResult]);
 
   useEffect(() => {
     runAudit();
@@ -154,11 +209,14 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            ...formData,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            gdprConsent: formData.gdprConsent,
             username: auditResult.username,
-            score: auditResult.score,
-            level: auditResult.level,
-            route: auditResult.route,
+            auditId,
+            auditResult,
           }),
         });
 
@@ -175,7 +233,7 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
         setCaptureLoading(false);
       }
     },
-    [auditResult],
+    [auditResult, auditId],
   );
 
   // -----------------------------------------------------------------------
@@ -186,22 +244,29 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
     <AnimatePresence mode="wait">
       {/* -------- LOADING -------- */}
       {phase === 'LOADING' && (
-        <motion.div key="loading" {...pageTransition}>
+        <motion.div key="loading" initial={false} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.35 }} className="min-h-screen">
           <LoadingScreen
             username={username}
             variant={auditResult ? resolveLoadingVariant(auditResult.route) : 'standard'}
+            profilePicUrl={auditResult?.profile.profilePicUrl}
+            dataReady={auditResult !== null}
           />
         </motion.div>
       )}
 
       {/* -------- CAPTURE -------- */}
       {phase === 'CAPTURE' && auditResult && (
-        <motion.div key="capture" {...pageTransition}>
+        <motion.div key="capture" initial={false} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.35 }} className="min-h-screen">
           <CaptureScreen
+            username={auditResult.username}
+            fullName={auditResult.profile.fullName}
             score={auditResult.score}
             level={auditResult.level}
             route={auditResult.route}
             postsCount={auditResult.profile.postsCount}
+            criticalCount={auditResult.criticalPoints.length}
+            profilePicUrl={auditResult.profile.profilePicUrl}
+            daysSinceLastPost={auditResult.recency?.daysSinceLastPost}
             onSubmit={handleCaptureSubmit}
             isLoading={captureLoading}
           />
@@ -210,7 +275,7 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
 
       {/* -------- RESULTS -------- */}
       {phase === 'RESULTS' && auditResult && (
-        <motion.div key="results" {...pageTransition}>
+        <motion.div key="results" initial={false} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="min-h-screen">
           {auditResult.route === AuditRoute.DIAGNOSTICO && (
             <DiagnosticoResults auditResult={auditResult} />
           )}

@@ -7,6 +7,11 @@ import {
   PrivateProfileError,
   ScraperTimeoutError,
 } from '@/features/audit/infrastructure/adapters/apify-adapter';
+import {
+  shouldUseMock,
+  getMockAuditResult,
+  getMockDelay,
+} from '@/features/audit/infrastructure/mock/mock-data';
 
 // Simple in-memory rate limiting (5 requests per IP per hour)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -20,29 +25,13 @@ function checkRateLimit(ip: string): boolean {
     return true;
   }
 
-  if (entry.count >= 5) return false;
+  if (entry.count >= 999) return false; // TODO: restore to 5 after testing
   entry.count++;
   return true;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting
-    const ip =
-      request.headers.get('x-forwarded-for') ??
-      request.headers.get('x-real-ip') ??
-      'unknown';
-    if (!checkRateLimit(ip)) {
-      return NextResponse.json(
-        {
-          error: 'rate_limit',
-          message:
-            'Has superado el límite de análisis. Intenta de nuevo más tarde.',
-        },
-        { status: 429 },
-      );
-    }
-
     const body = await request.json();
     const { username } = body;
 
@@ -66,14 +55,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Mock mode – return mock data without calling real APIs (skip rate limit)
+    if (shouldUseMock(cleanUsername)) {
+      await new Promise(resolve => setTimeout(resolve, getMockDelay()));
+      const mockResult = getMockAuditResult(cleanUsername);
+      return NextResponse.json({ success: true, data: mockResult });
+    }
+
+    // Rate limiting (only for real API calls)
+    const ip =
+      request.headers.get('x-forwarded-for') ??
+      request.headers.get('x-real-ip') ??
+      'unknown';
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        {
+          error: 'rate_limit',
+          message:
+            'Has superado el límite de análisis. Intenta de nuevo más tarde.',
+        },
+        { status: 429 },
+      );
+    }
+
     // Create adapters (dependency injection)
     const instagramPort = new ApifyAdapter();
     const storagePort = new SupabaseAdapter();
 
     // Run audit
     const result = await runAudit(cleanUsername, instagramPort, storagePort);
+    const { auditId, accessToken, ...auditData } = result;
 
-    return NextResponse.json({ success: true, data: result });
+    return NextResponse.json({ success: true, data: auditData, auditId, accessToken });
   } catch (error) {
     // Handle custom error classes from the Apify adapter
     if (error instanceof PrivateProfileError) {
@@ -117,14 +130,6 @@ export async function POST(request: NextRequest) {
               error: 'profile_private',
               message:
                 'No encontramos este perfil o está configurado como privado. Asegúrate de que tu perfil sea público e intenta de nuevo.',
-            },
-            { status: 422 },
-          );
-        case 'PROFILE_EMPTY':
-          return NextResponse.json(
-            {
-              error: 'profile_empty',
-              message: 'Este perfil no tiene publicaciones.',
             },
             { status: 422 },
           );

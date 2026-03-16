@@ -51,6 +51,7 @@ const config: Config = {
         linda: "#FEF3C7",
       },
       fontSize: {
+        hero: ["clamp(40px, 6vw, 56px)", { lineHeight: "1.1", fontWeight: "700" }],
         h1: ["32px", { lineHeight: "1.2", fontWeight: "700" }],
         h2: ["24px", { lineHeight: "1.3", fontWeight: "600" }],
         h3: ["20px", { lineHeight: "1.4", fontWeight: "600" }],

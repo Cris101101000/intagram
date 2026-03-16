@@ -44,6 +44,11 @@ export class ApifyAdapter implements InstagramPort {
 
       const raw = data[0];
 
+      // Apify returns { error: "not_found" } for non-existent profiles
+      if (raw.error === 'not_found' || raw.error === 'blocked' || raw.error === 'login_required') {
+        throw new ProfileNotFoundError(username);
+      }
+
       if (raw.private === true || raw.isPrivate === true) {
         throw new PrivateProfileError(username);
       }
@@ -88,21 +93,28 @@ export class ApifyAdapter implements InstagramPort {
     const latestPosts = raw.latestPosts as Array<Record<string, unknown>> | undefined;
     if (!Array.isArray(latestPosts)) return [];
 
-    return latestPosts.slice(0, 20).map((post) => ({
-      id: (post.id as string) ?? (post.shortCode as string) ?? '',
-      type: this.resolvePostType(post),
-      likesCount: Number(post.likesCount ?? 0),
-      commentsCount: Number(post.commentsCount ?? 0),
-      videoViewCount: post.videoViewCount != null ? Number(post.videoViewCount) : undefined,
-      timestamp: (post.timestamp as string) ?? new Date().toISOString(),
-    }));
+    return latestPosts
+      .filter((post) => !post.isPinned)
+      .slice(0, 20)
+      .map((post) => ({
+        id: (post.id as string) ?? (post.shortCode as string) ?? '',
+        type: this.resolvePostType(post),
+        likesCount: Number(post.likesCount ?? 0),
+        commentsCount: Number(post.commentsCount ?? 0),
+        videoViewCount: post.videoViewCount != null ? Number(post.videoViewCount) : undefined,
+        timestamp: (post.timestamp as string) ?? new Date().toISOString(),
+      }))
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }
 
   private resolvePostType(post: Record<string, unknown>): PostData['type'] {
     const type = (post.type as string) ?? '';
-    if (type === 'Video' || type === 'Clips') return type;
+    const productType = (post.productType as string) ?? '';
+
+    // Reels: productType "clips" or type "Clips"
+    if (productType === 'clips' || type === 'Clips') return 'Clips';
     if (type === 'Sidecar') return 'Sidecar';
-    if (post.isVideo === true || post.videoUrl) return 'Video';
+    if (type === 'Video' || post.isVideo === true || post.videoUrl) return 'Video';
     return 'Image';
   }
 }

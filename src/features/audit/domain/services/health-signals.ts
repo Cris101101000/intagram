@@ -92,9 +92,9 @@ export function calculateRecency(
   );
 
   let label: RecencyLabel;
-  if (daysSinceLastPost < 14) {
+  if (daysSinceLastPost < 8) {
     label = 'Activo';
-  } else if (daysSinceLastPost <= 45) {
+  } else if (daysSinceLastPost <= 15) {
     label = 'Irregular';
   } else {
     label = 'Inactivo';

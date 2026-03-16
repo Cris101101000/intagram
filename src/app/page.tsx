@@ -1,28 +1,52 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { LandingHero } from '@/features/audit/ui/input/components';
-import { UsernameInput } from '@/features/audit/ui/input/components';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useCallback, useEffect } from 'react';
+import {
+  HeroSection,
+  SocialProofMarquee,
+  FeaturesSection,
+  ScorePreviewSection,
+  TestimonialsSection,
+  CtaSection,
+  Footer,
+} from '@/features/audit/ui/landing/components';
 
 export default function Home() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
-  const handleSubmit = (username: string) => {
-    setIsLoading(true);
-    router.push(`/audit/${username}`);
-  };
+  // Read error from query params (redirected back from audit page)
+  useEffect(() => {
+    const err = searchParams.get('error');
+    if (err) {
+      setApiError(err);
+      // Clean URL without reloading
+      window.history.replaceState({}, '', '/');
+    }
+  }, [searchParams]);
+
+  const handleSubmit = useCallback(
+    (username: string) => {
+      setIsLoading(true);
+      setApiError('');
+      router.push(`/audit/${username}`);
+    },
+    [router],
+  );
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-soft-aqua">
-      {/* BeweOS Logo */}
-      <div className="absolute top-6 left-6">
-        <span className="font-inter font-bold text-h3 text-base-oscura">BeweOS</span>
-      </div>
+    <main className="min-h-screen" style={{ background: 'linear-gradient(135deg, #EEF6FF 0%, #F0FDF9 40%, #FEFCE8 100%)', backgroundAttachment: 'fixed' }}>
+      <HeroSection onSubmit={handleSubmit} isLoading={isLoading} apiError={apiError} />
 
-      <LandingHero />
-      <UsernameInput onSubmit={handleSubmit} isLoading={isLoading} />
+      <SocialProofMarquee />
+      <FeaturesSection />
+      <ScorePreviewSection />
+      <TestimonialsSection />
+      <CtaSection onSubmit={handleSubmit} isLoading={isLoading} />
+      <Footer />
     </main>
   );
 }

@@ -12,29 +12,32 @@ export async function runAudit(
   username: string,
   instagramPort: InstagramPort,
   storagePort: StoragePort
-): Promise<AuditResult> {
+): Promise<AuditResult & { auditId: string; accessToken: string }> {
   // 1. Fetch profile and posts
   const { profile, posts } = await instagramPort.fetchProfile(username);
 
   // 2. Validate profile
   if (profile.isPrivate) throw new Error('PROFILE_PRIVATE');
-  if (profile.postsCount === 0 && posts.length === 0) throw new Error('PROFILE_EMPTY');
 
-  // 3. Resolve sector
-  const sector = resolveSector(profile.businessCategoryName);
+  // 3. Resolve sector (with keyword fallback for generic categories)
+  const sector = resolveSector(profile.businessCategoryName, {
+    username: profile.username,
+    fullName: profile.fullName,
+    biography: profile.biography,
+  });
 
-  // 4. Check for previous audit
+  // 4. Calculate metrics and health signals
+  const metrics = calculateMetrics(posts, profile.followersCount);
+  const healthSignals = calculateAllHealthSignals(posts, profile.followersCount);
+
+  // 5. Check for previous audit
   const previousAudit = await storagePort.getLastAudit(username);
 
-  // 5. Determine route
-  const route = resolveRoute(posts.length, previousAudit);
-
-  // 6. Calculate metrics (only if enough posts)
-  const metrics = calculateMetrics(posts, profile.followersCount);
-  const score = posts.length >= 10 ? calculateFinalScore(metrics, sector) : 0;
+  // 6. Determine route (inactive profiles → arranque)
+  const route = resolveRoute(posts.length, previousAudit, healthSignals.recency.daysSinceLastPost);
+  const score = posts.length >= 10 ? calculateFinalScore(metrics, sector, healthSignals) : 0;
   const levelConfig = getScoreLevel(score);
   const normalizedMetrics = calculateNormalizedMetrics(metrics, SECTOR_BENCHMARKS[sector]);
-  const healthSignals = calculateAllHealthSignals(posts, profile.followersCount);
 
   // 7. Generate critical points (top 3 weakest)
   const criticalPoints = generateCriticalPoints(metrics, healthSignals, normalizedMetrics);
@@ -42,9 +45,9 @@ export async function runAudit(
   // 8. Calculate analysis window
   let analysisWindow = 0;
   if (posts.length >= 2) {
-    const newest = new Date(posts[0].timestamp);
-    const oldest = new Date(posts[posts.length - 1].timestamp);
-    analysisWindow = Math.ceil((newest.getTime() - oldest.getTime()) / (1000 * 60 * 60 * 24));
+    const first = new Date(posts[0].timestamp);
+    const last = new Date(posts[posts.length - 1].timestamp);
+    analysisWindow = Math.ceil(Math.abs(first.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
   }
 
   // 9. Build result
@@ -59,14 +62,17 @@ export async function runAudit(
     healthSignals,
     criticalPoints,
     sector,
-    postsAnalyzed: Math.min(posts.length, 10),
+    postsAnalyzed: posts.length,
     analysisWindow,
     previousAudit: previousAudit ?? undefined,
     createdAt: new Date().toISOString(),
   };
 
-  // 10. Save to storage
-  await storagePort.saveAudit(result);
+  // 10. Save IG profile snapshot
+  const profileId = await storagePort.saveProfile(profile);
 
-  return result;
+  // 11. Save audit to storage
+  const { id: auditId, accessToken } = await storagePort.saveAudit(result, undefined, profileId);
+
+  return { ...result, auditId, accessToken };
 }
