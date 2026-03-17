@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Icon } from '@iconify/react';
-import { proxyImageUrl } from '@/features/audit/ui/_shared/utils/proxy-image';
 import { AuditRoute, ScoreLevel } from '@/features/audit/domain/interfaces/audit';
+import { ShareImage, type ShareImageProps } from './ShareImage';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -16,6 +16,7 @@ interface ShareSlideProps {
   level: ScoreLevel;
   sector: string;
   route: AuditRoute;
+  percentile: number;
   /** CSS selector for the element that triggers the slide */
   triggerSelector: string;
 }
@@ -23,13 +24,6 @@ interface ShareSlideProps {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-const LEVEL_COLORS: Record<ScoreLevel, string> = {
-  [ScoreLevel.CRITICO]: '#F87171',
-  [ScoreLevel.REGULAR]: '#FBBF24',
-  [ScoreLevel.BUENO]: '#34D399',
-  [ScoreLevel.EXCELENTE]: '#60A5FA',
-};
 
 function getShareUrl(username: string): string {
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
@@ -41,6 +35,13 @@ function truncateUrl(url: string, max: number): string {
   return url.slice(0, max) + '...';
 }
 
+function computePercentile(score: number): number {
+  if (score <= 40) return Math.round(80 - (score / 40) * 20);
+  if (score <= 60) return Math.round(60 - ((score - 40) / 20) * 20);
+  if (score <= 80) return Math.round(40 - ((score - 60) / 20) * 20);
+  return Math.round(20 - ((score - 80) / 20) * 15);
+}
+
 // ---------------------------------------------------------------------------
 // Social config
 // ---------------------------------------------------------------------------
@@ -48,8 +49,6 @@ function truncateUrl(url: string, max: number): string {
 const SOCIALS = [
   { name: 'WhatsApp', icon: 'mdi:whatsapp', color: '#25D366', bg: '#25D36610' },
   { name: 'Instagram', icon: 'mdi:instagram', color: '#E040FB', bg: '#E040FB10' },
-  { name: 'X', icon: 'ri:twitter-x-fill', color: '#0A2540', bg: '#0A254008' },
-  { name: 'LinkedIn', icon: 'mdi:linkedin', color: '#0A66C2', bg: '#0A66C210' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -63,12 +62,14 @@ export function ShareSlide({
   level,
   sector,
   route,
+  percentile,
   triggerSelector,
 }: ShareSlideProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [copied, setCopied] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const [generating, setGenerating] = useState(false);
+  const shareImageRef = useRef<HTMLDivElement>(null);
 
   const isArranque = route === AuditRoute.ARRANQUE;
   const accentColor = isArranque ? '#34D399' : '#60A5FA';
@@ -151,27 +152,59 @@ export function ShareSlide({
   }, [shareUrl]);
 
   // -----------------------------------------------------------------------
-  // Social share URLs
+  // Generate & share/download image
   // -----------------------------------------------------------------------
 
-  const shareText = isArranque
-    ? 'Descubre cómo hacer crecer tu Instagram con IA'
-    : `Acabo de descubrir mi Instagram Score: ${score}/100. ¿Quieres conocer el tuyo?`;
+  const handleShareImage = useCallback(async (target: 'download' | 'whatsapp' | 'instagram') => {
+    const el = shareImageRef.current;
+    if (!el || generating) return;
 
-  function getSocialUrl(name: string): string {
-    switch (name) {
-      case 'WhatsApp':
-        return `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`;
-      case 'Instagram':
-        return shareUrl;
-      case 'X':
-        return `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-      case 'LinkedIn':
-        return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
-      default:
-        return shareUrl;
+    setGenerating(true);
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(el, {
+        width: 1080,
+        height: 1920,
+        scale: 1,
+        useCORS: true,
+        backgroundColor: null,
+      });
+
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((b) => { if (b) resolve(b); }, 'image/png', 1.0);
+      });
+
+      const fileName = `igaudit-${username}-${level.toLowerCase()}.png`;
+      const file = new File([blob], fileName, { type: 'image/png' });
+
+      // Try Web Share API (mobile)
+      if (target !== 'download' && navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Mi resultado IG Audit',
+        });
+        return;
+      }
+
+      // Fallback: download
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      // If WhatsApp, also open share link after download
+      if (target === 'whatsapp') {
+        const shareText = `Acabo de descubrir mi Instagram Score: ${score}/100. ¿Quieres conocer el tuyo?`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`, '_blank');
+      }
+    } catch (err) {
+      console.error('Error generating share image:', err);
+    } finally {
+      setGenerating(false);
     }
-  }
+  }, [generating, username, level, score, shareUrl]);
 
   // -----------------------------------------------------------------------
   // Render
@@ -181,6 +214,21 @@ export function ShareSlide({
 
   return (
     <>
+      {/* Off-screen share image for html2canvas */}
+      <div
+        aria-hidden="true"
+        style={{ position: 'absolute', left: -9999, top: 0, overflow: 'hidden', pointerEvents: 'none' }}
+      >
+        <ShareImage
+          ref={shareImageRef}
+          username={username}
+          score={score}
+          level={level}
+          sector={sector}
+          percentile={percentile}
+        />
+      </div>
+
       {/* Overlay */}
       <div
         className={`fixed inset-0 z-[9998] transition-all duration-300 ${isOpen ? 'bg-black/30 backdrop-blur-[2px]' : 'pointer-events-none opacity-0'}`}
@@ -188,177 +236,155 @@ export function ShareSlide({
         aria-hidden="true"
       />
 
-      {/* Panel */}
+      {/* Modal */}
       <div
-        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label="Compartir auditoría"
-        className={`fixed top-0 right-0 z-[9999] flex h-full w-full max-w-[420px] flex-col bg-white shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
       >
-        {/* Close button */}
-        <button
-          onClick={() => setIsOpen(false)}
-          className="absolute top-4 right-4 z-10 flex items-center justify-center rounded-full bg-gray-100 transition-all hover:bg-gray-200"
-          style={{ width: 36, height: 36 }}
-          aria-label="Cerrar"
-        >
-          <Icon icon="solar:close-circle-outline" width={20} height={20} color="#64748B" />
-        </button>
-
-        {/* Scrollable content */}
-        <div className="flex flex-1 flex-col overflow-y-auto" style={{ padding: '56px 24px 24px' }}>
-
-          {/* ── Card 1: Profile ── */}
-          <div
-            className="rounded-2xl border border-gray-100"
-            style={{ padding: 20, marginBottom: 16, background: 'linear-gradient(160deg, #F8FAFC, #F1F5F9)' }}
+        <div className="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
+          {/* Close button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-4 right-4 z-10 flex items-center justify-center rounded-full bg-gray-100 transition-all hover:bg-gray-200"
+            style={{ width: 36, height: 36 }}
+            aria-label="Cerrar"
           >
-            <div className="flex items-center gap-4">
-              {/* Avatar */}
-              <div
-                className="shrink-0 overflow-hidden rounded-full"
-                style={{ width: 48, height: 48, border: `2px solid ${accentColor}` }}
-              >
-                {profilePicUrl ? (
-                  <img
-                    src={proxyImageUrl(profilePicUrl) ?? ''}
-                    alt={username}
-                    width={48}
-                    height={48}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div
-                    className="flex h-full w-full items-center justify-center bg-gray-200 font-inter"
-                    style={{ fontSize: 16, fontWeight: 700, color: '#94A3B8' }}
-                  >
-                    {username[0]?.toUpperCase()}
-                  </div>
-                )}
-              </div>
+            <Icon icon="solar:close-circle-outline" width={20} height={20} color="#64748B" />
+          </button>
 
-              {/* Username + meta */}
-              <div className="min-w-0 flex-1">
-                <p className="font-inter truncate" style={{ fontSize: 16, fontWeight: 700, color: '#0A2540' }}>
-                  @{username}
-                </p>
-                <p className="font-inter text-gray-400 truncate" style={{ fontSize: 14, fontWeight: 400, marginTop: 2 }}>
-                  {sector}{!isArranque && ` · Score ${score}/100`}
-                </p>
-              </div>
+          {/* Content */}
+          <div className="flex flex-col" style={{ padding: '48px 24px 24px' }}>
 
-              {/* Large score number */}
-              {!isArranque && (
-                <span
-                  className="shrink-0 font-inter"
-                  style={{ fontSize: 32, fontWeight: 800, color: LEVEL_COLORS[level], lineHeight: 1 }}
-                >
-                  {score}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* ── Section: Tu enlace único ── */}
-          <div style={{ marginBottom: 16 }}>
-            <p
-              className="font-inter"
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                color: '#60A5FA',
-                marginBottom: 8,
-              }}
-            >
-              Tu enlace único
-            </p>
-            <p className="font-inter text-gray-500" style={{ fontSize: 14, lineHeight: 1.5, marginBottom: 12 }}>
-              Guarda este enlace para volver a ver tus resultados cuando quieras.
-            </p>
-            <div
-              className="flex items-center rounded-2xl border border-gray-100 bg-gray-50"
-              style={{ padding: '12px 12px 12px 16px' }}
-            >
-              <span
-                className="flex-1 truncate font-inter text-gray-500"
-                style={{ fontSize: 14, fontWeight: 400 }}
-              >
-                {truncateUrl(shareUrl.replace(/^https?:\/\//, ''), 32)}
-              </span>
-              <button
-                onClick={handleCopy}
-                className="shrink-0 flex items-center justify-center rounded-xl font-inter text-white transition-all hover:opacity-90"
+            {/* ── Image Preview ── */}
+            <div style={{ marginBottom: 20 }}>
+              <p
+                className="font-inter"
                 style={{
-                  fontSize: 14,
-                  fontWeight: 600,
-                  padding: '8px 20px',
-                  background: '#0A2540',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  color: '#60A5FA',
+                  marginBottom: 10,
                 }}
               >
-                {copied ? 'Copiado!' : 'Copiar'}
-              </button>
+                Tu imagen para compartir
+              </p>
+              <div
+                className="rounded-2xl overflow-hidden border border-gray-100"
+                style={{ aspectRatio: '9/16', background: '#F8FAFC' }}
+              >
+                <div style={{ transform: 'scale(0.333)', transformOrigin: 'top left', width: 1080, height: 1920 }}>
+                  <ShareImage
+                    username={username}
+                    score={score}
+                    level={level}
+                    sector={sector}
+                    percentile={percentile}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* ── Section: Compartir en redes ── */}
-          <div>
-            <p
-              className="font-inter"
+            {/* ── Download button ── */}
+            <button
+              onClick={() => handleShareImage('download')}
+              disabled={generating}
+              className="flex items-center justify-center gap-2 rounded-2xl font-inter text-white transition-all hover:opacity-90 disabled:opacity-60"
               style={{
-                fontSize: 11,
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                color: '#60A5FA',
-                marginBottom: 8,
+                padding: '14px 24px',
+                fontSize: 15,
+                fontWeight: 600,
+                background: 'linear-gradient(135deg, #60A5FA, #3B82F6)',
+                marginBottom: 16,
               }}
             >
-              Compartir en redes
-            </p>
-            <p className="font-inter text-gray-500" style={{ fontSize: 14, lineHeight: 1.5, marginBottom: 16 }}>
-              Compártelo con otros negocios para que también descubran cómo hacer crecer su Instagram.
-            </p>
+              <Icon icon="solar:download-minimalistic-outline" width={18} height={18} />
+              {generating ? 'Generando...' : 'Descargar imagen'}
+            </button>
 
-            {/* 2×2 grid */}
-            <div className="grid grid-cols-2 gap-3">
-              {SOCIALS.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.name === 'Instagram' ? undefined : getSocialUrl(social.name)}
-                  target={social.name === 'Instagram' ? undefined : '_blank'}
-                  rel={social.name === 'Instagram' ? undefined : 'noopener noreferrer'}
-                  onClick={
-                    social.name === 'Instagram'
-                      ? (e) => { e.preventDefault(); handleCopy(); }
-                      : undefined
-                  }
-                  className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white font-inter transition-all hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
-                  style={{ padding: '14px 16px' }}
+            {/* ── Share buttons ── */}
+            <div className="grid grid-cols-2 gap-3" style={{ marginBottom: 16 }}>
+              <button
+                onClick={() => handleShareImage('whatsapp')}
+                disabled={generating}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-gray-100 bg-white font-inter transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
+                style={{ padding: '12px 16px', fontSize: 14, fontWeight: 500, color: '#0A2540' }}
+              >
+                <div
+                  className="flex shrink-0 items-center justify-center rounded-xl"
+                  style={{ width: 32, height: 32, background: '#25D36610' }}
                 >
-                  <div
-                    className="flex shrink-0 items-center justify-center rounded-xl"
-                    style={{ width: 40, height: 40, background: social.bg }}
-                  >
-                    <Icon icon={social.icon} width={20} height={20} color={social.color} />
-                  </div>
-                  <span style={{ fontSize: 14, fontWeight: 500, color: '#0A2540' }}>
-                    {social.name}
-                  </span>
-                </a>
-              ))}
+                  <Icon icon="mdi:whatsapp" width={18} height={18} color="#25D366" />
+                </div>
+                WhatsApp
+              </button>
+              <button
+                onClick={() => handleShareImage('instagram')}
+                disabled={generating}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-gray-100 bg-white font-inter transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
+                style={{ padding: '12px 16px', fontSize: 14, fontWeight: 500, color: '#0A2540' }}
+              >
+                <div
+                  className="flex shrink-0 items-center justify-center rounded-xl"
+                  style={{ width: 32, height: 32, background: '#E040FB10' }}
+                >
+                  <Icon icon="mdi:instagram" width={18} height={18} color="#E040FB" />
+                </div>
+                Instagram
+              </button>
+            </div>
+
+            {/* ── Link section ── */}
+            <div style={{ marginBottom: 8 }}>
+              <p
+                className="font-inter"
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  color: '#60A5FA',
+                  marginBottom: 8,
+                }}
+              >
+                Tu enlace único
+              </p>
+              <div
+                className="flex items-center rounded-2xl border border-gray-100 bg-gray-50"
+                style={{ padding: '10px 10px 10px 16px' }}
+              >
+                <span
+                  className="flex-1 truncate font-inter text-gray-500"
+                  style={{ fontSize: 13, fontWeight: 400 }}
+                >
+                  {truncateUrl(shareUrl.replace(/^https?:\/\//, ''), 32)}
+                </span>
+                <button
+                  onClick={handleCopy}
+                  className="shrink-0 flex items-center justify-center rounded-xl font-inter text-white transition-all hover:opacity-90"
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    padding: '8px 16px',
+                    background: '#0A2540',
+                  }}
+                >
+                  {copied ? 'Copiado!' : 'Copiar'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Bottom branding */}
-        <div
-          className="shrink-0 flex items-center justify-center border-t border-gray-100 font-inter text-gray-300"
-          style={{ padding: 16, fontSize: 11 }}
-        >
-          Powered by Linda AI
+          {/* Bottom branding */}
+          <div
+            className="flex items-center justify-center border-t border-gray-100 font-inter text-gray-300"
+            style={{ padding: 14, fontSize: 11 }}
+          >
+            Powered by Linda AI
+          </div>
         </div>
       </div>
 

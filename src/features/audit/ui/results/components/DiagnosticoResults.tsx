@@ -174,6 +174,7 @@ export function DiagnosticoResults({ auditResult }: DiagnosticoResultsProps) {
         level={level}
         sector={sector}
         route={auditResult.route}
+        percentile={percentile}
         triggerSelector="[data-share-trigger]"
       />
     </AuroraBackground>

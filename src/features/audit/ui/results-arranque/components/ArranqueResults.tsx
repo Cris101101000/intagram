@@ -12,6 +12,13 @@ import { CTAPhoneNotifs } from '@/features/audit/ui/_shared/components/CTAPhoneN
 import { ShareSlide } from '@/features/audit/ui/_shared/components/ShareSlide';
 import { BeweFooter } from '@/features/audit/ui/_shared/components/BeweFooter';
 
+function computePercentile(score: number): number {
+  if (score <= 40) return Math.round(80 - (score / 40) * 20);
+  if (score <= 60) return Math.round(60 - ((score - 40) / 20) * 20);
+  if (score <= 80) return Math.round(40 - ((score - 60) / 20) * 20);
+  return Math.round(20 - ((score - 80) / 20) * 15);
+}
+
 interface ArranqueResultsProps {
   auditResult: AuditResult;
 }
@@ -143,6 +150,7 @@ export function ArranqueResults({ auditResult }: ArranqueResultsProps) {
         level={auditResult.level}
         sector={auditResult.sector}
         route={auditResult.route}
+        percentile={computePercentile(auditResult.score)}
         triggerSelector="[data-share-trigger]"
       />
     </AuroraBackground>
