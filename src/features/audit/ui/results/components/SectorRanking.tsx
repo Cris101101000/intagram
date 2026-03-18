@@ -38,7 +38,9 @@ export function SectorRanking({ score, percentile, sector, level }: SectorRankin
     return () => obs.disconnect();
   }, [score, sectorAvg]);
 
-  const pct = level === ScoreLevel.BUENO ? percentile : 100 - percentile;
+  const pct = (level === ScoreLevel.BUENO || level === ScoreLevel.EXCELENTE)
+    ? 100 - percentile
+    : percentile;
   const consequenceText = `El ${pct}% ${cfg.rankingConsequence.replace('{{sector}}', sector)}`;
   const consequenceTextShort = `El ${pct}% ${cfg.rankingConsequenceShort.replace('{{sector}}', sector)}`;
 

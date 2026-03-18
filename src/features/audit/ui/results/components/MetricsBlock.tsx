@@ -327,8 +327,8 @@ export function MetricsBlock({ metrics, normalizedMetrics, healthSignals, sector
 
       {/* Metric story cards */}
       <div className="flex flex-col gap-5">
-        {defs.map((m) => (
-          <MetricStoryCard key={m.key} metric={m} />
+        {defs.map((m, i) => (
+          <MetricStoryCard key={m.key} metric={m} index={i} />
         ))}
       </div>
     </div>
@@ -339,9 +339,10 @@ export function MetricsBlock({ metrics, normalizedMetrics, healthSignals, sector
 // Metric story card
 // ---------------------------------------------------------------------------
 
-function MetricStoryCard({ metric }: { metric: MetricStoryDef }) {
+function MetricStoryCard({ metric, index }: { metric: MetricStoryDef; index: number }) {
   const barRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(index === 0);
 
   useEffect(() => {
     const el = barRef.current;
@@ -359,20 +360,25 @@ function MetricStoryCard({ metric }: { metric: MetricStoryDef }) {
 
   return (
     <div
-      className="reveal rounded-[20px] border border-gray-200 bg-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
-      style={{ padding: 24 }}
+      className="reveal rounded-[20px] border border-gray-200 bg-white transition-all hover:shadow-lg"
+      style={{ padding: 'clamp(16px, 4vw, 24px)' }}
     >
-      {/* Header: icon + title + badge + description */}
-      <div className="flex items-center gap-3 mb-4">
+      {/* Header: icon + title + badge + description + chevron */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(prev => !prev)}
+        className="flex items-start gap-3 w-full text-left"
+        aria-expanded={isOpen}
+      >
         <div
-          className="flex shrink-0 items-center justify-center rounded-full"
+          className="flex shrink-0 items-center justify-center rounded-full mt-0.5"
           style={{ width: 36, height: 36, backgroundColor: `${barColor}10` }}
         >
           <Icon icon={metric.icon} width={18} height={18} color={barColor} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="font-inter text-base-oscura" style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.4 }}>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-inter text-base-oscura" style={{ fontSize: 'clamp(16px, 4vw, 20px)', fontWeight: 600, lineHeight: 1.4 }}>
               {metric.name}
             </span>
             <span
@@ -386,63 +392,80 @@ function MetricStoryCard({ metric }: { metric: MetricStoryDef }) {
             {metric.description}
           </p>
         </div>
-      </div>
-
-      {/* Value + benchmark in one row */}
-      <div className="flex items-end justify-between mb-3">
-        <div className="flex items-baseline gap-2">
-          <span className="font-inter" style={{ fontSize: 'clamp(24px, 6vw, 32px)', fontWeight: 700, color: barColor, letterSpacing: '-0.02em', lineHeight: 1 }}>
-            {metric.displayValue}
-          </span>
-          <span className="font-inter text-gray-400" style={{ fontSize: 13 }}>
-            {metric.profileContext}
-          </span>
-        </div>
-        <span className="font-inter text-gray-500" style={{ fontSize: 14, fontWeight: 600 }}>
-          Sector: {metric.benchmarkValue}
-        </span>
-      </div>
-
-      {/* Progress bar */}
-      <div ref={barRef} className="relative mb-2" style={{ height: 6, backgroundColor: '#F1F5F9', borderRadius: 99 }}>
-        <div
-          className="h-full rounded-full"
-          style={{
-            width: visible ? `${metric.fillPct}%` : '0%',
-            backgroundColor: barColor,
-            borderRadius: 99,
-            transition: 'width 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
+        <Icon
+          icon="solar:alt-arrow-down-outline"
+          width={20} height={20}
+          color="#94A3B8"
+          className="shrink-0 mt-1 transition-transform duration-300"
+          style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
         />
-        <div className="absolute" style={{ left: '100%', top: -3, bottom: -3, width: 2, backgroundColor: '#0A2540', opacity: 0.15, borderRadius: 1 }} />
-      </div>
-      <p className="font-inter text-gray-500" style={{ fontSize: 12, lineHeight: 1.4 }}>
-        {metric.gapText}
-      </p>
+      </button>
 
-      {/* Habits — compact inline chips */}
-      {metric.habits.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-4 pt-4" style={{ borderTop: '1px solid #F1F5F9' }}>
-          {metric.habits.map((h, i) => (
-            <div
-              key={i}
-              className="inline-flex items-center gap-2 rounded-[10px]"
-              style={{ padding: '8px 12px', backgroundColor: '#F8FAFC', border: '1px solid #F1F5F9' }}
-            >
-              <Icon icon={h.icon} width={14} height={14} color={h.iconColor} className="shrink-0" />
-              <span className="font-inter text-base-oscura" style={{ fontSize: 13, fontWeight: 600 }}>
-                {h.name}
-              </span>
-              <span
-                className="rounded-full font-inter shrink-0"
-                style={{ fontSize: 9, fontWeight: 700, padding: '1px 6px', backgroundColor: h.statusBg, color: h.statusColor, textTransform: 'uppercase', letterSpacing: '0.04em' }}
-              >
-                {h.statusLabel}
-              </span>
-            </div>
-          ))}
+      {/* Collapsible content */}
+      <div
+        className="overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          maxHeight: isOpen ? 600 : 0,
+          opacity: isOpen ? 1 : 0,
+          marginTop: isOpen ? 16 : 0,
+        }}
+      >
+        {/* Value + benchmark */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-1 mb-3">
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="font-inter" style={{ fontSize: 'clamp(24px, 6vw, 32px)', fontWeight: 700, color: barColor, letterSpacing: '-0.02em', lineHeight: 1 }}>
+              {metric.displayValue}
+            </span>
+            <span className="font-inter text-gray-400" style={{ fontSize: 13 }}>
+              {metric.profileContext}
+            </span>
+          </div>
+          <span className="font-inter text-gray-500" style={{ fontSize: 14, fontWeight: 600 }}>
+            Sector: {metric.benchmarkValue}
+          </span>
         </div>
-      )}
+
+        {/* Progress bar */}
+        <div ref={barRef} className="relative mb-2" style={{ height: 6, backgroundColor: '#F1F5F9', borderRadius: 99 }}>
+          <div
+            className="h-full rounded-full"
+            style={{
+              width: visible ? `${metric.fillPct}%` : '0%',
+              backgroundColor: barColor,
+              borderRadius: 99,
+              transition: 'width 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          />
+          <div className="absolute" style={{ left: '100%', top: -3, bottom: -3, width: 2, backgroundColor: '#0A2540', opacity: 0.15, borderRadius: 1 }} />
+        </div>
+        <p className="font-inter text-gray-500" style={{ fontSize: 12, lineHeight: 1.4 }}>
+          {metric.gapText}
+        </p>
+
+        {/* Habits — compact inline chips */}
+        {metric.habits.length > 0 && (
+          <div className="flex flex-col gap-2 mt-4 pt-4" style={{ borderTop: '1px solid #F1F5F9' }}>
+            {metric.habits.map((h, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-2 rounded-[10px]"
+                style={{ padding: '8px 12px', backgroundColor: '#F8FAFC', border: '1px solid #F1F5F9' }}
+              >
+                <Icon icon={h.icon} width={14} height={14} color={h.iconColor} className="shrink-0" />
+                <span className="font-inter text-base-oscura flex-1 min-w-0" style={{ fontSize: 13, fontWeight: 600 }}>
+                  {h.name}
+                </span>
+                <span
+                  className="rounded-full font-inter shrink-0"
+                  style={{ fontSize: 9, fontWeight: 700, padding: '1px 6px', backgroundColor: h.statusBg, color: h.statusColor, textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                >
+                  {h.statusLabel}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

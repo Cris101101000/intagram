@@ -29,6 +29,20 @@ export class SupabaseAdapter implements StoragePort {
     ip?: string,
     locale?: string,
   ): Promise<string> {
+    // Resolve country from IP (best-effort, non-blocking)
+    // ip-api.com: free for server-side (HTTP only, no HTTPS on free tier — fine for server)
+    let country: string | null = null;
+    const isPrivateIp = !ip || ip === 'unknown' || ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.') || ip.startsWith('::ffff:127') || ip.startsWith('::ffff:192.168') || ip.startsWith('::ffff:10.');
+    try {
+      // Without IP param, ip-api.com resolves the caller's public IP (the server)
+      const geoUrl = isPrivateIp
+        ? 'http://ip-api.com/json/?fields=status,country'
+        : `http://ip-api.com/json/${ip}?fields=status,country`;
+      const geo = await fetch(geoUrl, { signal: AbortSignal.timeout(3000) });
+      const json = await geo.json();
+      if (json.status === 'success' && json.country) country = json.country;
+    } catch { /* ignore — country is optional */ }
+
     const { data, error } = await this.client
       .from('sessions')
       .insert({
@@ -36,6 +50,7 @@ export class SupabaseAdapter implements StoragePort {
         user_agent: userAgent ?? null,
         ip_address: ip ?? null,
         locale: locale ?? 'es',
+        country: country,
       })
       .select('id')
       .single();

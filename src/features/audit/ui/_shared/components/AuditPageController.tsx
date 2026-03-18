@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from '@heroui/react';
@@ -190,7 +190,10 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
     }
   }, [username, t, router, processAuditResult]);
 
+  const hasStarted = useRef(false);
   useEffect(() => {
+    if (hasStarted.current) return;
+    hasStarted.current = true;
     runAudit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

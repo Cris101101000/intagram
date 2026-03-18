@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     // Rate limiting (only for real API calls)
     const ip =
-      request.headers.get('x-forwarded-for') ??
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
       request.headers.get('x-real-ip') ??
       'unknown';
     if (!checkRateLimit(ip)) {
@@ -82,8 +82,13 @@ export async function POST(request: NextRequest) {
     const instagramPort = new ApifyAdapter();
     const storagePort = new SupabaseAdapter();
 
+    // Create session with user agent and locale
+    const userAgent = request.headers.get('user-agent') ?? undefined;
+    const locale = request.headers.get('accept-language')?.split(',')[0]?.trim() ?? 'es';
+    const sessionId = await storagePort.createSession(cleanUsername, userAgent, ip, locale);
+
     // Run audit
-    const result = await runAudit(cleanUsername, instagramPort, storagePort);
+    const result = await runAudit(cleanUsername, instagramPort, storagePort, sessionId);
     const { auditId, accessToken, ...auditData } = result;
 
     return NextResponse.json({ success: true, data: auditData, auditId, accessToken });

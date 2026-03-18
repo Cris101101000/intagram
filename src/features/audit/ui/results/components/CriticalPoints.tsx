@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { CriticalPoint, ScoreLevel } from '@/features/audit/domain/interfaces/audit';
 
@@ -69,8 +70,11 @@ const NUMBER_STYLE = { bg: 'linear-gradient(135deg, #FCA5A5, #F87171)', color: '
 
 export function CriticalPoints({ criticalPoints, level }: CriticalPointsProps) {
   const topPoints = criticalPoints.slice(0, 3);
+  const [openIndex, setOpenIndex] = useState<number>(0);
 
   if (topPoints.length === 0) return null;
+
+  const toggle = (i: number) => setOpenIndex(prev => prev === i ? -1 : i);
 
   return (
     <div>
@@ -90,21 +94,27 @@ export function CriticalPoints({ criticalPoints, level }: CriticalPointsProps) {
       <div className="flex flex-col gap-5">
         {topPoints.map((point, i) => {
           const isHighSeverity = point.severity === 'high';
+          const isOpen = openIndex === i;
           return (
             <div
               key={i}
-              className="reveal rounded-[20px] border border-gray-200 bg-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              className="reveal rounded-[20px] border border-gray-200 bg-white transition-all hover:shadow-lg"
               style={{ padding: 24 }}
             >
-              {/* Header: number + title + subtitle */}
-              <div className="flex items-center gap-3 mb-4">
+              {/* Header: number + title + subtitle + chevron */}
+              <button
+                type="button"
+                onClick={() => toggle(i)}
+                className="flex items-center gap-3 w-full text-left"
+                aria-expanded={isOpen}
+              >
                 <div
                   className="flex shrink-0 items-center justify-center rounded-full font-inter"
                   style={{ width: 36, height: 36, background: NUMBER_STYLE.bg, color: NUMBER_STYLE.color, fontSize: 14, fontWeight: 800 }}
                 >
                   {i + 1}
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <div className="font-inter text-base-oscura" style={{ fontSize: 17, fontWeight: 700, lineHeight: 1.3 }}>
                     {TYPE_LABELS[point.type] ?? point.type}
                   </div>
@@ -112,31 +122,48 @@ export function CriticalPoints({ criticalPoints, level }: CriticalPointsProps) {
                     {TYPE_SUBTITLES[point.type] ?? ''}
                   </div>
                 </div>
-              </div>
+                <Icon
+                  icon="solar:alt-arrow-down-outline"
+                  width={20} height={20}
+                  color="#94A3B8"
+                  className="shrink-0 transition-transform duration-300"
+                  style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                />
+              </button>
 
-              {/* Explanation */}
-              <p className="font-inter text-gray-500 mb-4" style={{ fontSize: 14, lineHeight: 1.6 }}>
-                {point.message}
-              </p>
-
-              {/* Consequence box — visually prominent */}
+              {/* Collapsible content */}
               <div
-                className="flex items-start gap-2.5 rounded-[12px]"
+                className="overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
                 style={{
-                  padding: '14px 16px',
-                  backgroundColor: isHighSeverity ? 'rgba(248,113,113,0.06)' : 'rgba(251,191,36,0.06)',
-                  borderLeft: `3px solid ${isHighSeverity ? '#F87171' : '#FBBF24'}`,
+                  maxHeight: isOpen ? 500 : 0,
+                  opacity: isOpen ? 1 : 0,
+                  marginTop: isOpen ? 16 : 0,
                 }}
               >
-                <Icon
-                  icon="solar:danger-triangle-outline"
-                  width={16} height={16}
-                  color={isHighSeverity ? '#F87171' : '#D97706'}
-                  className="shrink-0 mt-0.5"
-                />
-                <p className="font-inter text-base-oscura" style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
-                  {TYPE_CONSEQUENCES[point.type] ?? 'Esto está limitando tu crecimiento orgánico.'}
+                {/* Explanation */}
+                <p className="font-inter text-gray-500 mb-4" style={{ fontSize: 14, lineHeight: 1.6 }}>
+                  {point.message}
                 </p>
+
+                {/* Consequence box */}
+                <div
+                  className="flex items-start gap-2.5 rounded-[12px]"
+                  style={{
+                    padding: '14px 16px',
+                    backgroundColor: isHighSeverity ? 'rgba(248,113,113,0.06)' : 'rgba(251,191,36,0.06)',
+                    borderLeft: `3px solid ${isHighSeverity ? '#F87171' : '#FBBF24'}`,
+                  }}
+                >
+                  <Icon
+                    icon="solar:danger-triangle-outline"
+                    width={16} height={16}
+                    color={isHighSeverity ? '#F87171' : '#D97706'}
+                    className="shrink-0 mt-0.5"
+                  />
+                  <p className="font-inter text-base-oscura" style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
+                    {TYPE_CONSEQUENCES[point.type] ?? 'Esto está limitando tu crecimiento orgánico.'}
+                  </p>
+                </div>
               </div>
             </div>
           );

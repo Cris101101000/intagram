@@ -69,9 +69,14 @@ export function ShareSlide({
   const [hasTriggered, setHasTriggered] = useState(false);
   const [copied, setCopied] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const shareImageRef = useRef<HTMLDivElement>(null);
 
   const isArranque = route === AuditRoute.ARRANQUE;
+
+  useEffect(() => {
+    setIsMobile(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
+  }, []);
   const accentColor = isArranque ? '#34D399' : '#60A5FA';
 
   // -----------------------------------------------------------------------
@@ -134,6 +139,14 @@ export function ShareSlide({
 
   const shareUrl = getShareUrl(username);
 
+  const trackEvent = useCallback((eventType: string) => {
+    fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, eventType }),
+    }).catch(() => {});
+  }, [username]);
+
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
@@ -149,7 +162,8 @@ export function ShareSlide({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  }, [shareUrl]);
+    trackEvent('share_copy_url');
+  }, [shareUrl, trackEvent]);
 
   // -----------------------------------------------------------------------
   // Generate & share/download image
@@ -159,20 +173,21 @@ export function ShareSlide({
     const el = shareImageRef.current;
     if (!el || generating) return;
 
+    const eventMap = { download: 'share_download', whatsapp: 'share_whatsapp', instagram: 'share_instagram' } as const;
+    trackEvent(eventMap[target]);
+
     setGenerating(true);
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(el, {
+      const { toPng } = await import('html-to-image');
+      const dataUrl = await toPng(el, {
         width: 1080,
         height: 1920,
-        scale: 1,
-        useCORS: true,
-        backgroundColor: null,
+        pixelRatio: 1,
+        cacheBust: true,
       });
 
-      const blob = await new Promise<Blob>((resolve) => {
-        canvas.toBlob((b) => { if (b) resolve(b); }, 'image/png', 1.0);
-      });
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
 
       const fileName = `igaudit-${username}-${level.toLowerCase()}.png`;
       const file = new File([blob], fileName, { type: 'image/png' });
@@ -204,7 +219,7 @@ export function ShareSlide({
     } finally {
       setGenerating(false);
     }
-  }, [generating, username, level, score, shareUrl]);
+  }, [generating, username, level, score, shareUrl, trackEvent]);
 
   // -----------------------------------------------------------------------
   // Render
@@ -257,26 +272,25 @@ export function ShareSlide({
           {/* Content */}
           <div className="flex flex-col" style={{ padding: '48px 24px 24px' }}>
 
-            {/* ── Image Preview ── */}
-            <div style={{ marginBottom: 20 }}>
-              <p
-                className="font-inter"
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  color: '#60A5FA',
-                  marginBottom: 10,
-                }}
-              >
-                Tu imagen para compartir
+            {/* ── Hero text ── */}
+            <div className="text-center" style={{ marginBottom: 20 }}>
+              <p className="font-inter text-base-oscura" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
+                Comparte tu resultado en Stories
               </p>
+              <p className="font-inter text-gray-400" style={{ fontSize: 14, lineHeight: 1.5 }}>
+                {isMobile
+                  ? 'Presume tu score en Stories y reta a otros negocios a descubrir el suyo.'
+                  : 'Descarga tu imagen, súbela a Stories y reta a otros negocios a descubrir su score.'}
+              </p>
+            </div>
+
+            {/* ── Image Preview ── */}
+            <div className="mx-auto" style={{ marginBottom: 20, maxWidth: 200 }}>
               <div
-                className="rounded-2xl overflow-hidden border border-gray-100"
+                className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm"
                 style={{ aspectRatio: '9/16', background: '#F8FAFC' }}
               >
-                <div style={{ transform: 'scale(0.333)', transformOrigin: 'top left', width: 1080, height: 1920 }}>
+                <div style={{ transform: `scale(${200 / 1080})`, transformOrigin: 'top left', width: 1080, height: 1920 }}>
                   <ShareImage
                     username={username}
                     score={score}
@@ -288,22 +302,24 @@ export function ShareSlide({
               </div>
             </div>
 
-            {/* ── Download button ── */}
-            <button
-              onClick={() => handleShareImage('download')}
-              disabled={generating}
-              className="flex items-center justify-center gap-2 rounded-2xl font-inter text-white transition-all hover:opacity-90 disabled:opacity-60"
-              style={{
-                padding: '14px 24px',
-                fontSize: 15,
-                fontWeight: 600,
-                background: 'linear-gradient(135deg, #60A5FA, #3B82F6)',
-                marginBottom: 16,
-              }}
-            >
-              <Icon icon="solar:download-minimalistic-outline" width={18} height={18} />
-              {generating ? 'Generando...' : 'Descargar imagen'}
-            </button>
+            {/* ── Download button (desktop only) ── */}
+            {!isMobile && (
+              <button
+                onClick={() => handleShareImage('download')}
+                disabled={generating}
+                className="flex items-center justify-center gap-2 rounded-2xl font-inter text-white transition-all hover:opacity-90 disabled:opacity-60"
+                style={{
+                  padding: '14px 24px',
+                  fontSize: 15,
+                  fontWeight: 600,
+                  background: 'linear-gradient(135deg, #60A5FA, #3B82F6)',
+                  marginBottom: 16,
+                }}
+              >
+                <Icon icon="solar:download-minimalistic-outline" width={18} height={18} />
+                {generating ? 'Generando...' : 'Descargar imagen'}
+              </button>
+            )}
 
             {/* ── Share buttons ── */}
             <div className="grid grid-cols-2 gap-3" style={{ marginBottom: 16 }}>
@@ -319,7 +335,7 @@ export function ShareSlide({
                 >
                   <Icon icon="mdi:whatsapp" width={18} height={18} color="#25D366" />
                 </div>
-                WhatsApp
+                {isMobile ? 'Enviar' : 'WhatsApp'}
               </button>
               <button
                 onClick={() => handleShareImage('instagram')}
@@ -333,46 +349,58 @@ export function ShareSlide({
                 >
                   <Icon icon="mdi:instagram" width={18} height={18} color="#E040FB" />
                 </div>
-                Instagram
+                {isMobile ? 'Stories' : 'Instagram'}
               </button>
             </div>
 
             {/* ── Link section ── */}
-            <div style={{ marginBottom: 8 }}>
-              <p
-                className="font-inter"
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  color: '#60A5FA',
-                  marginBottom: 8,
-                }}
-              >
-                Tu enlace único
+            <div
+              className="rounded-2xl"
+              style={{
+                marginBottom: 8,
+                padding: '16px 16px 14px',
+                background: 'linear-gradient(135deg, #EEF6FF 0%, #F0FDF9 100%)',
+                border: '1.5px solid #BFDBFE',
+              }}
+            >
+              <div className="flex items-center gap-2" style={{ marginBottom: 10 }}>
+                <Icon icon="solar:link-circle-bold" width={18} height={18} color="#3B82F6" />
+                <p
+                  className="font-inter"
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: '#0A2540',
+                  }}
+                >
+                  Tu enlace único
+                </p>
+              </div>
+              <p className="font-inter" style={{ fontSize: 12, color: '#64748B', lineHeight: 1.4, marginBottom: 12 }}>
+                Guárdalo para ver tu auditoría cuando quieras.
               </p>
               <div
-                className="flex items-center rounded-2xl border border-gray-100 bg-gray-50"
-                style={{ padding: '10px 10px 10px 16px' }}
+                className="flex items-center rounded-xl bg-white"
+                style={{ padding: '8px 8px 8px 14px', border: '1px solid #E2E8F0' }}
               >
                 <span
-                  className="flex-1 truncate font-inter text-gray-500"
-                  style={{ fontSize: 13, fontWeight: 400 }}
+                  className="flex-1 truncate font-inter"
+                  style={{ fontSize: 13, fontWeight: 500, color: '#334155' }}
                 >
                   {truncateUrl(shareUrl.replace(/^https?:\/\//, ''), 32)}
                 </span>
                 <button
                   onClick={handleCopy}
-                  className="shrink-0 flex items-center justify-center rounded-xl font-inter text-white transition-all hover:opacity-90"
+                  className="shrink-0 flex items-center justify-center gap-1.5 rounded-lg font-inter text-white transition-all hover:opacity-90"
                   style={{
                     fontSize: 13,
                     fontWeight: 600,
                     padding: '8px 16px',
-                    background: '#0A2540',
+                    background: copied ? '#10B981' : '#3B82F6',
                   }}
                 >
-                  {copied ? 'Copiado!' : 'Copiar'}
+                  <Icon icon={copied ? 'solar:check-circle-outline' : 'solar:copy-outline'} width={14} height={14} />
+                  {copied ? '¡Copiado!' : 'Copiar'}
                 </button>
               </div>
             </div>

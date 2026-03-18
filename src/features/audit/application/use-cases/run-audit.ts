@@ -11,7 +11,8 @@ import { generateCriticalPoints } from './helpers/critical-points';
 export async function runAudit(
   username: string,
   instagramPort: InstagramPort,
-  storagePort: StoragePort
+  storagePort: StoragePort,
+  sessionId?: string,
 ): Promise<AuditResult & { auditId: string; accessToken: string }> {
   // 1. Fetch profile and posts
   const { profile, posts } = await instagramPort.fetchProfile(username);
@@ -72,7 +73,7 @@ export async function runAudit(
   const profileId = await storagePort.saveProfile(profile);
 
   // 11. Save audit to storage
-  const { id: auditId, accessToken } = await storagePort.saveAudit(result, undefined, profileId);
+  const { id: auditId, accessToken } = await storagePort.saveAudit(result, sessionId, profileId);
 
   return { ...result, auditId, accessToken };
 }

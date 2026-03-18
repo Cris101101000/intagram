@@ -97,7 +97,7 @@ const SECTOR_EMOJIS: Record<string, string> = {
 };
 
 // ---------------------------------------------------------------------------
-// Shared inline styles (no Tailwind — html2canvas works better with inline)
+// Shared inline styles (no Tailwind — html-to-image works better with inline)
 // ---------------------------------------------------------------------------
 
 const S = {
@@ -255,7 +255,7 @@ const S = {
 };
 
 // ---------------------------------------------------------------------------
-// Component (rendered off-screen for html2canvas capture)
+// Component (rendered off-screen for html-to-image capture)
 // ---------------------------------------------------------------------------
 
 export const ShareImage = forwardRef<HTMLDivElement, ShareImageProps>(

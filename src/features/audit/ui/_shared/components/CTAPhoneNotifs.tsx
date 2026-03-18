@@ -297,6 +297,13 @@ export function CTAPhoneNotifs({ username, sector, page }: CTAPhoneNotifsProps) 
           {/* CTA button */}
           <button
             type="button"
+            onClick={() => {
+              fetch('/api/events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, eventType: 'cta_free_trial' }),
+              }).catch(() => {});
+            }}
             className="cta-shimmer relative mb-4 inline-flex items-center gap-2.5 rounded-full font-inter text-white transition-all hover:-translate-y-0.5 overflow-hidden"
             style={{
               background: 'linear-gradient(135deg, #34D399, #60A5FA)',
