@@ -5,9 +5,30 @@ import { AppProvider } from "@/shared/ui/providers/AppProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Auditoría de Instagram | BeweOS",
+  metadataBase: new URL("https://igaudit.bewe.io"),
+  title: "Auditoría de Instagram Gratis | BeweOS",
   description:
-    "Descubre si tu Instagram está funcionando. Score de 0 a 100 comparado con negocios de tu sector.",
+    "Descubre si tu Instagram está funcionando. Score de 0 a 100 comparado con negocios de tu sector. Análisis gratuito en segundos.",
+  keywords: ["auditoría instagram", "instagram para negocios", "score instagram", "análisis instagram gratis", "instagram pymes"],
+  authors: [{ name: "Bewe", url: "https://www.bewe.io" }],
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    siteName: "IG Audit by Bewe",
+    title: "Auditoría de Instagram Gratis | BeweOS",
+    description: "Descubre si tu Instagram está funcionando. Score de 0 a 100 comparado con negocios de tu sector.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Auditoría de Instagram — IG Audit by Bewe" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Auditoría de Instagram Gratis | BeweOS",
+    description: "Descubre si tu Instagram está funcionando. Score de 0 a 100 comparado con negocios de tu sector.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

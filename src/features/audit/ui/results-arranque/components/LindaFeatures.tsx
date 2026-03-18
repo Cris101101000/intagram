@@ -3,15 +3,18 @@
 import { Icon } from '@iconify/react';
 import { useTranslation } from '@/shared/ui/hooks/useTranslation';
 import { proxyImageUrl } from '@/features/audit/ui/_shared/utils/proxy-image';
-import { SectionLabel } from './InsightsSection';
+import { resolveSubNiche, type SubNicheContent } from '@/features/audit/ui/results/components/LindaSolutions';
 
 interface LindaFeaturesProps {
   username: string;
   profilePicUrl?: string;
+  fullName?: string;
+  biography?: string;
 }
 
-export function LindaFeatures({ username, profilePicUrl }: LindaFeaturesProps) {
+export function LindaFeatures({ username, profilePicUrl, fullName, biography }: LindaFeaturesProps) {
   const { t } = useTranslation('audit');
+  const content = resolveSubNiche(username, fullName, biography);
 
   return (
     <div>
@@ -26,7 +29,7 @@ export function LindaFeatures({ username, profilePicUrl }: LindaFeaturesProps) {
             title={t('audit_arranque_feat1_title')}
             desc={t('audit_arranque_feat1_desc')}
           />
-          <PostSimulation username={username} profilePicUrl={profilePicUrl} />
+          <PostSimulation username={username} profilePicUrl={profilePicUrl} content={content} />
         </FeatureRow>
 
         {/* Feature 2 — Auto replies (inverted) */}
@@ -39,7 +42,7 @@ export function LindaFeatures({ username, profilePicUrl }: LindaFeaturesProps) {
             title={t('audit_arranque_feat2_title')}
             desc={t('audit_arranque_feat2_desc')}
           />
-          <ChatSimulation />
+          <ChatSimulation content={content} />
         </FeatureRow>
 
         {/* Feature 3 — CRM inteligente */}
@@ -52,7 +55,7 @@ export function LindaFeatures({ username, profilePicUrl }: LindaFeaturesProps) {
             title={t('audit_arranque_feat3_title')}
             desc={t('audit_arranque_feat3_desc')}
           />
-          <CrmSimulation />
+          <CrmSimulation content={content} />
         </FeatureRow>
       </div>
     </div>
@@ -98,7 +101,7 @@ function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc }
 /* Post simulation                                                     */
 /* ------------------------------------------------------------------ */
 
-function PostSimulation({ username, profilePicUrl }: { username: string; profilePicUrl?: string }) {
+function PostSimulation({ username, profilePicUrl, content }: { username: string; profilePicUrl?: string; content: SubNicheContent }) {
   const proxiedPic = proxyImageUrl(profilePicUrl);
 
   return (
@@ -111,7 +114,8 @@ function PostSimulation({ username, profilePicUrl }: { username: string; profile
         {proxiedPic ? (
           <img
             src={proxiedPic}
-            alt={`@${username}`}
+            alt={`Foto de perfil de @${username}`}
+            loading="lazy"
             className="rounded-full object-cover"
             style={{ width: 32, height: 32 }}
           />
@@ -137,7 +141,7 @@ function PostSimulation({ username, profilePicUrl }: { username: string; profile
         className="relative flex flex-col justify-end"
         style={{
           height: 240,
-          backgroundImage: 'url(/sim-beauty.avif)',
+          backgroundImage: `url(${content.image})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           padding: 16,
@@ -145,17 +149,17 @@ function PostSimulation({ username, profilePicUrl }: { username: string; profile
       >
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)' }} />
         <p className="relative font-inter text-white" style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.3, marginBottom: 4 }}>
-          Nuestro tratamiento facial más pedido: hidratación profunda con resultados desde la primera sesión
+          {content.hook}
         </p>
         <span className="relative font-inter" style={{ fontSize: 12, color: '#93C5FD', fontWeight: 600 }}>
-          Conoce nuestros tratamientos →
+          {content.cta}
         </span>
       </div>
 
       {/* Caption */}
       <div style={{ padding: '12px 16px' }}>
         <p className="font-inter text-gray-600" style={{ fontSize: 12, lineHeight: 1.5 }}>
-          ¿Ya lo probaste? Cuéntanos tu experiencia en los comentarios
+          {content.caption}
         </p>
       </div>
 
@@ -182,15 +186,7 @@ function StatChip({ icon, value }: { icon: string; value: string }) {
 /* Chat simulation                                                     */
 /* ------------------------------------------------------------------ */
 
-const CHAT_MESSAGES = [
-  { from: 'user', text: 'Hola! Vi tu post del tratamiento facial. ¿Qué incluye?' },
-  { from: 'linda', text: '¡Hola! Gracias por escribirnos 😊 Incluye limpieza profunda, mascarilla hidratante y sérum personalizado según tu tipo de piel.' },
-  { from: 'user', text: '¿Y cuánto cuesta el tratamiento?' },
-  { from: 'linda', text: 'El tratamiento de hidratación profunda tiene un valor de $120.000. ¿Te gustaría conocer más detalles o tienes alguna otra pregunta?' },
-  { from: 'user', text: 'Suena genial, quiero más info' },
-];
-
-function ChatSimulation() {
+function ChatSimulation({ content }: { content: SubNicheContent }) {
   return (
     <div
       className="w-full sm:w-[360px] shrink-0 rounded-[20px] border border-gray-200 bg-white overflow-hidden"
@@ -204,7 +200,7 @@ function ChatSimulation() {
 
       {/* Messages */}
       <div className="flex flex-col gap-2" style={{ padding: 16, maxHeight: 280, overflow: 'hidden' }}>
-        {CHAT_MESSAGES.map((msg, i) => (
+        {content.chatMessages.map((msg, i) => (
           <div
             key={i}
             className={`arranque-chat-bubble max-w-[85%] rounded-[14px] font-inter ${msg.from === 'user' ? 'self-start' : 'self-end'}`}
@@ -237,14 +233,7 @@ function ChatSimulation() {
 /* CRM simulation                                                      */
 /* ------------------------------------------------------------------ */
 
-const CRM_CONTACTS = [
-  { name: 'Beatriz Cortés', status: 'Cliente', statusColor: '#059669', statusBg: 'rgba(52,211,153,0.1)', tags: ['Cliente frecuente', 'VIP', 'Piel sensible'], potential: 'Alta', potentialColor: '#059669' },
-  { name: 'Roberto Garrido', status: 'Prospecto', statusColor: '#487CBB', statusBg: 'rgba(96,165,250,0.1)', tags: ['Interesado en promociones', 'WhatsApp'], potential: 'Alta', potentialColor: '#059669' },
-  { name: 'Juan Gonzales', status: 'Lead', statusColor: '#D97706', statusBg: 'rgba(251,191,36,0.1)', tags: ['Instagram', 'Servicio de masaje'], potential: 'Media', potentialColor: '#D97706' },
-  { name: 'María Díaz', status: 'Cliente', statusColor: '#059669', statusBg: 'rgba(52,211,153,0.1)', tags: ['Frecuente', 'Piel sensible'], potential: 'Alta', potentialColor: '#059669' },
-];
-
-function CrmSimulation() {
+function CrmSimulation({ content }: { content: SubNicheContent }) {
   return (
     <div
       className="w-full sm:w-[360px] shrink-0 rounded-[20px] border border-gray-200 bg-white overflow-hidden"
@@ -273,11 +262,11 @@ function CrmSimulation() {
 
       {/* Rows */}
       <div className="flex flex-col">
-        {CRM_CONTACTS.map((c, i) => (
+        {content.crmContacts.map((c, i) => (
           <div
             key={i}
             className="grid items-center"
-            style={{ gridTemplateColumns: '1fr auto auto', padding: '10px 16px', borderBottom: i < CRM_CONTACTS.length - 1 ? '1px solid #F8FAFC' : 'none' }}
+            style={{ gridTemplateColumns: '1fr auto auto', padding: '10px 16px', borderBottom: i < content.crmContacts.length - 1 ? '1px solid #F8FAFC' : 'none' }}
           >
             <div>
               <span className="font-inter text-base-oscura" style={{ fontSize: 12, fontWeight: 600 }}>{c.name}</span>

@@ -383,7 +383,7 @@ export function LoadingScreen({ username, variant = 'standard', profilePicUrl, d
           >
             <img
               src={imgSrc}
-              alt={`@${username}`}
+              alt={`Foto de perfil de @${username} en Instagram`}
               className="w-full h-full object-cover"
             />
           </div>

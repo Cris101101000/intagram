@@ -145,7 +145,8 @@ export function EvolutionHero({ data, profilePicUrl }: EvolutionHeroProps) {
         <div className="mb-4">
           <img
             src={proxiedPic}
-            alt={`@${data.current.profile.username}`}
+            alt={`Foto de perfil de @${data.current.profile.username} en Instagram`}
+            loading="lazy"
             className="rounded-full object-cover"
             style={{ width: 72, height: 72, border: '3px solid white', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}
           />

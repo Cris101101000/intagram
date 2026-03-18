@@ -30,7 +30,8 @@ export function UsernamePill({ username, fullName, profilePicUrl }: UsernamePill
           >
             <img
               src={imgSrc}
-              alt={`@${username}`}
+              alt={`Foto de perfil de @${username} en Instagram`}
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           </div>

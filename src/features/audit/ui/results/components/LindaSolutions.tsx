@@ -36,7 +36,7 @@ const TYPE_LABELS: Record<string, string> = {
 // Sub-niche resolver — keyword scan on username + fullName + biography
 // ---------------------------------------------------------------------------
 
-interface SubNicheContent {
+export interface SubNicheContent {
   image: string;
   hook: string;
   cta: string;
@@ -612,7 +612,7 @@ const DEFAULT_CONTENT: SubNicheContent = {
   ],
 };
 
-function resolveSubNiche(username?: string, fullName?: string, biography?: string): SubNicheContent {
+export function resolveSubNiche(username?: string, fullName?: string, biography?: string): SubNicheContent {
   const text = [username, fullName, biography].filter(Boolean).join(' ');
   for (const rule of SUB_NICHE_RULES) {
     if (rule.regex.test(text)) {
@@ -741,7 +741,8 @@ function PostSimulation({ username, profilePicUrl, content }: { username: string
         {proxiedPic ? (
           <img
             src={proxiedPic}
-            alt={`@${username}`}
+            alt={`Foto de perfil de @${username}`}
+            loading="lazy"
             className="rounded-full object-cover"
             style={{ width: 32, height: 32 }}
           />

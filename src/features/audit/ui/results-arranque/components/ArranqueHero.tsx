@@ -39,7 +39,8 @@ export function ArranqueHero({ username, followersCount, postsCount, daysSinceLa
         <div className="reveal mb-4">
           <img
             src={proxiedPic}
-            alt={`@${username}`}
+            alt={`Foto de perfil de @${username} en Instagram`}
+            loading="lazy"
             className="rounded-full object-cover"
             style={{ width: 80, height: 80, border: '3px solid white', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}
           />

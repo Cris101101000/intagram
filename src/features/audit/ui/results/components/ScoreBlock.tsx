@@ -92,7 +92,8 @@ export function ScoreBlock({ username, score, level, sector, postsAnalyzed, anal
           >
             <img
               src={proxiedPic}
-              alt={`@${username}`}
+              alt={`Foto de perfil de @${username} en Instagram`}
+              loading="lazy"
               className="rounded-full object-cover"
               style={{
                 width: 56,

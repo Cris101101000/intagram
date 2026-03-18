@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 const SOCIAL_LINKS = [
   {
     url: 'https://www.instagram.com/bewe_software/',
@@ -38,9 +40,11 @@ export function BeweFooter() {
       >
         {/* Left column */}
         <div className="items-center sm:items-start" style={{ maxWidth: 400 }}>
-          <img
+          <Image
             src="/bewe-logo.png"
-            alt="Bewe"
+            alt="Bewe — Software AI-first para PYMES"
+            width={100}
+            height={28}
             style={{ height: 28, width: 'auto', marginBottom: 16, filter: 'brightness(0) invert(1)' }}
           />
           <p
