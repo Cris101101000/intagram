@@ -12,6 +12,7 @@ import {
   CtaSection,
   Footer,
 } from '@/features/audit/ui/landing/components';
+import { MoreTools } from '@/features/audit/ui/_shared/components/MoreTools';
 
 function HomeContent() {
   const router = useRouter();
@@ -47,6 +48,11 @@ function HomeContent() {
       <ScorePreviewSection />
       <TestimonialsSection />
       <CtaSection onSubmit={handleSubmit} isLoading={isLoading} />
+      <section style={{ padding: '0 0 64px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <MoreTools />
+        </div>
+      </section>
       <Footer />
     </main>
   );

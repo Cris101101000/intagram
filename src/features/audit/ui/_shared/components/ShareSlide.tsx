@@ -258,7 +258,7 @@ export function ShareSlide({
         aria-label="Compartir auditoría"
         className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
       >
-        <div className="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
+        <div className="relative w-full max-w-[600px] max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
           {/* Close button */}
           <button
             onClick={() => setIsOpen(false)}
@@ -270,138 +270,136 @@ export function ShareSlide({
           </button>
 
           {/* Content */}
-          <div className="flex flex-col" style={{ padding: '48px 24px 24px' }}>
+          <div className="flex flex-col" style={{ padding: '40px 28px 20px' }}>
 
             {/* ── Hero text ── */}
-            <div className="text-center" style={{ marginBottom: 20 }}>
-              <p className="font-inter text-base-oscura" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.3, marginBottom: 6 }}>
+            <div className="text-center" style={{ marginBottom: 16 }}>
+              <p className="font-inter text-base-oscura" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.3, marginBottom: 4 }}>
                 Comparte tu resultado en Stories
               </p>
-              <p className="font-inter text-gray-400" style={{ fontSize: 14, lineHeight: 1.5 }}>
+              <p className="font-inter text-gray-400" style={{ fontSize: 13, lineHeight: 1.5 }}>
                 {isMobile
                   ? 'Presume tu score en Stories y reta a otros negocios a descubrir el suyo.'
                   : 'Descarga tu imagen, súbela a Stories y reta a otros negocios a descubrir su score.'}
               </p>
             </div>
 
-            {/* ── Image Preview ── */}
-            <div className="mx-auto" style={{ marginBottom: 20, maxWidth: 200 }}>
-              <div
-                className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm"
-                style={{ aspectRatio: '9/16', background: '#F8FAFC' }}
-              >
-                <div style={{ transform: `scale(${200 / 1080})`, transformOrigin: 'top left', width: 1080, height: 1920 }}>
-                  <ShareImage
-                    username={username}
-                    score={score}
-                    level={level}
-                    sector={sector}
-                    percentile={percentile}
-                  />
+            {/* ── Two-column layout (desktop) / stacked (mobile) ── */}
+            <div className="flex flex-col sm:flex-row gap-5" style={{ marginBottom: 16 }}>
+
+              {/* Left: Image Preview */}
+              <div className="mx-auto sm:mx-0 shrink-0" style={{ width: isMobile ? 160 : 180 }}>
+                <div
+                  className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm"
+                  style={{ aspectRatio: '9/16', background: '#F8FAFC' }}
+                >
+                  <div style={{ transform: `scale(${(isMobile ? 160 : 180) / 1080})`, transformOrigin: 'top left', width: 1080, height: 1920 }}>
+                    <ShareImage
+                      username={username}
+                      score={score}
+                      level={level}
+                      sector={sector}
+                      percentile={percentile}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* ── Download button (desktop only) ── */}
-            {!isMobile && (
-              <button
-                onClick={() => handleShareImage('download')}
-                disabled={generating}
-                className="flex items-center justify-center gap-2 rounded-2xl font-inter text-white transition-all hover:opacity-90 disabled:opacity-60"
-                style={{
-                  padding: '14px 24px',
-                  fontSize: 15,
-                  fontWeight: 600,
-                  background: 'linear-gradient(135deg, #60A5FA, #3B82F6)',
-                  marginBottom: 16,
-                }}
-              >
-                <Icon icon="solar:download-minimalistic-outline" width={18} height={18} />
-                {generating ? 'Generando...' : 'Descargar imagen'}
-              </button>
-            )}
+              {/* Right: Actions */}
+              <div className="flex flex-col flex-1 justify-center gap-3">
+                {/* Download button (desktop only) */}
+                {!isMobile && (
+                  <button
+                    onClick={() => handleShareImage('download')}
+                    disabled={generating}
+                    className="flex items-center justify-center gap-2 rounded-2xl font-inter text-white transition-all hover:opacity-90 disabled:opacity-60"
+                    style={{
+                      padding: '12px 20px',
+                      fontSize: 14,
+                      fontWeight: 600,
+                      background: 'linear-gradient(135deg, #60A5FA, #3B82F6)',
+                    }}
+                  >
+                    <Icon icon="solar:download-minimalistic-outline" width={18} height={18} />
+                    {generating ? 'Generando...' : 'Descargar imagen'}
+                  </button>
+                )}
 
-            {/* ── Share buttons ── */}
-            <div className="grid grid-cols-2 gap-3" style={{ marginBottom: 16 }}>
-              <button
-                onClick={() => handleShareImage('whatsapp')}
-                disabled={generating}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-gray-100 bg-white font-inter transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
-                style={{ padding: '12px 16px', fontSize: 14, fontWeight: 500, color: '#0A2540' }}
-              >
-                <div
-                  className="flex shrink-0 items-center justify-center rounded-xl"
-                  style={{ width: 32, height: 32, background: '#25D36610' }}
-                >
-                  <Icon icon="mdi:whatsapp" width={18} height={18} color="#25D366" />
+                {/* Share buttons */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => handleShareImage('whatsapp')}
+                    disabled={generating}
+                    className="flex items-center justify-center gap-2 rounded-2xl border border-gray-100 bg-white font-inter transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
+                    style={{ padding: '10px 14px', fontSize: 13, fontWeight: 500, color: '#0A2540' }}
+                  >
+                    <div
+                      className="flex shrink-0 items-center justify-center rounded-xl"
+                      style={{ width: 30, height: 30, background: '#25D36610' }}
+                    >
+                      <Icon icon="mdi:whatsapp" width={16} height={16} color="#25D366" />
+                    </div>
+                    {isMobile ? 'Enviar' : 'WhatsApp'}
+                  </button>
+                  <button
+                    onClick={() => handleShareImage('instagram')}
+                    disabled={generating}
+                    className="flex items-center justify-center gap-2 rounded-2xl border border-gray-100 bg-white font-inter transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
+                    style={{ padding: '10px 14px', fontSize: 13, fontWeight: 500, color: '#0A2540' }}
+                  >
+                    <div
+                      className="flex shrink-0 items-center justify-center rounded-xl"
+                      style={{ width: 30, height: 30, background: '#E040FB10' }}
+                    >
+                      <Icon icon="mdi:instagram" width={16} height={16} color="#E040FB" />
+                    </div>
+                    {isMobile ? 'Stories' : 'Instagram'}
+                  </button>
                 </div>
-                {isMobile ? 'Enviar' : 'WhatsApp'}
-              </button>
-              <button
-                onClick={() => handleShareImage('instagram')}
-                disabled={generating}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-gray-100 bg-white font-inter transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
-                style={{ padding: '12px 16px', fontSize: 14, fontWeight: 500, color: '#0A2540' }}
-              >
-                <div
-                  className="flex shrink-0 items-center justify-center rounded-xl"
-                  style={{ width: 32, height: 32, background: '#E040FB10' }}
-                >
-                  <Icon icon="mdi:instagram" width={18} height={18} color="#E040FB" />
-                </div>
-                {isMobile ? 'Stories' : 'Instagram'}
-              </button>
-            </div>
 
-            {/* ── Link section ── */}
-            <div
-              className="rounded-2xl"
-              style={{
-                marginBottom: 8,
-                padding: '16px 16px 14px',
-                background: 'linear-gradient(135deg, #EEF6FF 0%, #F0FDF9 100%)',
-                border: '1.5px solid #BFDBFE',
-              }}
-            >
-              <div className="flex items-center gap-2" style={{ marginBottom: 10 }}>
-                <Icon icon="solar:link-circle-bold" width={18} height={18} color="#3B82F6" />
-                <p
-                  className="font-inter"
+                {/* Link section */}
+                <div
+                  className="rounded-2xl"
                   style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: '#0A2540',
+                    padding: '14px 14px 12px',
+                    background: 'linear-gradient(135deg, #EEF6FF 0%, #F0FDF9 100%)',
+                    border: '1.5px solid #BFDBFE',
                   }}
                 >
-                  Tu enlace único
-                </p>
-              </div>
-              <p className="font-inter" style={{ fontSize: 12, color: '#64748B', lineHeight: 1.4, marginBottom: 12 }}>
-                Guárdalo para ver tu auditoría cuando quieras.
-              </p>
-              <div
-                className="flex items-center rounded-xl bg-white"
-                style={{ padding: '8px 8px 8px 14px', border: '1px solid #E2E8F0' }}
-              >
-                <span
-                  className="flex-1 truncate font-inter"
-                  style={{ fontSize: 13, fontWeight: 500, color: '#334155' }}
-                >
-                  {truncateUrl(shareUrl.replace(/^https?:\/\//, ''), 32)}
-                </span>
-                <button
-                  onClick={handleCopy}
-                  className="shrink-0 flex items-center justify-center gap-1.5 rounded-lg font-inter text-white transition-all hover:opacity-90"
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 600,
-                    padding: '8px 16px',
-                    background: copied ? '#10B981' : '#3B82F6',
-                  }}
-                >
-                  <Icon icon={copied ? 'solar:check-circle-outline' : 'solar:copy-outline'} width={14} height={14} />
-                  {copied ? '¡Copiado!' : 'Copiar'}
-                </button>
+                  <div className="flex items-center gap-2" style={{ marginBottom: 6 }}>
+                    <Icon icon="solar:link-circle-bold" width={16} height={16} color="#3B82F6" />
+                    <p className="font-inter" style={{ fontSize: 12, fontWeight: 700, color: '#0A2540' }}>
+                      Tu enlace único
+                    </p>
+                  </div>
+                  <p className="font-inter" style={{ fontSize: 11, color: '#64748B', lineHeight: 1.4, marginBottom: 8 }}>
+                    Guárdalo para ver tu auditoría cuando quieras.
+                  </p>
+                  <div
+                    className="flex items-center rounded-xl bg-white"
+                    style={{ padding: '6px 6px 6px 12px', border: '1px solid #E2E8F0' }}
+                  >
+                    <span
+                      className="flex-1 truncate font-inter"
+                      style={{ fontSize: 12, fontWeight: 500, color: '#334155' }}
+                    >
+                      {truncateUrl(shareUrl.replace(/^https?:\/\//, ''), 36)}
+                    </span>
+                    <button
+                      onClick={handleCopy}
+                      className="shrink-0 flex items-center justify-center gap-1.5 rounded-lg font-inter text-white transition-all hover:opacity-90"
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                        padding: '6px 14px',
+                        background: copied ? '#10B981' : '#3B82F6',
+                      }}
+                    >
+                      <Icon icon={copied ? 'solar:check-circle-outline' : 'solar:copy-outline'} width={13} height={13} />
+                      {copied ? '¡Copiado!' : 'Copiar'}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -409,7 +407,7 @@ export function ShareSlide({
           {/* Bottom branding */}
           <div
             className="flex items-center justify-center border-t border-gray-100 font-inter text-gray-300"
-            style={{ padding: 14, fontSize: 11 }}
+            style={{ padding: 10, fontSize: 11 }}
           >
             Powered by Linda AI
           </div>

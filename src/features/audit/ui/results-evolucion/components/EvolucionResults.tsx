@@ -11,6 +11,7 @@ import { EvolutionAchievements } from './EvolutionAchievements';
 import { EvolutionTips } from './EvolutionTips';
 import { EvolutionCTA } from './EvolutionCTA';
 import { BeweFooter } from '@/features/audit/ui/_shared/components/BeweFooter';
+import { MoreTools } from '@/features/audit/ui/_shared/components/MoreTools';
 
 interface EvolucionResultsProps {
   auditResult: AuditResult;
@@ -92,6 +93,13 @@ export function EvolucionResults({ auditResult, evolutionData }: EvolucionResult
       <section style={{ padding: '0 0 72px' }}>
         <div className="mx-auto max-w-[800px] px-6">
           <EvolutionCTA data={evolutionData} />
+        </div>
+      </section>
+
+      {/* More Tools */}
+      <section style={{ padding: '0 0 64px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <MoreTools />
         </div>
       </section>
 

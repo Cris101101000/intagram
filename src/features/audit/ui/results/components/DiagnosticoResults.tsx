@@ -13,6 +13,7 @@ import { CTAPhoneNotifs } from '@/features/audit/ui/_shared/components/CTAPhoneN
 import { BenchmarkSources } from '@/features/audit/ui/_shared/components/BenchmarkSources';
 import { ShareSlide } from '@/features/audit/ui/_shared/components/ShareSlide';
 import { BeweFooter } from '@/features/audit/ui/_shared/components/BeweFooter';
+import { MoreTools } from '@/features/audit/ui/_shared/components/MoreTools';
 import { LEVEL_CONFIG } from '../constants/level-config';
 
 interface DiagnosticoResultsProps {
@@ -157,12 +158,20 @@ export function DiagnosticoResults({ auditResult }: DiagnosticoResultsProps) {
         </div>
       </section>
 
-      {/* Section 8 — Benchmark Sources */}
+      {/* Section 8 — More Tools */}
+      <section style={{ padding: '0 0 64px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <MoreTools />
+        </div>
+      </section>
+
+      {/* Section 9 — Benchmark Sources */}
       <section style={{ padding: '0 0 48px' }}>
         <div className="mx-auto max-w-[800px] px-6">
           <BenchmarkSources />
         </div>
       </section>
+
       {/* Footer */}
       <BeweFooter />
 

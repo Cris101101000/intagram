@@ -11,6 +11,7 @@ import { StartupPlan } from './StartupPlan';
 import { CTAPhoneNotifs } from '@/features/audit/ui/_shared/components/CTAPhoneNotifs';
 import { ShareSlide } from '@/features/audit/ui/_shared/components/ShareSlide';
 import { BeweFooter } from '@/features/audit/ui/_shared/components/BeweFooter';
+import { MoreTools } from '@/features/audit/ui/_shared/components/MoreTools';
 
 function computePercentile(score: number): number {
   if (score <= 40) return Math.round(80 - (score / 40) * 20);
@@ -139,6 +140,13 @@ export function ArranqueResults({ auditResult }: ArranqueResultsProps) {
           <CTAPhoneNotifs username={username} sector={auditResult.sector} page="arranque" />
         </div>
       </section>
+      {/* More Tools */}
+      <section style={{ padding: '0 0 64px' }}>
+        <div className="mx-auto max-w-[800px] px-6">
+          <MoreTools />
+        </div>
+      </section>
+
       {/* Footer */}
       <BeweFooter />
 

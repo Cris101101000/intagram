@@ -38,12 +38,11 @@ export function BeweFooter() {
       >
         {/* Left column */}
         <div className="items-center sm:items-start" style={{ maxWidth: 400 }}>
-          <p
-            className="font-inter"
-            style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em', marginBottom: 16 }}
-          >
-            BeweOS
-          </p>
+          <img
+            src="/bewe-logo.png"
+            alt="Bewe"
+            style={{ height: 28, width: 'auto', marginBottom: 16, filter: 'brightness(0) invert(1)' }}
+          />
           <p
             className="font-inter"
             style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, marginBottom: 20 }}
