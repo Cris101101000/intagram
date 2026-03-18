@@ -292,30 +292,30 @@ function ArranqueShareImage({ username, sector, ref: fwdRef }: { username: strin
       </div>
 
       {/* Motivational copy */}
-      <div style={S.copyInicio}>Hoy tomé la decisión</div>
-      <div style={S.nombreDisplay}>Voy a crecer</div>
-      <div style={S.posicionLabel}>y mi Instagram va a ser parte de eso 💪</div>
+      <div style={S.copyInicio}>Mi negocio está listo para</div>
+      <div style={S.nombreDisplay}>Despegar</div>
+      <div style={S.posicionLabel}>y mi Instagram será mi mejor vitrina 💪</div>
 
       {/* Motivational card */}
       <div style={S.metricsCard}>
         <div style={S.metricRow}>
-          <span style={S.metricLabel}>🎯 Mi objetivo</span>
-          <span style={S.metricValue(accent)}>Arrancar</span>
+          <span style={S.metricLabel}>🎯 Mi siguiente paso</span>
+          <span style={S.metricValue(accent)}>Estrategia</span>
         </div>
         <div style={{ height: 1, background: 'rgba(10,37,64,0.06)' }} />
         <div style={S.metricRow}>
-          <span style={S.metricLabel}>✨ Mi primer paso</span>
-          <span style={S.metricValue(accent)}>Hecho ✓</span>
+          <span style={S.metricLabel}>✨ Auditoría</span>
+          <span style={S.metricValue(accent)}>Hecha ✓</span>
         </div>
       </div>
 
       {/* Frase card */}
       <div style={S.fraseCard}>
-        🌱 Acabo de auditar mi Instagram y ya sé por dónde empezar
+        🌱 Audité el Instagram de mi negocio y ya tengo claro por dónde empezar
       </div>
 
       {/* CTA */}
-      <div style={S.ctaText}>¿Tú ya sabes cómo está el tuyo? 👇</div>
+      <div style={S.ctaText}>¿Ya auditaste el de tu negocio? 👇</div>
       <div style={S.ctaUrl}>igaudit.bewe.io</div>
     </div>
   );

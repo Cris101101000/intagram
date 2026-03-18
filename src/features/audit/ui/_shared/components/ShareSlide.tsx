@@ -212,7 +212,7 @@ export function ShareSlide({
       // If WhatsApp, also open share link after download
       if (target === 'whatsapp') {
         const shareText = isArranque
-          ? 'Acabo de auditar mi Instagram y ya sé por dónde empezar. ¿Tú ya sabes cómo está el tuyo?'
+          ? 'Audité el Instagram de mi negocio y ya tengo claro por dónde empezar. ¿Ya auditaste el de tu negocio?'
           : `Acabo de descubrir mi Instagram Score: ${score}/100. ¿Quieres conocer el tuyo?`;
         window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`, '_blank');
       }
