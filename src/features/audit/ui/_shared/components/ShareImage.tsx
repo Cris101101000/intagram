@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { ScoreLevel } from '@/features/audit/domain/interfaces/audit';
+import { AuditRoute, ScoreLevel } from '@/features/audit/domain/interfaces/audit';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -13,6 +13,7 @@ export interface ShareImageProps {
   level: ScoreLevel;
   sector: string;
   percentile: number;
+  route?: AuditRoute;
 }
 
 // ---------------------------------------------------------------------------
@@ -258,8 +259,79 @@ const S = {
 // Component (rendered off-screen for html-to-image capture)
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Arranque-specific render
+// ---------------------------------------------------------------------------
+
+function ArranqueShareImage({ username, sector, ref: fwdRef }: { username: string; sector: string; ref: React.Ref<HTMLDivElement> }) {
+  const sectorEmoji = SECTOR_EMOJIS[sector] ?? '📱';
+
+  const gradient = 'linear-gradient(180deg, #F0FDF9 0%, #CCFBF1 50%, #A7F3D0 100%)';
+  const accent = '#10B981';
+
+  return (
+    <div ref={fwdRef} style={S.container(gradient)}>
+      {/* Decorative orbs */}
+      <div style={S.orb1(accent)} />
+      <div style={S.orb2('#34D399')} />
+
+      {/* Header */}
+      <div style={S.header}>Auditoría Instagram ✨</div>
+
+      {/* Username pill */}
+      <div style={S.usernamePill}>
+        <span>{sectorEmoji}</span>
+        <span>@{username}</span>
+      </div>
+
+      {/* Emoji ring */}
+      <div style={S.emojiRingOuter('linear-gradient(135deg, #34D399, #10B981, #34D399)')}>
+        <div style={S.emojiRingInner('rgba(255,255,255,0.85)')}>
+          🚀
+        </div>
+      </div>
+
+      {/* Motivational copy */}
+      <div style={S.copyInicio}>Hoy tomé la decisión</div>
+      <div style={S.nombreDisplay}>Voy a crecer</div>
+      <div style={S.posicionLabel}>y mi Instagram va a ser parte de eso 💪</div>
+
+      {/* Motivational card */}
+      <div style={S.metricsCard}>
+        <div style={S.metricRow}>
+          <span style={S.metricLabel}>🎯 Mi objetivo</span>
+          <span style={S.metricValue(accent)}>Arrancar</span>
+        </div>
+        <div style={{ height: 1, background: 'rgba(10,37,64,0.06)' }} />
+        <div style={S.metricRow}>
+          <span style={S.metricLabel}>✨ Mi primer paso</span>
+          <span style={S.metricValue(accent)}>Hecho ✓</span>
+        </div>
+      </div>
+
+      {/* Frase card */}
+      <div style={S.fraseCard}>
+        🌱 Acabo de auditar mi Instagram y ya sé por dónde empezar
+      </div>
+
+      {/* CTA */}
+      <div style={S.ctaText}>¿Tú ya sabes cómo está el tuyo? 👇</div>
+      <div style={S.ctaUrl}>igaudit.bewe.io</div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
+
 export const ShareImage = forwardRef<HTMLDivElement, ShareImageProps>(
-  function ShareImage({ username, score, level, sector, percentile }, ref) {
+  function ShareImage({ username, score, level, sector, percentile, route }, ref) {
+    // Arranque mode — motivational, no score
+    if (route === AuditRoute.ARRANQUE) {
+      return <ArranqueShareImage username={username} sector={sector} ref={ref} />;
+    }
+
     const v = LEVEL_VISUALS[level];
     const sectorEmoji = SECTOR_EMOJIS[sector] ?? '📱';
     const topText = `Top ${percentile}%`;

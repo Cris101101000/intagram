@@ -211,7 +211,9 @@ export function ShareSlide({
 
       // If WhatsApp, also open share link after download
       if (target === 'whatsapp') {
-        const shareText = `Acabo de descubrir mi Instagram Score: ${score}/100. ¿Quieres conocer el tuyo?`;
+        const shareText = isArranque
+          ? 'Acabo de auditar mi Instagram y ya sé por dónde empezar. ¿Tú ya sabes cómo está el tuyo?'
+          : `Acabo de descubrir mi Instagram Score: ${score}/100. ¿Quieres conocer el tuyo?`;
         window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`, '_blank');
       }
     } catch (err) {
@@ -241,6 +243,7 @@ export function ShareSlide({
           level={level}
           sector={sector}
           percentile={percentile}
+          route={route}
         />
       </div>
 
@@ -300,6 +303,7 @@ export function ShareSlide({
                       level={level}
                       sector={sector}
                       percentile={percentile}
+                      route={route}
                     />
                   </div>
                 </div>
