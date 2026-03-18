@@ -13,6 +13,7 @@ export interface StoragePort {
   saveAudit(audit: AuditResult, sessionId?: string, profileId?: string): Promise<{ id: string; accessToken: string }>;
   getLastAudit(username: string): Promise<PreviousAudit | null>;
   getAuditByToken(accessToken: string): Promise<AuditResult | null>;
+  getRecentAudit(username: string, maxAgeHours: number): Promise<(AuditResult & { auditId: string; accessToken: string }) | null>;
 
   // Leads
   saveLead(lead: LeadData, auditId: string | null, score: number, scoreLevel: string, sector: string): Promise<StoredLead>;

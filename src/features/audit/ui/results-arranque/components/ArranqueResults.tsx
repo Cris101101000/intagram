@@ -22,6 +22,7 @@ function computePercentile(score: number): number {
 
 interface ArranqueResultsProps {
   auditResult: AuditResult;
+  accessToken?: string | null;
 }
 
 function useScrollReveal() {
@@ -57,7 +58,7 @@ function useScrollReveal() {
   return containerRef;
 }
 
-export function ArranqueResults({ auditResult }: ArranqueResultsProps) {
+export function ArranqueResults({ auditResult, accessToken }: ArranqueResultsProps) {
   const { t } = useTranslation('audit');
   const { username, profile, healthSignals, metrics } = auditResult;
   const containerRef = useScrollReveal();
@@ -160,6 +161,7 @@ export function ArranqueResults({ auditResult }: ArranqueResultsProps) {
         route={auditResult.route}
         percentile={computePercentile(auditResult.score)}
         triggerSelector="[data-share-trigger]"
+        accessToken={accessToken}
       />
     </AuroraBackground>
   );

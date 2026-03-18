@@ -30,6 +30,37 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
+// GET /api/audit?t=ACCESS_TOKEN — retrieve cached audit by token (share links)
+export async function GET(request: NextRequest) {
+  try {
+    const token = request.nextUrl.searchParams.get('t');
+    if (!token) {
+      return NextResponse.json(
+        { error: 'missing_token', message: 'Token es requerido.' },
+        { status: 400 },
+      );
+    }
+
+    const storagePort = new SupabaseAdapter();
+    const audit = await storagePort.getAuditByToken(token);
+
+    if (!audit) {
+      return NextResponse.json(
+        { error: 'not_found', message: 'No se encontró la auditoría.' },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({ success: true, data: audit, cached: true });
+  } catch (error) {
+    console.error('Audit GET error:', error);
+    return NextResponse.json(
+      { error: 'server_error', message: 'Algo salió mal.' },
+      { status: 500 },
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -62,6 +93,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, data: mockResult });
     }
 
+    // Check for cached audit from last 24 hours before running a fresh one
+    const storagePort = new SupabaseAdapter();
+    const cachedAudit = await storagePort.getRecentAudit(cleanUsername, 24);
+    if (cachedAudit) {
+      const { auditId, accessToken, ...auditData } = cachedAudit;
+      return NextResponse.json({ success: true, data: auditData, auditId, accessToken, cached: true });
+    }
+
     // Rate limiting (only for real API calls)
     const ip =
       request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
@@ -80,7 +119,6 @@ export async function POST(request: NextRequest) {
 
     // Create adapters (dependency injection)
     const instagramPort = new ApifyAdapter();
-    const storagePort = new SupabaseAdapter();
 
     // Create session with user agent and locale
     const userAgent = request.headers.get('user-agent') ?? undefined;

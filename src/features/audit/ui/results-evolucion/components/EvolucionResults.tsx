@@ -16,6 +16,7 @@ import { MoreTools } from '@/features/audit/ui/_shared/components/MoreTools';
 interface EvolucionResultsProps {
   auditResult: AuditResult;
   evolutionData: EvolutionData;
+  accessToken?: string | null;
 }
 
 function useScrollReveal() {
@@ -51,7 +52,7 @@ function useScrollReveal() {
   return containerRef;
 }
 
-export function EvolucionResults({ auditResult, evolutionData }: EvolucionResultsProps) {
+export function EvolucionResults({ auditResult, evolutionData, accessToken }: EvolucionResultsProps) {
   const containerRef = useScrollReveal();
   const { improved } = evolutionData;
 

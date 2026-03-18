@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from '@heroui/react';
 import { AuditResult, AuditRoute } from '@/features/audit/domain/interfaces/audit';
@@ -113,11 +113,13 @@ const pageTransition = {
 export function AuditPageController({ username }: AuditPageControllerProps) {
   const { t } = useTranslation('audit');
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // State machine
   const [phase, setPhase] = useState<AuditPhase>('LOADING');
   const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
   const [auditId, setAuditId] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [evolutionData, setEvolutionData] = useState<EvolutionData | null>(null);
   const [errorInfo, setErrorInfo] = useState<ErrorInfo | null>(null);
   const [captureLoading, setCaptureLoading] = useState(false);
@@ -139,6 +141,37 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
 
     // Evolucion skips lead capture — go straight to results
     setPhase(audit.route === AuditRoute.EVOLUCION ? 'RESULTS' : 'CAPTURE');
+  }, []);
+
+  const loadCachedByToken = useCallback(async (token: string) => {
+    setPhase('LOADING');
+    setErrorInfo(null);
+
+    try {
+      const res = await fetch(`/api/audit?t=${encodeURIComponent(token)}`);
+      if (!res.ok) {
+        // Token invalid or audit not found — fall back to fresh audit
+        return false;
+      }
+
+      const json = await res.json();
+      const audit: AuditResult = json.data ?? json;
+
+      setAuditResult(audit);
+      setAccessToken(token);
+      if (json.auditId) setAuditId(json.auditId);
+
+      if (audit.route === AuditRoute.EVOLUCION) {
+        setEvolutionData(getEvolution(audit));
+      }
+
+      // Brief loading for UX, then straight to results (skip capture)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setPhase('RESULTS');
+      return true;
+    } catch {
+      return false;
+    }
   }, []);
 
   const runAudit = useCallback(async () => {
@@ -168,10 +201,12 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
 
       const json = await res.json();
       const audit: AuditResult = json.data ?? json;
+      const isCached = Boolean(json.cached);
 
       // Set audit data so the loading screen can show the profile pic
       setAuditResult(audit);
       if (json.auditId) setAuditId(json.auditId);
+      if (json.accessToken) setAccessToken(json.accessToken);
 
       if (audit.route === AuditRoute.EVOLUCION) {
         const evo = getEvolution(audit);
@@ -179,9 +214,14 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
       }
 
       // Wait 3s so user sees their profile pic in the loading animation
-      await new Promise(resolve => setTimeout(resolve, SHOW_PHOTO_MS));
+      await new Promise(resolve => setTimeout(resolve, isCached ? 1500 : SHOW_PHOTO_MS));
 
-      setPhase(audit.route === AuditRoute.EVOLUCION ? 'RESULTS' : 'CAPTURE');
+      // Cached results → skip capture (user already submitted lead before)
+      if (isCached) {
+        setPhase('RESULTS');
+      } else {
+        setPhase(audit.route === AuditRoute.EVOLUCION ? 'RESULTS' : 'CAPTURE');
+      }
     } catch (err) {
       // Redirect back to landing with error message
       const message = encodeURIComponent(resolveErrorMessage(err));
@@ -194,7 +234,16 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
   useEffect(() => {
     if (hasStarted.current) return;
     hasStarted.current = true;
-    runAudit();
+
+    // Check for share token in URL → load cached results directly
+    const token = searchParams.get('t');
+    if (token) {
+      loadCachedByToken(token).then((ok) => {
+        if (!ok) runAudit(); // fallback to fresh audit if token is invalid
+      });
+    } else {
+      runAudit();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -280,15 +329,16 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
       {phase === 'RESULTS' && auditResult && (
         <motion.div key="results" initial={false} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="min-h-screen">
           {auditResult.route === AuditRoute.DIAGNOSTICO && (
-            <DiagnosticoResults auditResult={auditResult} />
+            <DiagnosticoResults auditResult={auditResult} accessToken={accessToken} />
           )}
           {auditResult.route === AuditRoute.ARRANQUE && (
-            <ArranqueResults auditResult={auditResult} />
+            <ArranqueResults auditResult={auditResult} accessToken={accessToken} />
           )}
           {auditResult.route === AuditRoute.EVOLUCION && evolutionData && (
             <EvolucionResults
               auditResult={auditResult}
               evolutionData={evolutionData}
+              accessToken={accessToken}
             />
           )}
         </motion.div>

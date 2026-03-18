@@ -155,9 +155,13 @@ export class SupabaseAdapter implements StoragePort {
     if (error) throw new Error(`Failed to query audit by token: ${error.message}`);
     if (!data) return null;
 
+    const profile = data.ig_profile_id
+      ? await this.getProfileById(data.ig_profile_id as string)
+      : {} as InstagramProfile;
+
     return {
       username: data.username as string,
-      profile: {} as InstagramProfile, // profile is stored separately
+      profile,
       score: Number(data.score),
       level: data.score_level,
       route: data.route,
@@ -170,6 +174,74 @@ export class SupabaseAdapter implements StoragePort {
       analysisWindow: Number(data.analysis_window),
       createdAt: data.created_at as string,
     } as AuditResult;
+  }
+
+  async getRecentAudit(
+    username: string,
+    maxAgeHours: number,
+  ): Promise<(AuditResult & { auditId: string; accessToken: string }) | null> {
+    const cutoff = new Date(Date.now() - maxAgeHours * 3600000).toISOString();
+
+    const { data, error } = await this.client
+      .from('audits')
+      .select('*')
+      .eq('username', username)
+      .gte('created_at', cutoff)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw new Error(`Failed to query recent audit: ${error.message}`);
+    if (!data) return null;
+
+    const profile = data.ig_profile_id
+      ? await this.getProfileById(data.ig_profile_id as string)
+      : {} as InstagramProfile;
+
+    return {
+      username: data.username as string,
+      profile,
+      score: Number(data.score),
+      level: data.score_level,
+      route: data.route,
+      metrics: data.metrics,
+      normalizedMetrics: data.normalized_metrics,
+      healthSignals: data.health_signals,
+      criticalPoints: data.critical_points,
+      sector: data.sector as string,
+      postsAnalyzed: Number(data.posts_analyzed),
+      analysisWindow: Number(data.analysis_window),
+      createdAt: data.created_at as string,
+      previousAudit: undefined,
+      auditId: data.id as string,
+      accessToken: data.access_token as string,
+    } as AuditResult & { auditId: string; accessToken: string };
+  }
+
+  // ── Profile lookup ──────────────────────────────────────────────
+
+  private async getProfileById(profileId: string): Promise<InstagramProfile> {
+    const { data, error } = await this.client
+      .from('instagram_profiles')
+      .select('*')
+      .eq('id', profileId)
+      .maybeSingle();
+
+    if (error || !data) return {} as InstagramProfile;
+
+    return {
+      username: data.username as string,
+      fullName: (data.full_name ?? '') as string,
+      biography: (data.biography ?? '') as string,
+      followersCount: Number(data.followers ?? 0),
+      followsCount: Number(data.follows ?? 0),
+      postsCount: Number(data.posts_count ?? 0),
+      profilePicUrl: (data.profile_pic ?? '') as string,
+      isVerified: Boolean(data.is_verified),
+      isPrivate: Boolean(data.is_private),
+      isBusinessAccount: Boolean(data.is_business),
+      businessCategoryName: (data.business_category ?? null) as string | null,
+    } as InstagramProfile;
   }
 
   // ── Leads ─────────────────────────────────────────────────────────

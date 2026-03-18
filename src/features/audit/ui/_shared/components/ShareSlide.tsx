@@ -19,15 +19,18 @@ interface ShareSlideProps {
   percentile: number;
   /** CSS selector for the element that triggers the slide */
   triggerSelector: string;
+  /** Access token for persistent share links */
+  accessToken?: string | null;
 }
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getShareUrl(username: string): string {
+function getShareUrl(username: string, accessToken?: string | null): string {
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
-  return `${origin}/audit/${username}`;
+  const base = `${origin}/audit/${username}`;
+  return accessToken ? `${base}?t=${accessToken}` : base;
 }
 
 function truncateUrl(url: string, max: number): string {
@@ -64,6 +67,7 @@ export function ShareSlide({
   route,
   percentile,
   triggerSelector,
+  accessToken,
 }: ShareSlideProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
@@ -137,7 +141,7 @@ export function ShareSlide({
   // Copy URL
   // -----------------------------------------------------------------------
 
-  const shareUrl = getShareUrl(username);
+  const shareUrl = getShareUrl(username, accessToken);
 
   const trackEvent = useCallback((eventType: string) => {
     fetch('/api/events', {

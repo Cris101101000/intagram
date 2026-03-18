@@ -18,6 +18,7 @@ import { LEVEL_CONFIG } from '../constants/level-config';
 
 interface DiagnosticoResultsProps {
   auditResult: AuditResult;
+  accessToken?: string | null;
 }
 
 function computePercentile(score: number): number {
@@ -60,7 +61,7 @@ function useScrollReveal() {
   return containerRef;
 }
 
-export function DiagnosticoResults({ auditResult }: DiagnosticoResultsProps) {
+export function DiagnosticoResults({ auditResult, accessToken }: DiagnosticoResultsProps) {
   const {
     username,
     profile,
@@ -185,6 +186,7 @@ export function DiagnosticoResults({ auditResult }: DiagnosticoResultsProps) {
         route={auditResult.route}
         percentile={percentile}
         triggerSelector="[data-share-trigger]"
+        accessToken={accessToken}
       />
     </AuroraBackground>
   );
