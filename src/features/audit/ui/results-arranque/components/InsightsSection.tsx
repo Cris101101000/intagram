@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useTranslation } from '@/shared/ui/hooks/useTranslation';
 
@@ -20,6 +21,9 @@ interface InsightCard {
 export function InsightsSection({ daysSinceLastPost, isPaused }: InsightsSectionProps) {
   const { t } = useTranslation('audit');
   const variant = isPaused ? 'paused' : 'new';
+  const [openIndex, setOpenIndex] = useState<number>(0);
+
+  const toggle = (i: number) => setOpenIndex(prev => prev === i ? -1 : i);
 
   const cards: InsightCard[] = [
     {
@@ -61,43 +65,70 @@ export function InsightsSection({ daysSinceLastPost, isPaused }: InsightsSection
       </div>
 
       <div className="flex flex-col gap-4">
-        {cards.map((card, i) => (
-          <div
-            key={i}
-            className="reveal rounded-[20px] border border-gray-200 bg-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
-            style={{ padding: 24 }}
-          >
-            <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
-              <div
-                className="flex shrink-0 items-center justify-center rounded-full"
-                style={{ width: 40, height: 40, backgroundColor: `${card.statColor}10` }}
+        {cards.map((card, i) => {
+          const isOpen = openIndex === i;
+          return (
+            <div
+              key={i}
+              className="reveal rounded-[20px] border border-gray-200 bg-white transition-all hover:shadow-lg"
+              style={{ padding: 'clamp(16px, 4vw, 24px)' }}
+            >
+              {/* Header — always visible */}
+              <button
+                type="button"
+                onClick={() => toggle(i)}
+                className="flex items-start gap-3 sm:gap-4 w-full text-left"
+                aria-expanded={isOpen}
               >
-                <Icon icon={card.icon} width={20} height={20} color={card.statColor} />
-              </div>
-              <div className="flex-1">
-                <div className="font-inter text-base-oscura" style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.4, marginBottom: 6 }}>
-                  {t(card.titleKey)}
+                <div
+                  className="flex shrink-0 items-center justify-center rounded-full mt-0.5"
+                  style={{ width: 40, height: 40, backgroundColor: `${card.statColor}10` }}
+                >
+                  <Icon icon={card.icon} width={20} height={20} color={card.statColor} />
                 </div>
-                <p className="font-inter text-gray-500" style={{ fontSize: 15, lineHeight: 1.5 }}>
+                <div className="flex-1 min-w-0">
+                  <div className="font-inter text-base-oscura" style={{ fontSize: 'clamp(15px, 4vw, 20px)', fontWeight: 600, lineHeight: 1.4 }}>
+                    {t(card.titleKey)}
+                  </div>
+                </div>
+                <Icon
+                  icon="solar:alt-arrow-down-outline"
+                  width={20} height={20}
+                  color="#94A3B8"
+                  className="shrink-0 mt-2 transition-transform duration-300"
+                  style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                />
+              </button>
+
+              {/* Collapsible content */}
+              <div
+                className="overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                style={{
+                  maxHeight: isOpen ? 400 : 0,
+                  opacity: isOpen ? 1 : 0,
+                  marginTop: isOpen ? 12 : 0,
+                }}
+              >
+                <p className="font-inter text-gray-500 sm:ml-14" style={{ fontSize: 15, lineHeight: 1.5 }}>
                   {t(card.descKey)}
                 </p>
+
+                {/* Stat bar */}
+                <div
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 rounded-[12px]"
+                  style={{ padding: 'clamp(10px, 3vw, 14px) clamp(12px, 3vw, 16px)', marginTop: 16, backgroundColor: `${card.statColor}08` }}
+                >
+                  <span className="font-inter" style={{ fontSize: 'clamp(24px, 5vw, 32px)', fontWeight: 700, color: card.statColor, letterSpacing: '-0.02em', lineHeight: 1 }}>
+                    {card.statValue}
+                  </span>
+                  <span className="font-inter text-gray-500" style={{ fontSize: 14, lineHeight: 1.5 }}>
+                    {t(card.statDescKey)}
+                  </span>
+                </div>
               </div>
             </div>
-
-            {/* Stat bar */}
-            <div
-              className="flex items-center gap-3 rounded-[12px]"
-              style={{ padding: '14px 16px', marginTop: 16, backgroundColor: `${card.statColor}08` }}
-            >
-              <span className="font-inter" style={{ fontSize: 'clamp(24px, 5vw, 32px)', fontWeight: 700, color: card.statColor, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                {card.statValue}
-              </span>
-              <span className="font-inter text-gray-500" style={{ fontSize: 14, lineHeight: 1.5 }}>
-                {t(card.statDescKey)}
-              </span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
