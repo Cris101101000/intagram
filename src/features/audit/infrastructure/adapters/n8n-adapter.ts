@@ -111,8 +111,10 @@ export class N8nAdapter implements CrmPort {
           body: JSON.stringify({ ...payload, agencyId: '242e5da7-f65d-47b8-968a-d5d066c237aa' }),
         });
         if (response.ok) {
-          const data = await response.json();
-          signupUrl = data.signupUrl ?? null;
+          const json = await response.json();
+          // Response can be an array (n8n) — take first element
+          const result = Array.isArray(json) ? json[0] : json;
+          signupUrl = result?.data?.signupUrl ?? result?.signupUrl ?? null;
         } else {
           console.error(`[N8nAdapter] Magic link webhook responded with ${response.status}: ${response.statusText}`);
         }
