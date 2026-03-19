@@ -8,7 +8,8 @@ export async function captureLead(
   auditResult: AuditResult,
   auditId: string | null,
   storagePort: StoragePort,
-  crmPort: CrmPort
+  crmPort: CrmPort,
+  sessionId?: string,
 ): Promise<LeadResponse> {
   // Validate
   if (!leadData.gdprConsent) {
@@ -27,12 +28,13 @@ export async function captureLead(
     auditResult.sector
   );
 
-  // Send to CRM (non-blocking - don't fail if CRM fails)
+  // Send to CRM webhooks (non-blocking - don't fail if CRM fails)
+  let signupUrl: string | null = null;
   try {
-    await crmPort.sendLead(storedLead, auditResult);
+    signupUrl = await crmPort.sendLead(storedLead, auditResult, sessionId);
   } catch (error) {
     console.error('CRM webhook failed:', error);
   }
 
-  return { success: true, message: 'Lead capturado exitosamente.' };
+  return { success: true, message: 'Lead capturado exitosamente.', signupUrl };
 }

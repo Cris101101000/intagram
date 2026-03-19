@@ -20,6 +20,7 @@ interface CTAPhoneNotifsProps {
   username: string;
   sector: string;
   page: Page;
+  signupUrl?: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -258,7 +259,7 @@ function PhoneMockup({ notifications }: { notifications: NotifContent[] }) {
 // Main export
 // ---------------------------------------------------------------------------
 
-export function CTAPhoneNotifs({ username, sector, page }: CTAPhoneNotifsProps) {
+export function CTAPhoneNotifs({ username, sector, page, signupUrl }: CTAPhoneNotifsProps) {
   const sectorKey = getSectorKey(sector);
   const sectorNotifs = NOTIF_LIBRARY[sectorKey];
   const notif4 = page === 'arranque' ? NOTIF_4_ARRANQUE : NOTIF_4_DIAGNOSTICO;
@@ -295,8 +296,10 @@ export function CTAPhoneNotifs({ username, sector, page }: CTAPhoneNotifsProps) 
           </p>
 
           {/* CTA button */}
-          <button
-            type="button"
+          <a
+            href={signupUrl ?? '#'}
+            target={signupUrl ? '_blank' : undefined}
+            rel={signupUrl ? 'noopener noreferrer' : undefined}
             onClick={() => {
               fetch('/api/events', {
                 method: 'POST',
@@ -315,6 +318,7 @@ export function CTAPhoneNotifs({ username, sector, page }: CTAPhoneNotifsProps) 
               cursor: 'pointer',
               boxShadow: '0 8px 32px rgba(52,211,153,0.35)',
               animation: 'cta-pulse 2.5s ease-in-out infinite',
+              textDecoration: 'none',
             }}
           >
             <span className="relative z-10 inline-flex items-center gap-2.5">
@@ -323,7 +327,7 @@ export function CTAPhoneNotifs({ username, sector, page }: CTAPhoneNotifsProps) 
                 <path d="M5 12h14m0 0l-6-6m6 6l-6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
-          </button>
+          </a>
 
           {/* Trust note */}
           <p className="font-inter text-gray-400" style={{ fontSize: 12, marginTop: 16 }}>

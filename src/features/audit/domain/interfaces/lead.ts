@@ -16,6 +16,7 @@ export interface LeadData {
 export interface LeadResponse {
   success: boolean;
   message: string;
+  signupUrl?: string | null;
 }
 
 export interface StoredLead extends LeadData {

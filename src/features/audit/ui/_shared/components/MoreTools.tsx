@@ -9,7 +9,7 @@ const TOOLS = [
     iconBg: 'rgba(245,158,11,0.08)',
     name: 'Calculadora de Crecimiento e Impacto de IA',
     description: 'Descubre cuánto dinero está perdiendo tu negocio por no implementar inteligencia artificial.',
-    url: '#',
+    url: 'https://calculadora.beweos.io/',
     cta: 'Calcular impacto',
   },
   {
@@ -18,7 +18,7 @@ const TOOLS = [
     iconBg: 'rgba(14,165,233,0.08)',
     name: 'Comparador de Competencia',
     description: 'Conoce en qué posición estás frente a tu competencia y qué puedes mejorar.',
-    url: '#',
+    url: 'https://comparador.beweos.io/',
     cta: 'Comparar ahora',
   },
 ];

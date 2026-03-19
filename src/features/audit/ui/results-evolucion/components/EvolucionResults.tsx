@@ -17,6 +17,7 @@ interface EvolucionResultsProps {
   auditResult: AuditResult;
   evolutionData: EvolutionData;
   accessToken?: string | null;
+  signupUrl?: string | null;
 }
 
 function useScrollReveal() {

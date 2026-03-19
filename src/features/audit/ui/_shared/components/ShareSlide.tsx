@@ -193,7 +193,7 @@ export function ShareSlide({
       const res = await fetch(dataUrl);
       const blob = await res.blob();
 
-      const fileName = `igaudit-${username}-${level.toLowerCase()}.png`;
+      const fileName = `instagram-audit-${username}-${level.toLowerCase()}.png`;
       const file = new File([blob], fileName, { type: 'image/png' });
 
       // Try Web Share API (mobile)

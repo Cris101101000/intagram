@@ -5,7 +5,7 @@ import { AppProvider } from "@/shared/ui/providers/AppProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://igaudit.bewe.io"),
+  metadataBase: new URL("https://instagramaudit.beweos.io"),
   title: "Auditoría de Instagram Gratis | BeweOS",
   description:
     "Descubre si tu Instagram está funcionando. Score de 0 a 100 comparado con negocios de tu sector. Análisis gratuito en segundos.",
@@ -14,10 +14,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_ES",
-    siteName: "IG Audit by Bewe",
+    siteName: "Instagram Audit by BeweOS",
     title: "Auditoría de Instagram Gratis | BeweOS",
     description: "Descubre si tu Instagram está funcionando. Score de 0 a 100 comparado con negocios de tu sector.",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Auditoría de Instagram — IG Audit by Bewe" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Auditoría de Instagram — Instagram Audit by BeweOS" }],
   },
   twitter: {
     card: "summary_large_image",

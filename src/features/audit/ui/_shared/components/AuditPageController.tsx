@@ -120,6 +120,8 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
   const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
   const [auditId, setAuditId] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [signupUrl, setSignupUrl] = useState<string | null>(null);
   const [evolutionData, setEvolutionData] = useState<EvolutionData | null>(null);
   const [errorInfo, setErrorInfo] = useState<ErrorInfo | null>(null);
   const [captureLoading, setCaptureLoading] = useState(false);
@@ -207,6 +209,7 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
       setAuditResult(audit);
       if (json.auditId) setAuditId(json.auditId);
       if (json.accessToken) setAccessToken(json.accessToken);
+      if (json.sessionId) setSessionId(json.sessionId);
 
       if (audit.route === AuditRoute.EVOLUCION) {
         const evo = getEvolution(audit);
@@ -269,6 +272,7 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
             username: auditResult.username,
             auditId,
             auditResult,
+            sessionId,
           }),
         });
 
@@ -276,6 +280,9 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
           const body = await res.json().catch(() => ({}));
           throw new Error(body.error ?? 'Lead submission failed');
         }
+
+        const resBody = await res.json();
+        if (resBody.signupUrl) setSignupUrl(resBody.signupUrl);
 
         setPhase('RESULTS');
       } catch {
@@ -285,7 +292,7 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
         setCaptureLoading(false);
       }
     },
-    [auditResult, auditId],
+    [auditResult, auditId, sessionId],
   );
 
   // -----------------------------------------------------------------------
@@ -329,16 +336,17 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
       {phase === 'RESULTS' && auditResult && (
         <motion.div key="results" initial={false} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="min-h-screen">
           {auditResult.route === AuditRoute.DIAGNOSTICO && (
-            <DiagnosticoResults auditResult={auditResult} accessToken={accessToken} />
+            <DiagnosticoResults auditResult={auditResult} accessToken={accessToken} signupUrl={signupUrl} />
           )}
           {auditResult.route === AuditRoute.ARRANQUE && (
-            <ArranqueResults auditResult={auditResult} accessToken={accessToken} />
+            <ArranqueResults auditResult={auditResult} accessToken={accessToken} signupUrl={signupUrl} />
           )}
           {auditResult.route === AuditRoute.EVOLUCION && evolutionData && (
             <EvolucionResults
               auditResult={auditResult}
               evolutionData={evolutionData}
               accessToken={accessToken}
+              signupUrl={signupUrl}
             />
           )}
         </motion.div>

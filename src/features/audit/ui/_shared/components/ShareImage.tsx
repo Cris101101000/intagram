@@ -316,7 +316,7 @@ function ArranqueShareImage({ username, sector, ref: fwdRef }: { username: strin
 
       {/* CTA */}
       <div style={S.ctaText}>¿Ya auditaste el de tu negocio? 👇</div>
-      <div style={S.ctaUrl}>igaudit.bewe.io</div>
+      <div style={S.ctaUrl}>instagramaudit.beweos.io</div>
     </div>
   );
 }
@@ -387,7 +387,7 @@ export const ShareImage = forwardRef<HTMLDivElement, ShareImageProps>(
 
         {/* CTA */}
         <div style={S.ctaText}>Descubre el tuyo 👇</div>
-        <div style={S.ctaUrl}>igaudit.bewe.io</div>
+        <div style={S.ctaUrl}>instagramaudit.beweos.io</div>
       </div>
     );
   },

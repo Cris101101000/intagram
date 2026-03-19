@@ -3,20 +3,25 @@ import { StoredLead } from '../../domain/interfaces/lead';
 import { AuditResult } from '../../domain/interfaces/audit';
 
 export class N8nAdapter implements CrmPort {
-  private readonly webhookUrl: string;
+  private readonly hubspotWebhookUrl: string;
+  private readonly magicLinkWebhookUrl: string;
 
   constructor() {
-    this.webhookUrl = process.env.N8N_WEBHOOK_URL ?? '';
+    this.hubspotWebhookUrl = process.env.N8N_WEBHOOK_URL ?? 'https://tecnologiabewe.app.n8n.cloud/webhook/35e3fab9-0f1d-40b2-8bce-c6b5c64a7046';
+    this.magicLinkWebhookUrl = process.env.N8N_MAGIC_LINK_WEBHOOK_URL ?? 'https://tecnologiabewe.app.n8n.cloud/webhook/c289df50-c2f4-49e8-a432-aa0281e4ea90';
   }
 
-  async sendLead(lead: StoredLead, audit: AuditResult): Promise<void> {
-    const payload = {
+  private buildPayload(lead: StoredLead, audit: AuditResult, sessionId?: string) {
+    return {
+      // ── Session ──
+      session_id: sessionId ?? null,
+
       // ── Lead info ──
       lead_id: lead.id,
       first_name: lead.firstName,
       last_name: lead.lastName,
       email: lead.email,
-      phone: `${lead.phone.code}${lead.phone.number}`,
+      phone: lead.phone.number,
       phone_code: lead.phone.code,
       phone_country: lead.phone.country,
       phone_number: lead.phone.number,
@@ -75,31 +80,47 @@ export class N8nAdapter implements CrmPort {
       // ── Meta ──
       created_at: lead.createdAt,
     };
+  }
 
-    if (!this.webhookUrl) {
-      console.warn('[N8nAdapter] N8N_WEBHOOK_URL not configured — skipping CRM sync');
-      return;
-    }
+  async sendLead(lead: StoredLead, audit: AuditResult, sessionId?: string): Promise<string | null> {
+    const payload = this.buildPayload(lead, audit, sessionId);
 
-    try {
-      const response = await fetch(this.webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        console.error(
-          `[N8nAdapter] Webhook responded with ${response.status}: ${response.statusText}`,
-        );
+    // 1. HubSpot webhook (non-blocking)
+    if (this.hubspotWebhookUrl) {
+      try {
+        const response = await fetch(this.hubspotWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+          console.error(`[N8nAdapter] HubSpot webhook responded with ${response.status}: ${response.statusText}`);
+        }
+      } catch (error: unknown) {
+        console.error('[N8nAdapter] HubSpot webhook failed:', error instanceof Error ? error.message : String(error));
       }
-    } catch (error: unknown) {
-      // Log but do NOT re-throw — the lead is already persisted in Supabase,
-      // so a CRM failure should not break the user-facing flow.
-      console.error(
-        '[N8nAdapter] Failed to send lead to n8n webhook:',
-        error instanceof Error ? error.message : String(error),
-      );
     }
+
+    // 2. Magic link webhook — returns signupUrl
+    let signupUrl: string | null = null;
+    if (this.magicLinkWebhookUrl) {
+      try {
+        const response = await fetch(this.magicLinkWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, agencyId: '242e5da7-f65d-47b8-968a-d5d066c237aa' }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          signupUrl = data.signupUrl ?? null;
+        } else {
+          console.error(`[N8nAdapter] Magic link webhook responded with ${response.status}: ${response.statusText}`);
+        }
+      } catch (error: unknown) {
+        console.error('[N8nAdapter] Magic link webhook failed:', error instanceof Error ? error.message : String(error));
+      }
+    }
+
+    return signupUrl;
   }
 }

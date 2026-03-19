@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/analytics/'],
       },
     ],
-    sitemap: 'https://igaudit.bewe.io/sitemap.xml',
+    sitemap: 'https://instagramaudit.beweos.io/sitemap.xml',
   };
 }

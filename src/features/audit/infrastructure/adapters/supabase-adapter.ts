@@ -5,6 +5,7 @@ import { LeadData, StoredLead } from '../../domain/interfaces/lead';
 
 export class SupabaseAdapter implements StoragePort {
   private readonly client: SupabaseClient;
+  private readonly brand: string;
 
   constructor() {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -19,6 +20,8 @@ export class SupabaseAdapter implements StoragePort {
     this.client = createClient(url, serviceKey, {
       auth: { autoRefreshToken: false, persistSession: false },
     });
+
+    this.brand = process.env.NEXT_PUBLIC_BRAND ?? 'bewe';
   }
 
   // ── Sessions ──────────────────────────────────────────────────────
@@ -51,6 +54,7 @@ export class SupabaseAdapter implements StoragePort {
         ip_address: ip ?? null,
         locale: locale ?? 'es',
         country: country,
+        brand: this.brand,
       })
       .select('id')
       .single();
@@ -117,6 +121,7 @@ export class SupabaseAdapter implements StoragePort {
         posts_analyzed: audit.postsAnalyzed,
         analysis_window: audit.analysisWindow,
         previous_audit_id: audit.previousAudit?.id ?? null,
+        brand: this.brand,
       })
       .select('id, access_token')
       .single();
@@ -130,6 +135,7 @@ export class SupabaseAdapter implements StoragePort {
       .from('audits')
       .select('id, score, metrics, created_at')
       .eq('username', username)
+      .eq('brand', this.brand)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -186,6 +192,7 @@ export class SupabaseAdapter implements StoragePort {
       .from('audits')
       .select('*')
       .eq('username', username)
+      .eq('brand', this.brand)
       .gte('created_at', cutoff)
       .order('created_at', { ascending: false })
       .limit(1)
@@ -268,6 +275,7 @@ export class SupabaseAdapter implements StoragePort {
         score,
         score_level: scoreLevel,
         sector,
+        brand: this.brand,
       })
       .select('*')
       .single();
@@ -281,6 +289,7 @@ export class SupabaseAdapter implements StoragePort {
       .from('leads')
       .select('*')
       .eq('email', email)
+      .eq('brand', this.brand)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();

@@ -23,6 +23,7 @@ function computePercentile(score: number): number {
 interface ArranqueResultsProps {
   auditResult: AuditResult;
   accessToken?: string | null;
+  signupUrl?: string | null;
 }
 
 function useScrollReveal() {
@@ -58,7 +59,7 @@ function useScrollReveal() {
   return containerRef;
 }
 
-export function ArranqueResults({ auditResult, accessToken }: ArranqueResultsProps) {
+export function ArranqueResults({ auditResult, accessToken, signupUrl }: ArranqueResultsProps) {
   const { t } = useTranslation('audit');
   const { username, profile, healthSignals, metrics } = auditResult;
   const containerRef = useScrollReveal();
@@ -138,7 +139,7 @@ export function ArranqueResults({ auditResult, accessToken }: ArranqueResultsPro
       {/* Section 5 — CTA */}
       <section style={{ padding: '0 0 72px' }}>
         <div className="mx-auto max-w-[800px] px-6">
-          <CTAPhoneNotifs username={username} sector={auditResult.sector} page="arranque" />
+          <CTAPhoneNotifs username={username} sector={auditResult.sector} page="arranque" signupUrl={signupUrl} />
         </div>
       </section>
       {/* More Tools */}

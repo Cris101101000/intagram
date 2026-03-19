@@ -19,6 +19,7 @@ import { LEVEL_CONFIG } from '../constants/level-config';
 interface DiagnosticoResultsProps {
   auditResult: AuditResult;
   accessToken?: string | null;
+  signupUrl?: string | null;
 }
 
 function computePercentile(score: number): number {
@@ -61,7 +62,7 @@ function useScrollReveal() {
   return containerRef;
 }
 
-export function DiagnosticoResults({ auditResult, accessToken }: DiagnosticoResultsProps) {
+export function DiagnosticoResults({ auditResult, accessToken, signupUrl }: DiagnosticoResultsProps) {
   const {
     username,
     profile,
@@ -155,7 +156,7 @@ export function DiagnosticoResults({ auditResult, accessToken }: DiagnosticoResu
       {/* Section 7 — CTA */}
       <section style={{ padding: '0 0 72px' }}>
         <div className="mx-auto max-w-[800px] px-6">
-          <CTAPhoneNotifs username={username} sector={sector} page="diagnostico" />
+          <CTAPhoneNotifs username={username} sector={sector} page="diagnostico" signupUrl={signupUrl} />
         </div>
       </section>
 

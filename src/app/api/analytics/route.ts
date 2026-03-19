@@ -49,6 +49,7 @@ export async function GET(req: NextRequest) {
       : now.toISOString();
 
     const sb = getSupabase();
+    const brand = 'bewe'; // Analytics only shows Bewe data
 
     // Parallel queries
     // Note: sessions table has no created_at column, so we fetch audits/leads
@@ -57,12 +58,14 @@ export async function GET(req: NextRequest) {
       sb
         .from('audits')
         .select('id, username, session_id, score, score_level, route, sector, created_at')
+        .eq('brand', brand)
         .gte('created_at', start)
         .lte('created_at', end)
         .limit(10000),
       sb
         .from('leads')
         .select('id, username, email, score, score_level, sector, created_at, audit_id')
+        .eq('brand', brand)
         .gte('created_at', start)
         .lte('created_at', end)
         .limit(10000),
@@ -94,6 +97,7 @@ export async function GET(req: NextRequest) {
         const sessionsRes = await sb
           .from('sessions')
           .select('id, username, user_agent, ip_address, locale, country, completed_at')
+          .eq('brand', brand)
           .in('id', batch);
         if (sessionsRes.error) throw new Error(`sessions: ${sessionsRes.error.message}`);
         sessions = sessions.concat(sessionsRes.data ?? []);

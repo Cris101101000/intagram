@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
     const result = await runAudit(cleanUsername, instagramPort, storagePort, sessionId);
     const { auditId, accessToken, ...auditData } = result;
 
-    return NextResponse.json({ success: true, data: auditData, auditId, accessToken });
+    return NextResponse.json({ success: true, data: auditData, auditId, accessToken, sessionId });
   } catch (error) {
     // Handle custom error classes from the Apify adapter
     if (error instanceof PrivateProfileError) {

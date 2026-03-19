@@ -9,7 +9,7 @@ import { shouldUseMock } from '@/features/audit/infrastructure/mock/mock-data';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { firstName, lastName, email, phone, username, gdprConsent, auditId, auditResult } = body;
+    const { firstName, lastName, email, phone, username, gdprConsent, auditId, auditResult, sessionId } = body;
 
     // Validate required fields
     if (!firstName || !lastName || !email || !phone?.number || !username) {
@@ -83,6 +83,7 @@ export async function POST(request: NextRequest) {
       auditId || null,
       storagePort,
       crmPort,
+      sessionId || undefined,
     );
 
     if (!result.success) {
@@ -92,7 +93,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true, message: result.message });
+    return NextResponse.json({
+      success: true,
+      message: result.message,
+      signupUrl: result.signupUrl ?? null,
+    });
   } catch (error) {
     console.error('Lead capture error:', error);
     return NextResponse.json(
