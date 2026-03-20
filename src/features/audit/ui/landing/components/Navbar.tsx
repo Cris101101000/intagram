@@ -58,13 +58,15 @@ export function Navbar() {
     >
       <div className="flex items-center" style={{ padding: '0 12px', gap: 24 }}>
         {/* Logo */}
-        <Image
-          src="/bewe-logo.png"
-          alt="Bewe"
-          width={100}
-          height={28}
-          style={{ height: 28, width: 'auto' }}
-        />
+        <a href="https://www.bewe.io" target="_blank" rel="noopener noreferrer">
+          <Image
+            src="/bewe-logo.png"
+            alt="Bewe"
+            width={100}
+            height={28}
+            style={{ height: 28, width: 'auto' }}
+          />
+        </a>
 
         {/* Tools dropdown */}
         <div ref={dropdownRef} className="relative">
