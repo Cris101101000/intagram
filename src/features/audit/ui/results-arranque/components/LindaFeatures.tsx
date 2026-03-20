@@ -10,9 +10,10 @@ interface LindaFeaturesProps {
   profilePicUrl?: string;
   fullName?: string;
   biography?: string;
+  signupUrl?: string | null;
 }
 
-export function LindaFeatures({ username, profilePicUrl, fullName, biography }: LindaFeaturesProps) {
+export function LindaFeatures({ username, profilePicUrl, fullName, biography, signupUrl }: LindaFeaturesProps) {
   const { t } = useTranslation('audit');
   const content = resolveSubNiche(username, fullName, biography);
 
@@ -28,6 +29,8 @@ export function LindaFeatures({ username, profilePicUrl, fullName, biography }: 
             badgeColor="#487CBB"
             title={t('audit_arranque_feat1_title')}
             desc={t('audit_arranque_feat1_desc')}
+            ctaLabel="Quiero contenido que conecte"
+            signupUrl={signupUrl}
           />
           <PostSimulation username={username} profilePicUrl={profilePicUrl} content={content} />
         </FeatureRow>
@@ -41,6 +44,8 @@ export function LindaFeatures({ username, profilePicUrl, fullName, biography }: 
             badgeColor="#279E73"
             title={t('audit_arranque_feat2_title')}
             desc={t('audit_arranque_feat2_desc')}
+            ctaLabel="Quiero responder al instante"
+            signupUrl={signupUrl}
           />
           <ChatSimulation content={content} />
         </FeatureRow>
@@ -54,6 +59,8 @@ export function LindaFeatures({ username, profilePicUrl, fullName, biography }: 
             badgeColor="#D97706"
             title={t('audit_arranque_feat3_title')}
             desc={t('audit_arranque_feat3_desc')}
+            ctaLabel="Quiero organizar mis contactos"
+            signupUrl={signupUrl}
           />
           <CrmSimulation content={content} />
         </FeatureRow>
@@ -75,8 +82,8 @@ function FeatureRow({ direction, children }: { direction: 'normal' | 'inverted';
   );
 }
 
-function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc }: {
-  badgeIcon: string; badgeLabel: string; badgeBg: string; badgeColor: string; title: string; desc: string;
+function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, ctaLabel, signupUrl }: {
+  badgeIcon: string; badgeLabel: string; badgeBg: string; badgeColor: string; title: string; desc: string; ctaLabel?: string; signupUrl?: string | null;
 }) {
   return (
     <div className="flex-1 min-w-0">
@@ -93,6 +100,26 @@ function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc }
       <p className="font-inter text-gray-500" style={{ fontSize: 16, lineHeight: 1.5 }}>
         {desc}
       </p>
+      {ctaLabel && (
+        <button
+          type="button"
+          onClick={() => { if (signupUrl) window.open(signupUrl, '_blank', 'noopener,noreferrer'); }}
+          className="inline-flex items-center gap-2 rounded-full font-inter transition-all hover:-translate-y-0.5 hover:shadow-lg"
+          style={{
+            marginTop: 16,
+            padding: '10px 24px',
+            fontSize: 14,
+            fontWeight: 600,
+            backgroundColor: badgeColor,
+            color: '#ffffff',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          {ctaLabel}
+          <Icon icon="solar:arrow-right-outline" width={16} height={16} />
+        </button>
+      )}
     </div>
   );
 }

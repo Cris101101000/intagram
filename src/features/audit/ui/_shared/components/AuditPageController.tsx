@@ -12,6 +12,7 @@ import { CaptureScreen, type CaptureFormData } from '@/features/audit/ui/capture
 import { DiagnosticoResults } from '@/features/audit/ui/results/components';
 import { ArranqueResults } from '@/features/audit/ui/results-arranque/components';
 import { EvolucionResults } from '@/features/audit/ui/results-evolucion/components';
+import { Navbar } from '@/features/audit/ui/landing/components/Navbar';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -335,6 +336,7 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
       {/* -------- RESULTS -------- */}
       {phase === 'RESULTS' && auditResult && (
         <motion.div key="results" initial={false} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="min-h-screen">
+          <Navbar />
           {auditResult.route === AuditRoute.DIAGNOSTICO && (
             <DiagnosticoResults auditResult={auditResult} accessToken={accessToken} signupUrl={signupUrl} />
           )}

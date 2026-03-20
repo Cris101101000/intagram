@@ -11,6 +11,7 @@ interface LindaSolutionsProps {
   profilePicUrl?: string;
   fullName?: string;
   biography?: string;
+  signupUrl?: string | null;
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -626,7 +627,7 @@ export function resolveSubNiche(username?: string, fullName?: string, biography?
 // Main component
 // ---------------------------------------------------------------------------
 
-export function LindaSolutions({ criticalPoints, username, profilePicUrl, fullName, biography }: LindaSolutionsProps) {
+export function LindaSolutions({ criticalPoints, username, profilePicUrl, fullName, biography, signupUrl }: LindaSolutionsProps) {
   const topPoints = criticalPoints.slice(0, 3);
   const content = resolveSubNiche(username, fullName, biography);
 
@@ -655,6 +656,8 @@ export function LindaSolutions({ criticalPoints, username, profilePicUrl, fullNa
             badgeColor="#487CBB"
             title="Crea contenido diseñado para que tu audiencia responda"
             desc="Cada 3 días Linda genera propuestas de contenido con hooks, preguntas y CTAs personalizados para tu sector. No publicas contenido genérico — publicas contenido que provoca respuestas. Tú solo apruebas y se publica."
+            ctaLabel="Quiero mejorar mis publicaciones"
+            signupUrl={signupUrl}
           />
           <PostSimulation username={username} profilePicUrl={profilePicUrl} content={content} />
         </FeatureRow>
@@ -668,6 +671,8 @@ export function LindaSolutions({ criticalPoints, username, profilePicUrl, fullNa
             badgeColor="#279E73"
             title="Cada mensaje y comentario respondido al instante, 24/7"
             desc="Linda responde mensajes en segundos con el tono de tu marca, detecta la intención del mensaje y guía al cliente hacia agendar. También responde comentarios para mantener la conversación activa."
+            ctaLabel="Quiero responder más rápido"
+            signupUrl={signupUrl}
           />
           <ChatSimulation messages={content.chatMessages} />
         </FeatureRow>
@@ -681,6 +686,8 @@ export function LindaSolutions({ criticalPoints, username, profilePicUrl, fullNa
             badgeColor="#D97706"
             title="Cada contacto de Instagram se guarda y organiza solo"
             desc="Cuando alguien te escribe por Instagram, Linda captura sus datos, lo etiqueta según su interés y lo registra automáticamente en tu panel de contactos. Tú solo ves quién te escribió, qué quiere y cuándo hacer seguimiento."
+            ctaLabel="Quiero organizar mis contactos"
+            signupUrl={signupUrl}
           />
           <CrmSimulation contacts={content.crmContacts} />
         </FeatureRow>
@@ -702,8 +709,8 @@ function FeatureRow({ direction, children }: { direction: 'normal' | 'inverted';
   );
 }
 
-function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc }: {
-  badgeIcon: string; badgeLabel: string; badgeBg: string; badgeColor: string; title: string; desc: string;
+function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, ctaLabel, signupUrl }: {
+  badgeIcon: string; badgeLabel: string; badgeBg: string; badgeColor: string; title: string; desc: string; ctaLabel?: string; signupUrl?: string | null;
 }) {
   return (
     <div className="flex-1 min-w-0">
@@ -720,6 +727,26 @@ function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc }
       <p className="font-inter text-gray-500" style={{ fontSize: 16, lineHeight: 1.5 }}>
         {desc}
       </p>
+      {ctaLabel && (
+        <button
+          type="button"
+          onClick={() => { if (signupUrl) window.open(signupUrl, '_blank', 'noopener,noreferrer'); }}
+          className="inline-flex items-center gap-2 rounded-full font-inter transition-all hover:-translate-y-0.5 hover:shadow-lg"
+          style={{
+            marginTop: 16,
+            padding: '10px 24px',
+            fontSize: 14,
+            fontWeight: 600,
+            backgroundColor: badgeColor,
+            color: '#ffffff',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          {ctaLabel}
+          <Icon icon="solar:arrow-right-outline" width={16} height={16} />
+        </button>
+      )}
     </div>
   );
 }

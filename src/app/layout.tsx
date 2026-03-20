@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { AppProvider } from "@/shared/ui/providers/AppProvider";
 
 import "./globals.css";
@@ -47,17 +46,6 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-soft-aqua font-inter">
-        {/* Bewe logo — top left on all pages */}
-        <div style={{ position: 'fixed', top: 16, left: 20, zIndex: 9000, pointerEvents: 'none' }}>
-          <Image
-            src="/bewe-logo.png"
-            alt="Bewe"
-            width={80}
-            height={22}
-            style={{ height: 22, width: 'auto', opacity: 0.85 }}
-            priority
-          />
-        </div>
         <AppProvider>{children}</AppProvider>
       </body>
     </html>

@@ -113,7 +113,7 @@ export function ArranqueResults({ auditResult, accessToken, signupUrl }: Arranqu
       {/* Section 3 — Linda Features */}
       <section className="py-10 sm:py-[72px]">
         <div className="mx-auto max-w-[1060px] px-6">
-          <LindaFeatures username={username} profilePicUrl={profile.profilePicUrl} fullName={profile.fullName} biography={profile.biography} />
+          <LindaFeatures username={username} profilePicUrl={profile.profilePicUrl} fullName={profile.fullName} biography={profile.biography} signupUrl={signupUrl} />
         </div>
       </section>
 

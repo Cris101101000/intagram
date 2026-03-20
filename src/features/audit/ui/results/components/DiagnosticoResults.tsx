@@ -142,6 +142,7 @@ export function DiagnosticoResults({ auditResult, accessToken, signupUrl }: Diag
             profilePicUrl={profile.profilePicUrl}
             fullName={profile.fullName}
             biography={profile.biography}
+            signupUrl={signupUrl}
           />
         </div>
       </section>

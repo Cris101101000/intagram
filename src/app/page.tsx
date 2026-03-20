@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useCallback, useEffect } from 'react';
 import {
+  Navbar,
   HeroSection,
   SocialProofMarquee,
   FeaturesSection,
@@ -41,6 +42,7 @@ function HomeContent() {
 
   return (
     <main className="min-h-screen" style={{ background: 'linear-gradient(135deg, #EEF6FF 0%, #F0FDF9 40%, #FEFCE8 100%)', backgroundAttachment: 'fixed' }}>
+      <Navbar />
       <HeroSection onSubmit={handleSubmit} isLoading={isLoading} apiError={apiError} />
 
       <SocialProofMarquee />
