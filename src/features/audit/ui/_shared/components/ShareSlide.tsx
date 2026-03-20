@@ -74,14 +74,18 @@ export function ShareSlide({
   const [copied, setCopied] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showComparador, setShowComparador] = useState(false);
+  const [comparadorDismissed, setComparadorDismissed] = useState(false);
   const shareImageRef = useRef<HTMLDivElement>(null);
 
   const isArranque = route === AuditRoute.ARRANQUE;
+  const isExcelente = level === ScoreLevel.EXCELENTE;
 
   useEffect(() => {
     setIsMobile(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
   }, []);
   const accentColor = isArranque ? '#34D399' : '#60A5FA';
+  const comparadorUrl = 'https://comparador.beweos.io/';
 
   // -----------------------------------------------------------------------
   // IntersectionObserver — trigger when section enters viewport
@@ -97,7 +101,11 @@ export function ShareSlide({
       const obs = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            setIsOpen(true);
+            if (isExcelente && !comparadorDismissed) {
+              setShowComparador(true);
+            } else {
+              setIsOpen(true);
+            }
             setHasTriggered(true);
             obs.disconnect();
           }
@@ -117,13 +125,19 @@ export function ShareSlide({
   // -----------------------------------------------------------------------
 
   useEffect(() => {
-    if (isOpen) {
+    const anyOpen = isOpen || showComparador;
+    if (anyOpen) {
       document.body.style.overflow = 'hidden';
+      document.querySelector<HTMLElement>('[data-navbar]')?.style.setProperty('display', 'none');
     } else {
       document.body.style.overflow = '';
+      document.querySelector<HTMLElement>('[data-navbar]')?.style.removeProperty('display');
     }
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
+    return () => {
+      document.body.style.overflow = '';
+      document.querySelector<HTMLElement>('[data-navbar]')?.style.removeProperty('display');
+    };
+  }, [isOpen, showComparador]);
 
   // -----------------------------------------------------------------------
   // Close on Escape
@@ -131,11 +145,18 @@ export function ShareSlide({
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 'Escape') {
+        if (showComparador) {
+          setShowComparador(false);
+          setComparadorDismissed(true);
+        } else {
+          setIsOpen(false);
+        }
+      }
     };
-    if (isOpen) window.addEventListener('keydown', handleKey);
+    if (isOpen || showComparador) window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [isOpen]);
+  }, [isOpen, showComparador]);
 
   // -----------------------------------------------------------------------
   // Copy URL
@@ -231,10 +252,115 @@ export function ShareSlide({
   // Render
   // -----------------------------------------------------------------------
 
-  if (!isOpen && !hasTriggered) return null;
+  const handleCloseComparador = useCallback(() => {
+    setShowComparador(false);
+    setComparadorDismissed(true);
+    trackEvent('comparador_modal_dismissed');
+  }, [trackEvent]);
+
+  const handleGoToComparador = useCallback(() => {
+    trackEvent('comparador_modal_clicked');
+    window.open(comparadorUrl, '_blank');
+    setShowComparador(false);
+    setComparadorDismissed(true);
+  }, [comparadorUrl, trackEvent]);
+
+  if (!isOpen && !hasTriggered && !showComparador) return null;
 
   return (
     <>
+      {/* ── Comparador Modal (EXCELENTE level only) ── */}
+      {showComparador && (
+        <>
+          <div
+            className="fixed inset-0 z-[9998] bg-black/30 backdrop-blur-[2px] transition-all duration-300"
+            onClick={handleCloseComparador}
+            aria-hidden="true"
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Comparador de competencia"
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          >
+            <div
+              className="relative w-full max-w-[480px] overflow-hidden rounded-3xl bg-white shadow-2xl"
+              style={{ animation: 'fadeIn 0.3s ease-out' }}
+            >
+              {/* Close */}
+              <button
+                onClick={handleCloseComparador}
+                className="absolute top-4 right-4 z-10 flex items-center justify-center rounded-full bg-gray-100 transition-all hover:bg-gray-200"
+                style={{ width: 36, height: 36 }}
+                aria-label="Cerrar"
+              >
+                <Icon icon="solar:close-circle-outline" width={20} height={20} color="#64748B" />
+              </button>
+
+              {/* Top gradient banner */}
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 50%, #93C5FD 100%)',
+                  padding: '40px 28px 32px',
+                  textAlign: 'center',
+                }}
+              >
+                <div style={{ fontSize: 56, marginBottom: 12 }}>🏆</div>
+                <p className="font-inter" style={{ fontSize: 22, fontWeight: 800, color: '#0A2540', lineHeight: 1.3, marginBottom: 6 }}>
+                  ¡Tu perfil es imparable!
+                </p>
+                <p className="font-inter" style={{ fontSize: 14, color: '#0A2540', opacity: 0.6, lineHeight: 1.5 }}>
+                  Nivel Excelente — Top {percentile}% de tu sector
+                </p>
+              </div>
+
+              {/* Body */}
+              <div style={{ padding: '28px 28px 20px' }}>
+                <p className="font-inter" style={{ fontSize: 15, fontWeight: 600, color: '#0A2540', lineHeight: 1.5, marginBottom: 8, textAlign: 'center' }}>
+                  Ahora descubre si también eres el mejor frente a tus competidores directos
+                </p>
+                <p className="font-inter" style={{ fontSize: 13, color: '#64748B', lineHeight: 1.6, marginBottom: 24, textAlign: 'center' }}>
+                  Descubre cómo estás posicionado frente a los negocios de tu zona y quién lidera en tu sector.
+                </p>
+
+                {/* CTA button */}
+                <button
+                  onClick={handleGoToComparador}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl font-inter text-white transition-all hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg"
+                  style={{
+                    padding: '14px 24px',
+                    fontSize: 15,
+                    fontWeight: 700,
+                    background: 'linear-gradient(135deg, #2563EB, #3B82F6)',
+                    marginBottom: 12,
+                  }}
+                >
+                  <Icon icon="solar:chart-square-outline" width={20} height={20} />
+                  Comparar con mi competencia
+                </button>
+
+                {/* Skip link */}
+                <button
+                  onClick={handleCloseComparador}
+                  className="flex w-full items-center justify-center font-inter transition-colors hover:text-gray-600"
+                  style={{ fontSize: 13, fontWeight: 500, color: '#9CA3AF', padding: '8px 0' }}
+                >
+                  Tal vez después
+                </button>
+              </div>
+
+              {/* Footer */}
+              <div
+                className="flex items-center justify-center border-t border-gray-100 font-inter text-gray-300"
+                style={{ padding: 10, fontSize: 11 }}
+              >
+                Powered by Linda AI
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Off-screen share image for html2canvas */}
       <div
         aria-hidden="true"

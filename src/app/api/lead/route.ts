@@ -4,7 +4,6 @@ import { N8nAdapter } from '@/features/audit/infrastructure/adapters/n8n-adapter
 import { captureLead } from '@/features/audit/application/use-cases/capture-lead';
 import { AuditResult } from '@/features/audit/domain/interfaces/audit';
 import { LeadData } from '@/features/audit/domain/interfaces/lead';
-import { shouldUseMock } from '@/features/audit/infrastructure/mock/mock-data';
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,11 +53,6 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 },
       );
-    }
-
-    // Mock mode – skip Supabase and N8N calls
-    if (shouldUseMock(username)) {
-      return NextResponse.json({ success: true, message: 'Lead capturado exitosamente (demo).' });
     }
 
     const storagePort = new SupabaseAdapter();

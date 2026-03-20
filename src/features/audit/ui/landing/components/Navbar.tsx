@@ -46,17 +46,20 @@ export function Navbar() {
 
   return (
     <nav
+      data-navbar
       className="fixed top-0 left-0 right-0 z-40"
       style={{
-        backgroundColor: 'transparent',
+        backgroundColor: scrolled ? 'rgba(255,255,255,0.95)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
         border: 0,
         outline: 0,
-        boxShadow: 'none',
+        boxShadow: scrolled ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
         padding: scrolled ? '12px 0' : '20px 0',
-        transition: 'padding 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
-      <div className="flex items-center" style={{ padding: '0 12px', gap: 24 }}>
+      <div className="flex items-center justify-between" style={{ padding: '0 24px' }}>
+        <div className="flex items-center" style={{ gap: 24 }}>
         {/* Logo */}
         <a href="https://www.bewe.io" target="_blank" rel="noopener noreferrer">
           <Image
@@ -151,6 +154,21 @@ export function Navbar() {
             </div>
           )}
         </div>
+        </div>
+
+        {/* CTA Conocer más */}
+        <a
+          href="https://www.bewe.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full font-inter transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+          style={{ padding: '6px 14px', fontSize: 12, fontWeight: 600, color: '#3B82F6', backgroundColor: 'rgba(59,130,246,0.08)', textDecoration: 'none', border: '1px solid rgba(59,130,246,0.15)' }}
+        >
+          <span className="hidden sm:inline">Conocer más sobre </span>Bewe
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+            <path d="M5.25 3L9.25 7L5.25 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
       </div>
     </nav>
   );

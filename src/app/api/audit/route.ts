@@ -7,11 +7,6 @@ import {
   PrivateProfileError,
   ScraperTimeoutError,
 } from '@/features/audit/infrastructure/adapters/apify-adapter';
-import {
-  shouldUseMock,
-  getMockAuditResult,
-  getMockDelay,
-} from '@/features/audit/infrastructure/mock/mock-data';
 
 // Simple in-memory rate limiting (5 requests per IP per hour)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -25,7 +20,7 @@ function checkRateLimit(ip: string): boolean {
     return true;
   }
 
-  if (entry.count >= 999) return false; // TODO: restore to 5 after testing
+  if (entry.count >= 5) return false;
   entry.count++;
   return true;
 }
@@ -84,13 +79,6 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 },
       );
-    }
-
-    // Mock mode – return mock data without calling real APIs (skip rate limit)
-    if (shouldUseMock(cleanUsername)) {
-      await new Promise(resolve => setTimeout(resolve, getMockDelay()));
-      const mockResult = getMockAuditResult(cleanUsername);
-      return NextResponse.json({ success: true, data: mockResult });
     }
 
     // Check for cached audit from last 24 hours before running a fresh one
