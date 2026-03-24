@@ -5,10 +5,12 @@ import { AuditResult } from '../../domain/interfaces/audit';
 export class N8nAdapter implements CrmPort {
   private readonly hubspotWebhookUrl: string;
   private readonly magicLinkWebhookUrl: string;
+  private readonly magicLinkLookupUrl: string;
 
   constructor() {
     this.hubspotWebhookUrl = process.env.N8N_WEBHOOK_URL ?? 'https://tecnologiabewe.app.n8n.cloud/webhook/35e3fab9-0f1d-40b2-8bce-c6b5c64a7046';
     this.magicLinkWebhookUrl = process.env.N8N_MAGIC_LINK_WEBHOOK_URL ?? 'https://tecnologiabewe.app.n8n.cloud/webhook/c289df50-c2f4-49e8-a432-aa0281e4ea90';
+    this.magicLinkLookupUrl = process.env.N8N_MAGIC_LINK_LOOKUP_URL ?? 'https://tecnologiabewe.app.n8n.cloud/webhook/38602a2b-fc2f-4434-bb56-b499d6dc09d9';
   }
 
   private buildPayload(lead: StoredLead, audit: AuditResult, sessionId?: string) {
@@ -114,12 +116,32 @@ export class N8nAdapter implements CrmPort {
           const json = await response.json();
           // Response can be an array (n8n) — take first element
           const result = Array.isArray(json) ? json[0] : json;
-          signupUrl = result?.data?.signupUrl ?? result?.signupUrl ?? null;
+          signupUrl = result?.signup_url ?? result?.signupUrl ?? result?.item?.signup_url ?? null;
         } else {
           console.error(`[N8nAdapter] Magic link webhook responded with ${response.status}: ${response.statusText}`);
         }
       } catch (error: unknown) {
         console.error('[N8nAdapter] Magic link webhook failed:', error instanceof Error ? error.message : String(error));
+      }
+    }
+
+    // 3. Fallback — if no signupUrl, look up existing magic link across all tools
+    if (!signupUrl && this.magicLinkLookupUrl) {
+      try {
+        const response = await fetch(this.magicLinkLookupUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: lead.email }),
+        });
+        if (response.ok) {
+          const json = await response.json();
+          const result = Array.isArray(json) ? json[0] : json;
+          signupUrl = result?.signup_url ?? result?.signupUrl ?? result?.item?.signup_url ?? null;
+        } else {
+          console.error(`[N8nAdapter] Magic link lookup responded with ${response.status}: ${response.statusText}`);
+        }
+      } catch (error: unknown) {
+        console.error('[N8nAdapter] Magic link lookup failed:', error instanceof Error ? error.message : String(error));
       }
     }
 
