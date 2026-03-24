@@ -32,6 +32,9 @@ export async function captureLead(
   let signupUrl: string | null = null;
   try {
     signupUrl = await crmPort.sendLead(storedLead, auditResult, sessionId);
+    if (signupUrl) {
+      await storagePort.updateLeadSignupUrl(storedLead.id, signupUrl);
+    }
   } catch (error) {
     console.error('CRM webhook failed:', error);
   }

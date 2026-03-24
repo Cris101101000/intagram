@@ -151,6 +151,17 @@ export class SupabaseAdapter implements StoragePort {
     };
   }
 
+  async getAuditIdByToken(accessToken: string): Promise<string | null> {
+    const { data, error } = await this.client
+      .from('audits')
+      .select('id')
+      .eq('access_token', accessToken)
+      .maybeSingle();
+
+    if (error || !data) return null;
+    return data.id as string;
+  }
+
   async getAuditByToken(accessToken: string): Promise<AuditResult | null> {
     const { data, error } = await this.client
       .from('audits')
@@ -298,6 +309,29 @@ export class SupabaseAdapter implements StoragePort {
     if (!data) return null;
 
     return this.mapToStoredLead(data);
+  }
+
+  async getSignupUrlByAuditId(auditId: string): Promise<string | null> {
+    const { data, error } = await this.client
+      .from('leads')
+      .select('signup_url')
+      .eq('audit_id', auditId)
+      .eq('brand', this.brand)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error || !data) return null;
+    return (data.signup_url as string) ?? null;
+  }
+
+  async updateLeadSignupUrl(leadId: string, signupUrl: string): Promise<void> {
+    const { error } = await this.client
+      .from('leads')
+      .update({ signup_url: signupUrl })
+      .eq('id', leadId);
+
+    if (error) throw new Error(`Failed to update lead signup_url: ${error.message}`);
   }
 
   // ── Helpers ───────────────────────────────────────────────────────

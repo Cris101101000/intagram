@@ -163,6 +163,7 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
       setAuditResult(audit);
       setAccessToken(token);
       if (json.auditId) setAuditId(json.auditId);
+      if (json.signupUrl) setSignupUrl(json.signupUrl);
 
       if (audit.route === AuditRoute.EVOLUCION) {
         setEvolutionData(getEvolution(audit));

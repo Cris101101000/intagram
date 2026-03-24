@@ -18,4 +18,6 @@ export interface StoragePort {
   // Leads
   saveLead(lead: LeadData, auditId: string | null, score: number, scoreLevel: string, sector: string): Promise<StoredLead>;
   getLeadByEmail(email: string): Promise<StoredLead | null>;
+  updateLeadSignupUrl(leadId: string, signupUrl: string): Promise<void>;
+  getSignupUrlByAuditId(auditId: string): Promise<string | null>;
 }

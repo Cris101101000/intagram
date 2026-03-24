@@ -61,7 +61,7 @@ export function Navbar() {
       <div className="flex items-center justify-between" style={{ padding: '0 24px' }}>
         <div className="flex items-center" style={{ gap: 24 }}>
         {/* Logo */}
-        <a href="https://www.bewe.io" target="_blank" rel="noopener noreferrer">
+        <a href="/">
           <Image
             src="/bewe-logo.png"
             alt="Bewe"

@@ -46,7 +46,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true, data: audit, cached: true });
+    // Look up signupUrl from the lead associated with this audit
+    const auditId = await storagePort.getAuditIdByToken(token);
+    let signupUrl: string | null = null;
+    if (auditId) {
+      signupUrl = await storagePort.getSignupUrlByAuditId(auditId);
+    }
+
+    return NextResponse.json({ success: true, data: audit, cached: true, signupUrl });
   } catch (error) {
     console.error('Audit GET error:', error);
     return NextResponse.json(
