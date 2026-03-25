@@ -72,6 +72,7 @@ export async function GET(req: NextRequest) {
       sb
         .from('events')
         .select('id, username, event_type, created_at')
+        .eq('brand', brand)
         .gte('created_at', start)
         .lte('created_at', end)
         .limit(10000),
@@ -107,10 +108,8 @@ export async function GET(req: NextRequest) {
     // sessions, audits, leads already defined above
 
     // ── Funnel ──────────────────────────────────────────────────────
-    // Use max(sessions fetched, unique session_ids in audits, audits count) as session count
-    // since some audits may not have session_id linked
-    const uniqueSessionIds = new Set(audits.map((a) => a.session_id).filter(Boolean));
-    const totalSessions = Math.max(sessions.length, uniqueSessionIds.size, audits.length);
+    // Count session_start events as "users who entered" (real data only)
+    const totalSessions = events.filter((e) => e.event_type === 'session_start').length;
     const totalAudits = audits.length;
     const totalLeads = leads.length;
     const conversionRate = totalSessions > 0
@@ -163,36 +162,48 @@ export async function GET(req: NextRequest) {
     }));
 
     // ── Daily trends ────────────────────────────────────────────────
-    // Sessions table has no created_at, so we use audits as proxy for sessions
-    // (each audit = 1 user session). Unique usernames per day = unique sessions.
-    const dailyMap = new Map<string, { usernames: Set<string>; audits: number; leads: number; freeTrials: number }>();
+    const dailyMap = new Map<string, { sessions: number; audits: number; leads: number; freeTrials: number }>();
+    // Count session_start events per day
+    for (const e of events) {
+      if (e.event_type !== 'session_start') continue;
+      const d = e.created_at?.slice(0, 10) ?? '';
+      if (!d) continue;
+      const entry = dailyMap.get(d) ?? { sessions: 0, audits: 0, leads: 0, freeTrials: 0 };
+      entry.sessions += 1;
+      dailyMap.set(d, entry);
+    }
     for (const a of audits) {
       const d = a.created_at?.slice(0, 10) ?? '';
       if (!d) continue;
-      const entry = dailyMap.get(d) ?? { usernames: new Set<string>(), audits: 0, leads: 0, freeTrials: 0 };
+      const entry = dailyMap.get(d) ?? { sessions: 0, audits: 0, leads: 0, freeTrials: 0 };
       entry.audits += 1;
-      entry.usernames.add(a.username);
       dailyMap.set(d, entry);
     }
     for (const l of leads) {
       const d = l.created_at?.slice(0, 10) ?? '';
       if (!d) continue;
-      const entry = dailyMap.get(d) ?? { usernames: new Set<string>(), audits: 0, leads: 0, freeTrials: 0 };
+      const entry = dailyMap.get(d) ?? { sessions: 0, audits: 0, leads: 0, freeTrials: 0 };
       entry.leads += 1;
       dailyMap.set(d, entry);
     }
+    const dailyFreeTrialUsers = new Map<string, Set<string>>();
     for (const e of events) {
       if (e.event_type !== 'cta_free_trial') continue;
       const d = e.created_at?.slice(0, 10) ?? '';
       if (!d) continue;
-      const entry = dailyMap.get(d) ?? { usernames: new Set<string>(), audits: 0, leads: 0, freeTrials: 0 };
-      entry.freeTrials += 1;
+      const entry = dailyMap.get(d) ?? { sessions: 0, audits: 0, leads: 0, freeTrials: 0 };
+      const seen = dailyFreeTrialUsers.get(d) ?? new Set<string>();
+      if (!seen.has(e.username)) {
+        seen.add(e.username);
+        entry.freeTrials += 1;
+      }
+      dailyFreeTrialUsers.set(d, seen);
       dailyMap.set(d, entry);
     }
     const dailyData = Array.from(dailyMap.entries())
       .map(([date, v]) => ({
         date,
-        sessions: v.usernames.size,
+        sessions: v.sessions,
         audits: v.audits,
         leads: v.leads,
         freeTrials: v.freeTrials,
@@ -265,7 +276,9 @@ export async function GET(req: NextRequest) {
       .sort((a, b) => b.auditCount - a.auditCount)
       .slice(0, 10);
 
-    const sortedByScore = [...audits].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+    // Exclude arranque (score 0) from score rankings
+    const scoredAudits = audits.filter((a) => (a.score ?? 0) > 0);
+    const sortedByScore = [...scoredAudits].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
     const highestScores = sortedByScore.slice(0, 10).map((a) => ({
       username: a.username,
       score: a.score ?? 0,
@@ -284,7 +297,10 @@ export async function GET(req: NextRequest) {
     const allEventTypes = ['share_whatsapp', 'share_instagram', 'share_download', 'share_copy_url', 'cta_free_trial'];
     const eventCounts: Record<string, number> = {};
     for (const et of allEventTypes) {
-      eventCounts[et] = events.filter((e) => e.event_type === et).length;
+      const matching = events.filter((e) => e.event_type === et);
+      // Count unique usernames to avoid inflated numbers from repeated clicks
+      const uniqueUsernames = new Set(matching.map((e) => e.username));
+      eventCounts[et] = uniqueUsernames.size;
     }
 
     // ── Response ────────────────────────────────────────────────────

@@ -31,6 +31,7 @@ export function LindaFeatures({ username, profilePicUrl, fullName, biography, si
             desc={t('audit_arranque_feat1_desc')}
             ctaLabel="Quiero contenido que conecte"
             signupUrl={signupUrl}
+            username={username}
           />
           <PostSimulation username={username} profilePicUrl={profilePicUrl} content={content} />
         </FeatureRow>
@@ -46,6 +47,7 @@ export function LindaFeatures({ username, profilePicUrl, fullName, biography, si
             desc={t('audit_arranque_feat2_desc')}
             ctaLabel="Quiero responder al instante"
             signupUrl={signupUrl}
+            username={username}
           />
           <ChatSimulation content={content} />
         </FeatureRow>
@@ -61,6 +63,7 @@ export function LindaFeatures({ username, profilePicUrl, fullName, biography, si
             desc={t('audit_arranque_feat3_desc')}
             ctaLabel="Quiero organizar mis contactos"
             signupUrl={signupUrl}
+            username={username}
           />
           <CrmSimulation content={content} />
         </FeatureRow>
@@ -82,8 +85,8 @@ function FeatureRow({ direction, children }: { direction: 'normal' | 'inverted';
   );
 }
 
-function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, ctaLabel, signupUrl }: {
-  badgeIcon: string; badgeLabel: string; badgeBg: string; badgeColor: string; title: string; desc: string; ctaLabel?: string; signupUrl?: string | null;
+function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, ctaLabel, signupUrl, username }: {
+  badgeIcon: string; badgeLabel: string; badgeBg: string; badgeColor: string; title: string; desc: string; ctaLabel?: string; signupUrl?: string | null; username?: string;
 }) {
   return (
     <div className="flex-1 min-w-0">
@@ -103,7 +106,12 @@ function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, 
       {ctaLabel && (
         <button
           type="button"
-          onClick={() => { if (signupUrl) window.open(signupUrl, '_blank', 'noopener,noreferrer'); }}
+          onClick={() => {
+            if (signupUrl) {
+              fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username ?? '', eventType: 'cta_free_trial' }) }).catch(() => {});
+              window.open(signupUrl, '_blank', 'noopener,noreferrer');
+            }
+          }}
           className="inline-flex items-center gap-2 rounded-full font-inter transition-all hover:-translate-y-0.5 hover:shadow-lg"
           style={{
             marginTop: 16,

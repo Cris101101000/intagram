@@ -11,6 +11,7 @@ function getSupabase() {
 }
 
 const VALID_EVENTS = [
+  'session_start',
   'share_whatsapp',
   'share_instagram',
   'share_download',
@@ -32,10 +33,12 @@ export async function POST(req: NextRequest) {
     }
 
     const sb = getSupabase();
+    const brand = process.env.NEXT_PUBLIC_BRAND ?? 'bewe';
     const { error } = await sb.from('events').insert({
       username,
       event_type: eventType,
       metadata: metadata ?? {},
+      brand,
     });
 
     if (error) throw error;

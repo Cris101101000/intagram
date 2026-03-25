@@ -93,7 +93,12 @@ export async function POST(request: NextRequest) {
     const cachedAudit = await storagePort.getRecentAudit(cleanUsername, 24);
     if (cachedAudit) {
       const { auditId, accessToken, ...auditData } = cachedAudit;
-      return NextResponse.json({ success: true, data: auditData, auditId, accessToken, cached: true });
+      // Look up signupUrl from the lead associated with this audit
+      let signupUrl: string | null = null;
+      if (auditId) {
+        signupUrl = await storagePort.getSignupUrlByAuditId(auditId);
+      }
+      return NextResponse.json({ success: true, data: auditData, auditId, accessToken, cached: true, signupUrl });
     }
 
     // Rate limiting (only for real API calls)

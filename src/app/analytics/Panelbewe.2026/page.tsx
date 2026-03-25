@@ -228,6 +228,7 @@ const S = {
     padding: '10px 14px',
     borderBottom: '1px solid #F1F5F9',
     fontWeight: 500,
+    whiteSpace: 'nowrap' as const,
   } as React.CSSProperties,
   chartCard: {
     padding: 24,
@@ -235,6 +236,7 @@ const S = {
     background: '#FFFFFF',
     border: '1px solid #F1F5F9',
     boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    overflowX: 'auto' as const,
   } as React.CSSProperties,
   grid2: {
     display: 'grid',
@@ -440,20 +442,8 @@ export default function AnalyticsDashboardPage() {
               {funnelCard('👁️', data.totalSessions, 'Usuarios que ingresaron', 'Cantidad de usuarios que iniciaron una sesión en la herramienta', '#6366F1', 'rgba(99,102,241,0.1)')}
               {funnelCard('✅', data.totalAudits, 'Usuarios auditados', 'Cantidad de perfiles de Instagram que fueron scrapeados y analizados', '#3B82F6', 'rgba(59,130,246,0.1)')}
               {funnelCard('📩', data.totalLeads, 'Usuarios que dejaron datos', 'Cantidad de usuarios que llenaron el formulario de datos personales', '#10B981', 'rgba(16,185,129,0.1)')}
-              {funnelCard('📈', `${data.conversionRate}%`, 'Tasa de conversión', 'Porcentaje de usuarios que ingresaron y terminaron dejando sus datos', '#F59E0B', 'rgba(245,158,11,0.1)')}
+              {funnelCard('🚀', data.eventCounts['cta_free_trial'] ?? 0, 'Click en Free Trial', 'Cantidad de usuarios que hicieron click en el botón de prueba gratis', '#F59E0B', 'rgba(245,158,11,0.1)')}
             </div>
-
-            {/* Drop-off pills */}
-            {data.totalSessions > 0 && (
-              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
-                <div style={S.dropoff}>
-                  Sesión → Auditoría: {data.totalAudits > 0 ? Math.round((data.totalAudits / data.totalSessions) * 100) : 0}%
-                </div>
-                <div style={S.dropoff}>
-                  Auditoría → Lead: {data.totalAudits > 0 ? Math.round((data.totalLeads / data.totalAudits) * 100) : 0}%
-                </div>
-              </div>
-            )}
 
             {/* ── Abandonment section ────────────────────────────── */}
             {(() => {

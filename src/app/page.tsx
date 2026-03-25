@@ -31,6 +31,17 @@ function HomeContent() {
     }
   }, [searchParams]);
 
+  // Track session start (once per browser session)
+  useEffect(() => {
+    if (sessionStorage.getItem('session_tracked')) return;
+    sessionStorage.setItem('session_tracked', '1');
+    fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: '_landing', eventType: 'session_start' }),
+    }).catch(() => {});
+  }, []);
+
   const handleSubmit = useCallback(
     (username: string) => {
       setIsLoading(true);

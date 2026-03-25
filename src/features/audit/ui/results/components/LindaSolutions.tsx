@@ -658,6 +658,7 @@ export function LindaSolutions({ criticalPoints, username, profilePicUrl, fullNa
             desc="Cada 3 días Linda genera propuestas de contenido con hooks, preguntas y CTAs personalizados para tu sector. No publicas contenido genérico — publicas contenido que provoca respuestas. Tú solo apruebas y se publica."
             ctaLabel="Quiero mejorar mis publicaciones"
             signupUrl={signupUrl}
+            username={username}
           />
           <PostSimulation username={username} profilePicUrl={profilePicUrl} content={content} />
         </FeatureRow>
@@ -673,6 +674,7 @@ export function LindaSolutions({ criticalPoints, username, profilePicUrl, fullNa
             desc="Linda responde mensajes en segundos con el tono de tu marca, detecta la intención del mensaje y guía al cliente hacia agendar. También responde comentarios para mantener la conversación activa."
             ctaLabel="Quiero responder más rápido"
             signupUrl={signupUrl}
+            username={username}
           />
           <ChatSimulation messages={content.chatMessages} />
         </FeatureRow>
@@ -688,6 +690,7 @@ export function LindaSolutions({ criticalPoints, username, profilePicUrl, fullNa
             desc="Cuando alguien te escribe por Instagram, Linda captura sus datos, lo etiqueta según su interés y lo registra automáticamente en tu panel de contactos. Tú solo ves quién te escribió, qué quiere y cuándo hacer seguimiento."
             ctaLabel="Quiero organizar mis contactos"
             signupUrl={signupUrl}
+            username={username}
           />
           <CrmSimulation contacts={content.crmContacts} />
         </FeatureRow>
@@ -709,8 +712,8 @@ function FeatureRow({ direction, children }: { direction: 'normal' | 'inverted';
   );
 }
 
-function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, ctaLabel, signupUrl }: {
-  badgeIcon: string; badgeLabel: string; badgeBg: string; badgeColor: string; title: string; desc: string; ctaLabel?: string; signupUrl?: string | null;
+function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, ctaLabel, signupUrl, username }: {
+  badgeIcon: string; badgeLabel: string; badgeBg: string; badgeColor: string; title: string; desc: string; ctaLabel?: string; signupUrl?: string | null; username?: string;
 }) {
   return (
     <div className="flex-1 min-w-0">
@@ -730,7 +733,12 @@ function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, 
       {ctaLabel && (
         <button
           type="button"
-          onClick={() => { if (signupUrl) window.open(signupUrl, '_blank', 'noopener,noreferrer'); }}
+          onClick={() => {
+            if (signupUrl) {
+              fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username ?? '', eventType: 'cta_free_trial' }) }).catch(() => {});
+              window.open(signupUrl, '_blank', 'noopener,noreferrer');
+            }
+          }}
           className="inline-flex items-center gap-2 rounded-full font-inter transition-all hover:-translate-y-0.5 hover:shadow-lg"
           style={{
             marginTop: 16,
