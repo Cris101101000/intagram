@@ -110,7 +110,7 @@ export class N8nAdapter implements CrmPort {
         const response = await fetch(this.magicLinkWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...payload, agencyId: '242e5da7-f65d-47b8-968a-d5d066c237aa' }),
+          body: JSON.stringify({ ...payload, agencyId: 'cf4abcd7-4279-4614-9dee-fb5536045cd5' }),
         });
         if (response.ok) {
           const json = await response.json();
