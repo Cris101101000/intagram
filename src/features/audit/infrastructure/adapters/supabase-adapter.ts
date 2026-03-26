@@ -151,6 +151,45 @@ export class SupabaseAdapter implements StoragePort {
     };
   }
 
+  async getLeadEmailByAuditId(auditId: string): Promise<string | null> {
+    const { data, error } = await this.client
+      .from('leads')
+      .select('email')
+      .eq('audit_id', auditId)
+      .eq('brand', this.brand)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error || !data) return null;
+    return (data.email as string) ?? null;
+  }
+
+  async getLeadIdByAuditId(auditId: string): Promise<string | null> {
+    const { data, error } = await this.client
+      .from('leads')
+      .select('id')
+      .eq('audit_id', auditId)
+      .eq('brand', this.brand)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error || !data) return null;
+    return (data.id as string) ?? null;
+  }
+
+  async hasLeadForAudit(auditId: string): Promise<boolean> {
+    const { count, error } = await this.client
+      .from('leads')
+      .select('id', { count: 'exact', head: true })
+      .eq('audit_id', auditId)
+      .eq('brand', this.brand);
+
+    if (error) return false;
+    return (count ?? 0) > 0;
+  }
+
   async getAuditIdByToken(accessToken: string): Promise<string | null> {
     const { data, error } = await this.client
       .from('audits')

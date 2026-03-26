@@ -34,8 +34,8 @@ export async function runAudit(
   // 5. Check for previous audit
   const previousAudit = await storagePort.getLastAudit(username);
 
-  // 6. Determine route (inactive profiles → arranque)
-  const route = resolveRoute(posts.length, previousAudit, healthSignals.recency.daysSinceLastPost);
+  // 6. Determine route (use profile.postsCount for total posts, not posts.length which is limited by scraper)
+  const route = resolveRoute(profile.postsCount, previousAudit, healthSignals.recency.daysSinceLastPost);
   const score = posts.length >= 10 ? calculateFinalScore(metrics, sector, healthSignals) : 0;
   const levelConfig = getScoreLevel(score);
   const normalizedMetrics = calculateNormalizedMetrics(metrics, SECTOR_BENCHMARKS[sector]);

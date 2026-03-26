@@ -116,7 +116,7 @@ export class N8nAdapter implements CrmPort {
           const json = await response.json();
           // Response can be an array (n8n) — take first element
           const result = Array.isArray(json) ? json[0] : json;
-          signupUrl = result?.signup_url ?? result?.signupUrl ?? result?.item?.signup_url ?? null;
+          signupUrl = result?.data?.signupUrl ?? result?.data?.signup_url ?? result?.signupUrl ?? result?.signup_url ?? result?.item?.signup_url ?? null;
         } else {
           console.error(`[N8nAdapter] Magic link webhook responded with ${response.status}: ${response.statusText}`);
         }
@@ -136,7 +136,7 @@ export class N8nAdapter implements CrmPort {
         if (response.ok) {
           const json = await response.json();
           const result = Array.isArray(json) ? json[0] : json;
-          signupUrl = result?.signup_url ?? result?.signupUrl ?? result?.item?.signup_url ?? null;
+          signupUrl = result?.data?.signupUrl ?? result?.data?.signup_url ?? result?.signupUrl ?? result?.signup_url ?? result?.item?.signup_url ?? null;
         } else {
           console.error(`[N8nAdapter] Magic link lookup responded with ${response.status}: ${response.statusText}`);
         }

@@ -20,4 +20,5 @@ export interface StoragePort {
   getLeadByEmail(email: string): Promise<StoredLead | null>;
   updateLeadSignupUrl(leadId: string, signupUrl: string): Promise<void>;
   getSignupUrlByAuditId(auditId: string): Promise<string | null>;
+  hasLeadForAudit(auditId: string): Promise<boolean>;
 }

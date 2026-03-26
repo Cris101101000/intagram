@@ -222,11 +222,14 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
       // Wait 3s so user sees their profile pic in the loading animation
       await new Promise(resolve => setTimeout(resolve, isCached ? 1500 : SHOW_PHOTO_MS));
 
-      // Cached results → skip capture (user already submitted lead before)
-      if (isCached) {
+      // Cached results with lead data → skip capture; otherwise show capture
+      const hasLead = Boolean(json.hasLead);
+      if (isCached && hasLead) {
+        setPhase('RESULTS');
+      } else if (audit.route === AuditRoute.EVOLUCION) {
         setPhase('RESULTS');
       } else {
-        setPhase(audit.route === AuditRoute.EVOLUCION ? 'RESULTS' : 'CAPTURE');
+        setPhase('CAPTURE');
       }
     } catch (err) {
       // Redirect back to landing with error message

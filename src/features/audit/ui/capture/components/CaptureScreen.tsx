@@ -125,7 +125,7 @@ export function CaptureScreen({
 
         {/* Level badge */}
         <div style={{ animation: 'fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both', animationDelay: '0.05s' }}>
-          <LevelBadge level={level} route={route} postsCount={postsCount} />
+          <LevelBadge level={level} route={route} postsCount={postsCount} daysSinceLastPost={daysSinceLastPost} />
         </div>
 
         {/* Hero visual — Blurred Score or Rocket */}

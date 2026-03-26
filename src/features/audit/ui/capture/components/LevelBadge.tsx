@@ -7,20 +7,23 @@ interface LevelBadgeProps {
   level: ScoreLevel;
   route: AuditRoute;
   postsCount?: number;
+  daysSinceLastPost?: number;
 }
 
-type LevelVariant = 'bajo' | 'intermedio' | 'avanzado' | 'crecimiento';
+type LevelVariant = 'bajo' | 'intermedio' | 'avanzado' | 'crecimiento' | 'inactivo';
 
 const VARIANT_STYLES: Record<LevelVariant, { bg: string; text: string; dot: string }> = {
   bajo: { bg: 'rgba(248,113,113,0.10)', text: '#F87171', dot: '#F87171' },
   intermedio: { bg: 'rgba(251,191,36,0.10)', text: '#D97706', dot: '#FBBF24' },
   avanzado: { bg: 'rgba(52,211,153,0.10)', text: '#059669', dot: '#34D399' },
   crecimiento: { bg: 'rgba(117,201,200,0.10)', text: '#0D9488', dot: '#75C9C8' },
+  inactivo: { bg: 'rgba(251,191,36,0.10)', text: '#D97706', dot: '#FBBF24' },
 };
 
-function resolveVariant(level: ScoreLevel, route: AuditRoute, postsCount?: number): LevelVariant {
-  if (route === AuditRoute.ARRANQUE || (postsCount !== undefined && postsCount < 10)) {
-    return 'crecimiento';
+function resolveVariant(level: ScoreLevel, route: AuditRoute, postsCount?: number, daysSinceLastPost?: number): LevelVariant {
+  if (route === AuditRoute.ARRANQUE) {
+    const isInactive = (daysSinceLastPost != null && daysSinceLastPost >= 90) || (postsCount != null && postsCount >= 10 && daysSinceLastPost != null && daysSinceLastPost >= 90);
+    return isInactive ? 'inactivo' : 'crecimiento';
   }
   switch (level) {
     case ScoreLevel.CRITICO:
@@ -33,13 +36,15 @@ function resolveVariant(level: ScoreLevel, route: AuditRoute, postsCount?: numbe
   }
 }
 
-export function LevelBadge({ level, route, postsCount }: LevelBadgeProps) {
+export function LevelBadge({ level, route, postsCount, daysSinceLastPost }: LevelBadgeProps) {
   const { t } = useTranslation('audit');
-  const variant = resolveVariant(level, route, postsCount);
+  const variant = resolveVariant(level, route, postsCount, daysSinceLastPost);
   const styles = VARIANT_STYLES[variant];
 
   const label = variant === 'crecimiento'
     ? t('audit_capture_level_crecimiento')
+    : variant === 'inactivo'
+    ? 'Perfil inactivo'
     : t('audit_capture_level_prefix') + ' ' + t(`audit_capture_level_${variant}`);
 
   return (

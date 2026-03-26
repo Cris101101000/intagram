@@ -93,12 +93,39 @@ export async function POST(request: NextRequest) {
     const cachedAudit = await storagePort.getRecentAudit(cleanUsername, 24);
     if (cachedAudit) {
       const { auditId, accessToken, ...auditData } = cachedAudit;
-      // Look up signupUrl from the lead associated with this audit
+      // Check if user already submitted lead data for this audit
       let signupUrl: string | null = null;
+      let hasLead = false;
       if (auditId) {
-        signupUrl = await storagePort.getSignupUrlByAuditId(auditId);
+        hasLead = await storagePort.hasLeadForAudit(auditId);
+        if (hasLead) {
+          signupUrl = await storagePort.getSignupUrlByAuditId(auditId);
+          // If lead exists but signupUrl was never saved, try fallback lookup
+          if (!signupUrl) {
+            const leadEmail = await storagePort.getLeadEmailByAuditId(auditId);
+            if (leadEmail) {
+              const lookupUrl = process.env.N8N_MAGIC_LINK_LOOKUP_URL ?? 'https://tecnologiabewe.app.n8n.cloud/webhook/38602a2b-fc2f-4434-bb56-b499d6dc09d9';
+              try {
+                const res = await fetch(lookupUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: leadEmail }),
+                });
+                if (res.ok) {
+                  const json = await res.json();
+                  const result = Array.isArray(json) ? json[0] : json;
+                  signupUrl = result?.data?.signupUrl ?? result?.data?.signup_url ?? result?.signupUrl ?? result?.signup_url ?? result?.item?.signup_url ?? null;
+                  if (signupUrl) {
+                    const leadId = await storagePort.getLeadIdByAuditId(auditId);
+                    if (leadId) await storagePort.updateLeadSignupUrl(leadId, signupUrl);
+                  }
+                }
+              } catch { /* non-blocking */ }
+            }
+          }
+        }
       }
-      return NextResponse.json({ success: true, data: auditData, auditId, accessToken, cached: true, signupUrl });
+      return NextResponse.json({ success: true, data: auditData, auditId, accessToken, cached: true, hasLead, signupUrl });
     }
 
     // Rate limiting (only for real API calls)
