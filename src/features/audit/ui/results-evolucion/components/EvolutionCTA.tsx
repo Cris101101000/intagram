@@ -2,6 +2,7 @@
 
 import { Icon } from '@iconify/react';
 import { EvolutionData } from '@/features/audit/application/use-cases/get-evolution';
+import { trackSharedInstagram } from '@/features/audit/infrastructure/analytics/audit-analytics';
 
 // ---------------------------------------------------------------------------
 // Particles (floating background dots)
@@ -352,6 +353,8 @@ export function EvolutionCTA({ data }: EvolutionCTAProps) {
   const scoreDelta = data.scoreDelta;
 
   const handleShare = () => {
+    trackSharedInstagram(username, { source: 'evolution_cta' });
+
     if (typeof navigator !== 'undefined' && navigator.share) {
       navigator
         .share({

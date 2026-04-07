@@ -2,6 +2,7 @@
 
 import { Icon } from '@iconify/react';
 import { CriticalPoint } from '@/features/audit/domain/interfaces/audit';
+import { trackClickTrial } from '@/features/audit/infrastructure/analytics/audit-analytics';
 import { proxyImageUrl } from '@/features/audit/ui/_shared/utils/proxy-image';
 import { SectionLabel } from './MetricsBlock';
 
@@ -735,7 +736,7 @@ function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, 
           type="button"
           onClick={() => {
             if (signupUrl) {
-              fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username ?? '', eventType: 'cta_free_trial' }) }).catch(() => {});
+              trackClickTrial(username ?? '', { source: 'linda_solutions' });
               window.open(signupUrl, '_blank', 'noopener,noreferrer');
             }
           }}

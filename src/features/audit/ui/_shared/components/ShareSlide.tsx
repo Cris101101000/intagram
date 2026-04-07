@@ -2,6 +2,12 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Icon } from '@iconify/react';
+import {
+  trackCopiedUrl,
+  trackDownloadedReport,
+  trackSharedInstagram,
+  trackSharedWhatsapp,
+} from '@/features/audit/infrastructure/analytics/audit-analytics';
 import { AuditRoute, ScoreLevel } from '@/features/audit/domain/interfaces/audit';
 import { ShareImage, type ShareImageProps } from './ShareImage';
 
@@ -164,14 +170,6 @@ export function ShareSlide({
 
   const shareUrl = getShareUrl(username, accessToken);
 
-  const trackEvent = useCallback((eventType: string) => {
-    fetch('/api/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, eventType }),
-    }).catch(() => {});
-  }, [username]);
-
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
@@ -187,8 +185,8 @@ export function ShareSlide({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-    trackEvent('share_copy_url');
-  }, [shareUrl, trackEvent]);
+    trackCopiedUrl(username, { source: 'share_slide' });
+  }, [shareUrl, username]);
 
   // -----------------------------------------------------------------------
   // Generate & share/download image
@@ -198,8 +196,13 @@ export function ShareSlide({
     const el = shareImageRef.current;
     if (!el || generating) return;
 
-    const eventMap = { download: 'share_download', whatsapp: 'share_whatsapp', instagram: 'share_instagram' } as const;
-    trackEvent(eventMap[target]);
+    if (target === 'download') {
+      trackDownloadedReport(username, { source: 'share_slide' });
+    } else if (target === 'whatsapp') {
+      trackSharedWhatsapp(username, { source: 'share_slide' });
+    } else if (target === 'instagram') {
+      trackSharedInstagram(username, { source: 'share_slide' });
+    }
 
     setGenerating(true);
     try {
@@ -246,7 +249,7 @@ export function ShareSlide({
     } finally {
       setGenerating(false);
     }
-  }, [generating, username, level, score, shareUrl, trackEvent]);
+  }, [generating, username, level, score, shareUrl]);
 
   // -----------------------------------------------------------------------
   // Render
@@ -255,15 +258,13 @@ export function ShareSlide({
   const handleCloseComparador = useCallback(() => {
     setShowComparador(false);
     setComparadorDismissed(true);
-    trackEvent('comparador_modal_dismissed');
-  }, [trackEvent]);
+  }, []);
 
   const handleGoToComparador = useCallback(() => {
-    trackEvent('comparador_modal_clicked');
     window.open(comparadorUrl, '_blank');
     setShowComparador(false);
     setComparadorDismissed(true);
-  }, [comparadorUrl, trackEvent]);
+  }, [comparadorUrl]);
 
   if (!isOpen && !hasTriggered && !showComparador) return null;
 

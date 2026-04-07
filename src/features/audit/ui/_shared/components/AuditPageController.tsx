@@ -13,6 +13,10 @@ import { DiagnosticoResults } from '@/features/audit/ui/results/components';
 import { ArranqueResults } from '@/features/audit/ui/results-arranque/components';
 import { EvolucionResults } from '@/features/audit/ui/results-evolucion/components';
 import { Navbar } from '@/features/audit/ui/landing/components/Navbar';
+import {
+  trackAuditCompleted,
+  trackLeadCaptured,
+} from '@/features/audit/infrastructure/analytics/audit-analytics';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -159,6 +163,11 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
 
       const json = await res.json();
       const audit: AuditResult = json.data ?? json;
+      trackAuditCompleted(audit.username, {
+        route: audit.route,
+        score: audit.score,
+        source: 'token',
+      });
 
       setAuditResult(audit);
       setAccessToken(token);
@@ -206,6 +215,11 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
       const json = await res.json();
       const audit: AuditResult = json.data ?? json;
       const isCached = Boolean(json.cached);
+      trackAuditCompleted(audit.username, {
+        route: audit.route,
+        score: audit.score,
+        source: isCached ? 'cache' : 'fresh',
+      });
 
       // Set audit data so the loading screen can show the profile pic
       setAuditResult(audit);
@@ -289,6 +303,10 @@ export function AuditPageController({ username }: AuditPageControllerProps) {
 
         const resBody = await res.json();
         if (resBody.signupUrl) setSignupUrl(resBody.signupUrl);
+        const emailDomain = formData.email.includes('@')
+          ? formData.email.split('@')[1]
+          : 'unknown';
+        trackLeadCaptured(auditResult.username, { email_domain: emailDomain });
 
         setPhase('RESULTS');
       } catch {

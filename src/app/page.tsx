@@ -14,6 +14,7 @@ import {
   Footer,
 } from '@/features/audit/ui/landing/components';
 import { MoreTools } from '@/features/audit/ui/_shared/components/MoreTools';
+import { trackSessionStarted } from '@/features/audit/infrastructure/analytics/audit-analytics';
 
 function HomeContent() {
   const router = useRouter();
@@ -35,11 +36,7 @@ function HomeContent() {
   useEffect(() => {
     if (sessionStorage.getItem('session_tracked')) return;
     sessionStorage.setItem('session_tracked', '1');
-    fetch('/api/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: '_landing', eventType: 'session_start' }),
-    }).catch(() => {});
+    trackSessionStarted('_landing', { source: 'landing' });
   }, []);
 
   const handleSubmit = useCallback(

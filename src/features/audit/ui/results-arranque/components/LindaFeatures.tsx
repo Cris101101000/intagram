@@ -2,6 +2,7 @@
 
 import { Icon } from '@iconify/react';
 import { useTranslation } from '@/shared/ui/hooks/useTranslation';
+import { trackClickTrial } from '@/features/audit/infrastructure/analytics/audit-analytics';
 import { proxyImageUrl } from '@/features/audit/ui/_shared/utils/proxy-image';
 import { resolveSubNiche, type SubNicheContent } from '@/features/audit/ui/results/components/LindaSolutions';
 
@@ -108,7 +109,7 @@ function FeatureText({ badgeIcon, badgeLabel, badgeBg, badgeColor, title, desc, 
           type="button"
           onClick={() => {
             if (signupUrl) {
-              fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username ?? '', eventType: 'cta_free_trial' }) }).catch(() => {});
+              trackClickTrial(username ?? '', { source: 'arranque_linda_features' });
               window.open(signupUrl, '_blank', 'noopener,noreferrer');
             }
           }}

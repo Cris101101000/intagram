@@ -1,5 +1,7 @@
 'use client';
 
+import { trackClickTrial } from '@/features/audit/infrastructure/analytics/audit-analytics';
+
 // ---------------------------------------------------------------------------
 // CTA with phone mockup showing iOS-style notifications
 // Used in Diagnóstico and Arranque result pages
@@ -301,11 +303,7 @@ export function CTAPhoneNotifs({ username, sector, page, signupUrl }: CTAPhoneNo
             target={signupUrl ? '_blank' : undefined}
             rel={signupUrl ? 'noopener noreferrer' : undefined}
             onClick={() => {
-              fetch('/api/events', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, eventType: 'cta_free_trial' }),
-              }).catch(() => {});
+              trackClickTrial(username, { source: 'cta_phone_notifs' });
             }}
             className="cta-shimmer relative mb-4 inline-flex items-center gap-2.5 rounded-full font-inter text-white transition-all hover:-translate-y-0.5 overflow-hidden"
             style={{
