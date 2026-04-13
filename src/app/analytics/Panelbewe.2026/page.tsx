@@ -37,6 +37,7 @@ interface AnalyticsData {
   highestScores: { username: string; score: number; sector: string }[];
   lowestScores: { username: string; score: number; sector: string }[];
   eventCounts: Record<string, number>;
+  freeTrialLeads: { fechaClick: string; username: string; nombreCompleto: string; email: string; telefono: string }[];
 }
 
 // ---------------------------------------------------------------------------
@@ -319,7 +320,11 @@ export default function AnalyticsDashboardPage() {
   // ── CSV export ──────────────────────────────────────────────────
   const exportCSV = () => {
     if (!data) return;
-    const rows = [
+    const escapeCsv = (v: string | number): string => {
+      const s = String(v ?? '');
+      return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const rows: (string | number)[][] = [
       ['Metrica', 'Valor'],
       ['Total Sesiones', data.totalSessions],
       ['Total Auditorias', data.totalAudits],
@@ -332,9 +337,13 @@ export default function AnalyticsDashboardPage() {
       [],
       ['Pais', 'Sesiones', '%'],
       ...data.byCountry.map((c) => [c.country, c.count, c.pct]),
+      [],
+      ['Leads que hicieron click en Free Trial'],
+      ['Fecha Click', '@Usuario IG', 'Nombre Completo', 'Email', 'Telefono'],
+      ...(data.freeTrialLeads ?? []).map((l) => [l.fechaClick, l.username, l.nombreCompleto, l.email, l.telefono]),
     ];
-    const csv = rows.map((r) => (r as (string | number)[]).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
+    const csv = rows.map((r) => r.map(escapeCsv).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

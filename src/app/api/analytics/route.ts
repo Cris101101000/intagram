@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
         .limit(10000),
       sb
         .from('leads')
-        .select('id, username, email, score, score_level, sector, created_at, audit_id')
+        .select('id, username, first_name, last_name, email, phone_code, phone_number, score, score_level, sector, created_at, audit_id')
         .eq('brand', brand)
         .gte('created_at', start)
         .lte('created_at', end)
@@ -303,6 +303,41 @@ export async function GET(req: NextRequest) {
       eventCounts[et] = uniqueUsernames.size;
     }
 
+    // ── Free Trial leads (cross-ref events ↔ leads by username) ─────
+    const ftClickEvents = events.filter((e) => e.event_type === 'cta_free_trial');
+    const firstClickByUsername = new Map<string, string>();
+    for (const e of ftClickEvents) {
+      const u = (e.username ?? '').toString();
+      if (!u) continue;
+      const cur = firstClickByUsername.get(u);
+      if (!cur || e.created_at < cur) firstClickByUsername.set(u, e.created_at);
+    }
+    const ftUsernames = Array.from(firstClickByUsername.keys());
+    const leadByUsername = new Map<string, typeof leads[number]>();
+    for (const l of leads) {
+      const u = (l.username ?? '').toString();
+      if (!u || leadByUsername.has(u)) continue;
+      leadByUsername.set(u, l);
+    }
+    const freeTrialLeads = ftUsernames
+      .map((username) => {
+        const lead = leadByUsername.get(username);
+        if (!lead) return null;
+        const nombreCompleto = `${lead.first_name ?? ''} ${lead.last_name ?? ''}`.trim();
+        const code = lead.phone_code ?? '';
+        const num = lead.phone_number ?? '';
+        const telefono = code || num ? `${code ? '+' + code + ' ' : ''}${num}`.trim() : '';
+        return {
+          fechaClick: firstClickByUsername.get(username) ?? '',
+          username,
+          nombreCompleto,
+          email: lead.email ?? '',
+          telefono,
+        };
+      })
+      .filter((x): x is NonNullable<typeof x> => x !== null)
+      .sort((a, b) => b.fechaClick.localeCompare(a.fechaClick));
+
     // ── Response ────────────────────────────────────────────────────
     return NextResponse.json({
       totalSessions,
@@ -323,6 +358,7 @@ export async function GET(req: NextRequest) {
       highestScores,
       lowestScores,
       eventCounts,
+      freeTrialLeads,
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
