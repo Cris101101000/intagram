@@ -1,0 +1,869 @@
+
+
+BEWE
+Definición de Producto
+Herramienta de Auditoría de Instagram con Score
+
+
+v0.1
+Versión
+En definición
+Estado
+6 Mar 2026
+Fecha objetivo
+
+
+Responsables: Camilo Castillo · Natalia Ordóñez
+
+1
+Información del Proyecto
+
+Nombre del proyecto
+Auditoría de Instagram con Score
+Versión
+v0.1 — MVP
+Estado
+En definición
+Fecha de definición
+Febrero 2026
+Fecha objetivo
+6 de marzo de 2026
+Responsables
+Camilo Castillo · Natalia Ordóñez
+Área
+Producto · Growth
+
+Contexto del proyecto
+Auditoría de Instagram con Score es una herramienta web gratuita de BeweOS que analiza el perfil público de Instagram de un negocio y le entrega un score de 0 a 100 con sus puntos débiles y recomendaciones, posicionando a Linda IA y BeweOS como la solución. El objetivo es convertir ese momento de claridad en un lead calificado y eventualmente en una prueba gratuita de 15 días.
+
+
+Impacto esperado: Atraer negocios que aún no son clientes de Bewe, mostrarles el estado real de su Instagram y conectarlos con Linda IA como solución para mejorar su presencia digital.
+
+2
+Objetivos y Promesa de Valor
+
+Objetivo principal
+Entregar un diagnóstico público útil del desempeño de Instagram de un negocio y una ruta de mejora accionable — posicionando a BeweOS y Linda IA como la solución natural para ejecutarla. La herramienta audita el perfil públicamente, calcula un score de 0 a 100 comparado con negocios similares del sector, identifica los puntos débiles concretos y muestra cómo resolverlos semana a semana con BeweOS. El valor real para el usuario es el diagnóstico en sí mismo — no un anzuelo de marketing. Ese valor es el que convierte el momento de claridad en el inicio de una prueba gratuita de 15 días.
+
+Objetivos secundarios
+Capturar leads calificados (negocios con IG activo, idealmente del sector bienestar/belleza/salud/fitness).
+Educar al usuario sobre qué significa tener una buena presencia en Instagram y cómo se mide.
+Generar diferenciación: Bewe es el único software de gestión que te dice cómo está tu Instagram.
+Construir una base de datos de perfiles auditados para enriquecer el ranking competitivo por nicho.
+
+Promesa de valor para el usuario
+
+"Descubrí en 30 segundos si mi Instagram está funcionando o no, comparado con negocios como el mío."
+
+El usuario ingresa su username de Instagram, obtiene un score de 0 a 100 con métricas concretas, ve en qué percentil está dentro de su nicho, y recibe una recomendación clara de qué hacer.
+
+Promesa de valor para el negocio (Bewe)
+Métrica
+Descripción
+Lead generation
+Captura de nombre, email y teléfono del negocio a cambio de desbloquear el resultado completo de la auditoría.
+Conversión a trial
+El CTA principal del resultado completo es el free trial de 15 días de Bewe, mostrando cómo Linda IA y las funcionalidades de la plataforma resuelven cada punto débil encontrado.
+Diferenciación
+Posiciona a Bewe como una empresa que entiende el mundo digital del negocio, no solo la operación.
+
+Alineación con el North Star Metric de Bewe
+El NSM de Bewe está orientado a la activación de Linda IA: lograr que los negocios descubran y usen Linda IA para ver su potencial real. Esta herramienta alimenta directamente ese objetivo ya que:
+Atrae negocios nuevos (no clientes) al ecosistema de Bewe.
+Crea un momento de consciencia sobre el estado digital del negocio.
+Posiciona a Linda IA y las funcionalidades de Bewe como la solución inmediata a los puntos débiles encontrados.
+Convierte ese momento de dolor en una prueba real del producto con el free trial de 15 días.
+
+
+3
+Público Objetivo
+
+Usuario primario
+Dueño o administrador de un negocio de bienestar, belleza, salud o fitness en Latinoamérica. Tiene entre 28 y 50 años, habla español o portugués, gestiona personalmente su presencia en redes sociales y siente que Instagram podría estar funcionando mejor, aunque no sabe exactamente qué está fallando ni cómo medirlo.
+
+Perfiles de usuario
+Perfil
+Descripción
+El autodidacta digital
+Maneja su propio Instagram, publica contenido sin una estrategia clara. Sabe que debería hacerlo mejor pero no sabe por dónde empezar. Le llama la atención compararse con otros negocios similares.
+El que ya invierte en redes
+Contrata a alguien o a una agencia para manejar su Instagram pero no sabe si el resultado es bueno o malo. Quiere validar si lo que está pagando vale la pena.
+El explorador de herramientas
+Siempre está probando herramientas nuevas. Le llama la atención la promesa de un score, quiere ver qué tan bien o mal está y si la herramienta le da recomendaciones concretas.
+El competitivo
+Le importa saber cómo está su negocio vs. la competencia. El ranking por nicho es su principal motivador para usar la herramienta.
+
+Necesidades y pain points del usuario
+No sabe si su Instagram tiene buen o mal rendimiento — no tiene un punto de referencia claro.
+Siente que publica y no obtiene resultados, pero no puede identificar qué métrica está fallando.
+No tiene tiempo ni conocimiento para analizar métricas complejas de redes sociales.
+Quiere saber cómo se compara con negocios similares en su industria.
+Necesita una justificación clara para invertir en una herramienta de gestión como Bewe.
+
+Diferencia clave: clientes vs. no clientes de Bewe
+Tipo de usuario
+Relación con la herramienta
+No cliente de Bewe (target principal)
+Es el usuario que la herramienta busca convertir. Llega por marketing, redes, referidos o búsqueda orgánica. No conoce Bewe o lo conoce superficialmente. El score y el CTA son su primer contacto real con el producto.
+Cliente actual de Bewe
+Usa la herramienta como un validador de éxito. Si ya se había auditado antes de usar Bewe, la herramienta detecta su historial y activa el Modo Evolución, mostrándole un 'Antes y Después' de sus métricas para demostrar el impacto de Linda IA en su crecimiento.
+
+Geografía y características del mercado
+Idiomas
+Español y Portugués (Brasil)
+Países foco
+Colombia, México, Brasil, Argentina, Chile, Perú
+Tipo de negocio
+Bienestar (yoga, pilates, danza, música, artes marciales), Belleza (peluquería, barbería, estética, spa, uñas), Salud (óptica, clínica, psicología, nutrición, fisioterapia, veterinaria, odontología) y Fitness (gimnasio, entrenador personal, crossfit). Foco principal en belleza y bienestar.
+Tamaño
+Negocios pequeños y medianos (1 a 20 empleados)
+Canal de llegada
+Redes sociales de Bewe, email marketing, referidos, SEO orgánico, Página web
+
+
+4
+Flujo de Experiencia / User Journey
+
+Mapa general del flujo
+Etapa
+Descripción
+1. Llegada
+El usuario llega desde una landing externa o desde dentro de Página Bewe.
+2. Input
+Ingresa el username de Instagram de su negocio.
+3. Procesamiento
+La herramienta analiza el perfil (10–30 seg). Se muestra una pantalla de carga con mensajes de progreso.
+4. Captura de datos
+Ve el nivel del score (Crítico / Regular / Bueno / Excelente) visible con color semántico y el número exacto borroso. Directamente debajo aparece el formulario de desbloqueo (nombre, email, teléfono).
+5. Resultado completo
+Ve el análisis completo en 5 bloques: (1) métricas individuales, (2) ranking vs. nicho, (3) puntos débiles, (4) recomendaciones con BeweOS + Linda IA, (5) plan de acción de 30 días según su nivel.
+6. Conversión
+CTA al free trial de 15 días de Bewe.
+
+Paso 1 — Llegada: ¿Cómo llega el usuario?
+Canal
+Detalle
+Landing externa
+Página independiente accesible sin login. Puede llegar desde redes sociales de Bewe, email marketing, campañas pagas, SEO o referidos. El usuario NO necesita ser cliente de Bewe.
+
+Paso 2 — Input: ¿Qué ingresa el usuario?
+El usuario ve un campo de texto simple con el mensaje: "Escribe el username de tu Instagram" (sin el @). Hace clic en "Auditar" o "Analizar mi perfil". No requiere login, no requiere conectar su cuenta de Instagram. Cuando el usuario ingresa su username , el servidor de Next.js consulta en Supabase si ya existe una auditoría previa para ese mismo usuario.
+
+
+Caso edge — Perfil privado o username inexistente:
+Se muestra un mensaje de error claro: "No encontramos este perfil o está configurado como privado.
+Asegúrate de que tu perfil sea público e intenta de nuevo."
+El campo se limpia y el usuario puede intentar con otro username.
+
+Paso 3 — Procesamiento: pantalla de carga
+Mientras la herramienta analiza el perfil (puede tomar entre 10 y 30 segundos), el usuario ve una pantalla de carga animada. El sistema detecta rápidamente el volumen de posts y adapta los mensajes:
+Si tiene 10 o más posts:
+"Analizando tu perfil de Instagram..."
+"Calculando tu tasa de engagement..."
+"Comparando con negocios de tu sector..."
+"Preparando tu score..."
+
+Si tiene menos de 10 posts 
+"Analizando tu perfil de Instagram..."
+"Notamos que tu perfil es nuevo o tiene pocas publicaciones..."
+"Identificando oportunidades en tu sector..."
+"Preparando tu Plan de Crecimiento con IA..."
+
+Si existe un registro previo (ej. de hace más de 30 días), la pantalla de carga adapta sus mensajes: "Analizando tu perfil actual...", "Buscando tu diagnóstico anterior...", "Calculando tu crecimiento con Bewe..."
+
+El objetivo de esta pantalla es mantener al usuario en la página y generar anticipación sobre el resultado.
+
+Paso 4 —  Captura de datos: formulario de desbloqueo
+El usuario ve una sola cosa: su score general borroso. No se muestra ningún otro dato. El score aparece grande y con blur, lo suficiente para intuir que es un número pero no poder leerlo con claridad. Debajo del score, sin ningún paso intermedio ni botón, aparece directamente el formulario de desbloqueo.
+Elemento
+Comportamiento (Flujo Normal: ≥ 10 posts)
+Comportamiento ( < 10 posts)
+Nivel del score (visible)
+Visible con color semántico. Pill badge con texto: Crítico / Regular / Bueno / Excelente. No está borroso. Es el único dato real que el usuario recibe antes del formulario — sabe si está en zona roja o verde, pero no puede leer el número exacto. Reduce fricción sin eliminar la tensión del blur.
+Badge muestra “Perfil en crecimiento” en lugar de nivel numérico.
+Score general (0–100)
+Borroso (blur). Grande y visible pero no legible. El usuario intuye que hay un número ahí pero no puede leerlo.
+Gráfico de "Nivel de Oportunidad" o "Plan de Acción" Borroso. El usuario intuye que hay un mapa de ruta diseñado para él.
+Resto del resultado
+No se muestra. Nada más es visible en esta pantalla.
+No se muestra. Nada más es visible en esta pantalla.
+Formulario de desbloqueo
+Aparece directamente debajo del score borroso, sin botones intermedios. Título: "Desbloquea tu análisis completo — es gratis". Campos: Nombre, Email, Teléfono. Botón: "Ver mi resultado".
+Aparece directamente debajo. Título: "Desbloquea tu Plan de Crecimiento — es gratis".Campos: Nombre, Email, Teléfono. Botón: "Ver mi resultado".
+Texto de apoyo
+"+500 negocios ya conocen su score." / "Sin spam, sin compromisos."
+"+500 negocios ya conocen su potencial." / "Sin spam, sin compromisos."
+
+
+Principio de diseño: el usuario debe sentir que el resultado ya existe y está a centímetros de sus ojos.
+El blur del score crea tensión inmediata. El formulario debajo elimina cualquier fricción — no hay que buscar un botón,
+el siguiente paso está justo ahí.
+El formulario ya está visible, debajo del score borroso. El usuario completa los 3 campos — Nombre, Email y Teléfono — y hace clic en "Ver mi resultado". Al enviar, el score se desbloquea y el resultado completo.
+
+Paso 5 — Resultado completo
+Con los datos desbloqueados, el usuario ve el análisis completo organizado en 5 bloques:
+Ruta Diagnóstico — Resultado completo
+Aplica cuando el perfil cumple todos los criterios de suficiencia de datos. El usuario ve 6 bloques en secuencia. El objetivo narrativo es: entender → sentir el problema → ver la solución → actuar. Cada bloque intensifica la necesidad del siguiente.
+Bloque 1 — Score + contexto de credibilidad
+Objetivo: anclar credibilidad. El usuario ve que el número es real y comparable.
+Elemento
+Contenido y propósito
+Score grande con nivel
+Número de 0–100 en tipografía Merriweather grande, con el pill badge del nivel (Crítico / Regular / Bueno / Excelente) en su color semántico. Es lo primero que ve el usuario al desbloquear el resultado. Debe generar una reacción inmediata — ya sea satisfacción o incomodidad.
+Benchmark y sector
+Frase breve que indica contra qué se comparó. Ej: “Comparado con negocios de Belleza en Latinoamérica (benchmark 2025)”. Elimina la percepción de que el score es arbitrario.
+Posts analizados + ventana
+Ej: “Análisis basado en tus últimos 10 posts (62 días)”. Si faltó alguna métrica se indica: “Sin Reels detectados — peso redistribuido entre ER y CR”. El usuario sabe exactamente de dónde sale su número.
+Bloque 2 — Señales de tu perfil
+Objetivo: mostrar el diagnóstico completo. El usuario ve dónde está fuerte y dónde está fallando — con datos reales, no solo el score global.
+Métricas del score (las 3 principales)
+Métrica
+Valor del perfil
+vs. Benchmark del sector
+Nivel
+Engagement Rate (ER)
+Valor calculado del perfil (%) + barra visual proporcional al benchmark
+Benchmark del sector seleccionado (%) mostrado como línea de referencia
+Etiqueta con color semántico: Bajo / Medio / Alto
+Comment Rate (CR)
+Valor calculado (ratio) + barra visual
+Benchmark del sector
+Etiqueta con color semántico
+Reels View Rate (RVR)
+Valor calculado (%) + barra visual. Si no hay Reels: mostrar “Sin datos de video” con nota de redistribución de pesos.
+Benchmark del sector (si aplica)
+Etiqueta con color semántico o “No aplica”
+Señales de salud del perfil (métricas complementarias)
+Estas 5 señales no afectan el score pero contextualizan el diagnóstico. Se muestran como indicadores visuales simples (ícono + valor + etiqueta) debajo de las 3 métricas principales.
+Señal
+Lo que muestra al usuario
+Ejemplo de cómo se lee
+Frecuencia de publicación
+Posts por semana (promedio últimos 30 días). Etiqueta: Baja / Media / Alta según rango del sector.
+“1.2 posts/semana — Baja frecuencia para tu sector”
+Mix de formatos
+Distribución % entre fotos, Reels y carruseles en los últimos 20 posts. Etiqueta: Variado / Dependiente de un formato.
+“90% fotos — Sin aprovechamiento de Reels”
+Recencia
+Días desde el último post. Etiqueta: Activo (<14 días) / Irregular (14–45 días) / Inactivo (>45 días).
+“Último post hace 38 días — Perfil irregular”
+Consistencia temporal
+Variabilidad de intervalos entre los últimos 15 posts. Etiqueta: Consistente / Irregular / Muy irregular.
+“Alta variación entre posts — el algoritmo no te favorece”
+Tendencia reciente
+Comparación ER/CR promedio: 5 posts más recientes vs. 5 anteriores. Etiqueta: Mejorando ↑ / Estable → / Cayendo ↓.
+“Tu engagement cayó un 23% en los últimos 5 posts ↓”
+Bloque 3 — Tu posición vs. tu competencia
+Objetivo: activar instinto competitivo. El usuario se sitúa dentro de su sector y siente urgencia o validación.
+Percentil en el sector
+Frase directa con el posicionamiento. Ej: “Tu perfil está en el top 32% de peluquerías en Latinoamérica” o “El 68% de negocios de tu sector tiene mejor engagement que tú”. El tono cambia según el nivel — urgente para Crítico/Regular, motivador para Bueno/Excelente.
+Frase de consecuencia
+Una línea que traduce el percentil a realidad de negocio. Ej Crítico: “Eso significa que cuando alguien busca opciones en tu ciudad, tu perfil no es el que genera confianza.” Ej Excelente: “Estás construyendo una presencia que la mayoría de tu competencia no tiene.”
+Bloque 4 — Los 3 puntos críticos de tu perfil
+Objetivo: convertir datos en dolor tangible. El usuario deja de ver números y empieza a ver consecuencias reales en su negocio.
+Se seleccionan automáticamente los 3 indicadores más débiles del perfil (combinando métricas del score y señales de salud). Cada punto incluye: nombre del problema, qué significa en lenguaje de negocio (no técnico) y la consecuencia real que está generando hoy.
+Punto crítico
+Qué significa (lenguaje de negocio)
+Consecuencia real hoy
+Ej: Engagement bajo
+Tu audiencia ve tu contenido pero no interactúa. Para Instagram, eso es una señal de que tu contenido no merece distribución.
+El algoritmo muestra tus posts a cada vez menos personas. Tu alcance orgánico se está reduciendo aunque publiques con frecuencia.
+Ej: Sin Reels
+No estás usando el único formato que Instagram distribuye orgánicamente a personas que aún no te conocen.
+Tu crecimiento de seguidores depende de que la gente ya te conozca. Estás dejando de llegar a clientes nuevos cada semana.
+Ej: Perfil irregular
+Publicas cuando puedes, no con una cadencia que el algoritmo pueda aprender a distribuir.
+Hay semanas que tu negocio no existe en Instagram. Tus seguidores se olvidan de ti y buscan alternativas que sí publican.
+Bloque 5 — Así lo resuelve Linda IA
+Objetivo: crear necesidad de BeweOS. No se describe la plataforma — se muestra lo que está pasando HOY en el negocio del usuario y cómo Linda lo detiene o lo potencia. Cada punto del Bloque 4 tiene su respuesta directa aquí.
+Problema del perfil
+Lo que pasa ahora sin BeweOS
+Cómo lo resuelve Linda IA en BeweOS
+Bajo engagement
+Publicas contenido genérico que no genera reacción. Cada post que no tiene interacción le dice al algoritmo que tu cuenta no merece alcance.
+BeweOS propone contenido específico para tu negocio cada 3 días — basado en tus servicios, fechas del sector y lo que funciona en tu nicho. Tú solo apruebas y publicas directo desde la plataforma. Linda también responde comentarios para mantener la conversación activa 24/7.
+Baja conversión desde DMs
+Personas que escriben por Instagram no reciben respuesta rápida o se pierden. Cada DM sin responder en menos de 1 hora reduce la probabilidad de cierre a menos del 30%.
+Linda responde cada DM en segundos, 24/7. Detecta la intención del mensaje, etiqueta al contacto en el CRM y lo guia hacia agendar. Nunca pierdes un lead por tiempo de respuesta.
+Publicación inconsistente
+Crear contenido desde cero requiere tiempo y creatividad que el dueño del negocio no tiene. El resultado es publicar cuando hay tiempo, no cuando hay estrategia.
+BeweOS genera propuestas de contenido listas cada 3 días. No hay que escribir ni diseñar — solo aprobar en segundos y publicar directamente desde la plataforma. La consistencia deja de depender del tiempo disponible.
+Leads sin seguimiento
+Las personas que preguntan por tus servicios no siempre están listas para comprar al momento. Sin seguimiento automático, ese interés se enfría y se va a la competencia.
+El CRM de BeweOS registra cada contacto que escribe por Instagram con su intención etiquetada por Linda. Los leads sin respuesta reciben reengagement automático a los 7 días. Nada se pierde.
+Ruta Arranque — Tu perfil necesita base, aquí está el punto de partida
+Aplica cuando el perfil no cumple alguno de los criterios de suficiencia de datos. Puede ser un negocio que empieza en Instagram, uno que tiene publicaciones pero abandonó la cuenta, o uno con datos insuficientes por el tipo de contenido que publica. En todos los casos el mensaje es el mismo: no hay suficientes datos para un diagnóstico completo, pero sí podemos ver lo que hay y darte un punto de partida real. El usuario siempre recibe resultado — nunca una pantalla vacía.
+Bloque 1 — Lo que vemos en tu perfil hoy
+Objetivo: ser honestos pero constructivos. En lugar de decir “no tenemos datos” se muestra lo que sí se puede analizar y se explica en qué punto está el perfil.
+Badge visible
+“Perfil en construcción” — en lugar del pill de nivel. No hay score numérico. El mensaje de cabecera es: “Tu perfil necesita base — aquí está el punto de partida.”
+Lo que sí pudimos ver
+Se muestran los datos disponibles: número de seguidores, total de posts publicados, recencia (último post hace X días), y mix de formatos si hay suficientes posts. Se usan para mostrar con honestidad el estado actual sin fabricar métricas.
+Por qué no hay score
+Explicación breve y honesta, en tono positivo. Ej: “Para calcular tu score necesitamos al menos 6 posts con interacciones y actividad reciente. Lo bueno es que eso es exactamente lo que vamos a construir juntos.” No es un error — es el punto de partida.
+Bloque 2 — Las 3 métricas que van a definir tu crecimiento
+Objetivo: educar con orientación hacia BeweOS. El usuario aprende qué debe construir y ve a Linda como la herramienta que lo hace posible desde el día 1.
+Métrica
+Qué mide y por qué importa
+Cómo Linda IA te ayuda a construirla
+Engagement Rate
+Mide si tu audiencia reacciona a lo que publicas. Es la señal principal que Instagram usa para decidir si distribuye tu contenido.
+BeweOS propone contenido específico para tu tipo de negocio cada 3 días. No hay que pensar qué publicar — Linda lo genera y tú lo apruebas. Cada post está diseñado para generar reacción.
+Comment Rate
+Mide cuánta gente comenta vs. cuanta da like. Los comentarios son la interacción que más pesa en el algoritmo de Instagram en 2025.
+Linda responde comentarios y DMs 24/7, manteniendo la conversación activa sin que tengas que estar pendiente. Más conversación = más alcance orgánico desde el primer post.
+Reels View Rate
+Mide el alcance de tus videos en relación a tus seguidores. Los Reels son el formato con mayor distribución orgánica — la forma más efectiva de llegar a clientes nuevos sin pagar publicidad.
+BeweOS incluye propuestas de Reels entre su contenido periódico. No necesitas experiencia en video — Linda genera el concepto y el copy. Tú grabas o apruebas, y ella lo publica en el momento óptimo.
+Bloque 3 — Tu plan de arranque con BeweOS (30 días)
+Objetivo: hacer el trial concreto y sin riesgo. El usuario ve exactamente qué va a pasar en sus primeros 30 días con BeweOS — sin importar si su perfil está empezando o si estuvo inactivo. La promesa es: al final de estos 30 días, tendremos suficientes datos para hacer tu primera auditoría real.
+Semana
+Objetivo de la semana
+Acciones con BeweOS
+Semana 1
+Activar la base
+Conectar Instagram a BeweOS. Configurar Linda en DMs con respuestas básicas del negocio (servicios, precios, horarios). Publicar el primer post desde la plataforma usando una propuesta generada por Linda.
+Semana 2
+Construir consistencia
+Publicar 2–3 posts desde BeweOS usando propuestas proactivas de Linda. Revisar y responder DMs desde el panel. Registrar primeros contactos en el CRM.
+Semana 3
+Generar datos reales
+Publicar al menos 1 Reel con propuesta de Linda. Activar respuestas automáticas de Linda en comentarios. Ver cómo empieza a llegar interacción desde el primer contenido en video.
+Semana 4
+Listo para la auditoría
+Revisar CRM: ¿cuántos contactos ha capturado Linda? Publicar 2 posts más. Al final de esta semana el perfil tiene suficientes datos para volver a auditar y obtener su primer score real. Linda te lo notifica.
+Modo Evolución — Antes vs. Después
+Aplica cuando existe un registro previo en Supabase para el username consultado. Es la experiencia de mayor valor para retención: el usuario ve el impacto real de haber usado BeweOS.
+Bloque 1 — Score comparativo
+Dos círculos: “Tu Score Antes” (ej. 45) y “Tu Score Ahora” (ej. 82), con flecha verde de crecimiento en el medio. Es lo primero que ve el usuario — debe generar celebración inmediata.
+Bloque 2 — Métricas lado a lado
+ER, CR y RVR con valor anterior en gris y valor actual destacado. Señales de salud también comparadas: frecuencia antes vs ahora, recencia, tendencia. Cada mejora muestra el incremento porcentual en verde. Ej: “+12% en Engagement”, “Frecuencia: de 0.8 a 2.4 posts/semana”.
+Bloque 3 — Logros desbloqueados
+En lugar de puntos débiles, se muestran los 3 mayores avances del perfil desde la última auditoría, conectados explícitamente a Linda IA. Ej: “Tus Reels ahora llegan a un 30% más de personas. La estrategia de video de Linda está funcionando.” “Capturaste 14 leads nuevos desde Instagram este mes. Linda los registró y etiquetó automáticamente.”
+Bloque 4 — Compártelo
+No hay CTA de venta — el usuario ya es cliente. El cierre es el momento de mayor orgullo: ver su progreso y querer mostrarlo. Texto: “Tu Instagram creció. Muéstraselo al mundo.” Botón principal: “Compartir mi resultado” — genera una imagen visual del antes/después del score, optimizada para Stories de Instagram. Botón secundario: “Volver a auditar en 30 días” — activa un recordatorio automático. El usuario se convierte en embajador orgánico: su red ve el resultado, llega a la herramienta y el ciclo de adquisición se retroalimenta.
+Bloque 5 — Lo que sigue
+No hay plan semanal — el usuario ya completó un ciclo. En su lugar se muestran tips personalizados según si el perfil mejoró o no. La lógica es: si score_actual > score_anterior → tips de crecimiento. Si score_actual ≤ score_anterior → tips de recuperación.
+Variante A — Score mejoró (score_actual > score_anterior)
+Título: “Vas bien. Aquí hay 3 cosas que pueden llevarte más lejos.” Se seleccionan los tips basándose en las métricas o señales que aún tienen margen de mejora (las que no llegaron a Benchmark o quedaron en nivel Medio).
+Si esta métrica/señal sigue baja
+Tip para seguir creciendo
+Feature de BeweOS que lo ejecuta
+RVR aún bajo o sin Reels
+Los Reels son el canal con mayor alcance orgánico de Instagram. Publicar 2 Reels por semana es suficiente para ver un salto en vistas en menos de 30 días.
+Propuestas de contenido de BeweOS — Linda genera el concepto y el copy del Reel. Tú solo grabas y apruebas.
+CR en nivel Medio
+La gente que te comenta ya está comprometida — responderles rápido y con personalidad aumenta la conversación y el alcance. Cada hilo de comentarios es una señal positiva al algoritmo.
+Linda responde comentarios automáticamente con el tono del negocio, manteniendo la conversación activa 24/7 sin que tengas que estar pendiente.
+Consistencia irregular
+El algoritmo favorece a los perfiles que publican con ritmo predecible. Pasar de publicar cuando hay tiempo a publicar con calendario fijo es el cambio de mayor impacto a largo plazo.
+BeweOS propone contenido cada 3 días y lo publica directo desde la plataforma. La consistencia deja de depender de tu disponibilidad.
+Mix de formatos — dependiente de un tipo
+Diversificar formatos expone tu perfil a distintos segmentos de audiencia. Foto + carrusel + Reel es la combinación que mayor cobertura orgánica genera en 2025.
+Las propuestas de BeweOS ya incluyen mezcla de formatos. Si ves que Linda propone solo un tipo, puedes ajustar las preferencias desde tu panel.
+Variante B — Score igual o bajó (score_actual ≤ score_anterior)
+Título: “No pasa nada. Aquí está por qué puede estar pasando esto.” Tono empático, no alarmista. Se identifican las causas más probables del estancamiento o caída y se da una acción concreta para revertir cada una.
+Causa probable
+Por qué afecta el score
+Acción concreta con BeweOS
+Publicación inconsistente en el período
+Si publicaste menos que el período anterior, el ER y CR se calculan sobre menos posts, lo que puede bajar el promedio aunque la calidad del contenido sea igual o mejor.
+Activar las propuestas periódicas de BeweOS para que Linda te recuerde publicar y prepare el contenido con anticipación.
+Contenido sin interacción reciente
+Posts con 0 o muy pocos likes/comentarios arrastran el promedio hacia abajo. Suele pasar cuando el contenido no está conectado con lo que tu audiencia espera ver.
+Revisar las propuestas de Linda y ajustar preferencias de contenido en BeweOS — tipo de servicio a destacar, tono, formato. Linda aprende con cada publicación aprobada.
+DMs sin respuesta acumulados
+Si Linda no está activa o sus reglas no están bien configuradas, los DMs sin respuesta generan una experiencia negativa que se refleja en baja retención y menos interacción futura.
+Verificar que Linda esté activa en DMs e Instagram desde el panel de BeweOS. Revisar las reglas de comportamiento — si hay preguntas sin respuesta, agregarlas a la base de conocimiento.
+El sector tuvo un pico y el benchmark subió
+El score baja si el sector mejoró en conjunto aunque el perfil se haya mantenido. No es una caída del negocio — es el mercado subiéndole el listón a todos.
+Enfocarse en las métricas absolutas del perfil (valores reales, no solo el score normalizado) para ver si hay progreso real aunque el percentil no haya subido.
+Bloque 5 — Tu plan de acción con BeweOS (30 días)
+El quinto bloque es el puente entre entender el problema y saber exactamente qué hacer con BeweOS. Aplica de forma diferente según la ruta del usuario:
+Ruta
+Qué se muestra en el Bloque 5
+Ruta Diagnóstico (datos suficientes)
+SÍ aplica. Plan completo de 4 semanas según el nivel del score (Crítico / Regular / Bueno / Excelente). Cada semana incluye objetivo, acciones concretas y la feature de BeweOS que las ejecuta. Ver tabla de planes por nivel abajo.
+Ruta Arranque (datos insuficientes)
+SÍ aplica, pero en versión adaptada. No hay score ni brechas — el foco es fundamentos y primeros pasos. El plan se enfoca en: (1) publicar con consistencia desde BeweOS, (2) activar Linda en DMs para capturar primeros contactos, (3) construir la base mínima para generar datos válidos en una próxima auditoría.
+Modo Evolución (cliente con auditoría previa)
+NO aplica. En Modo Evolución el foco es el progreso logrado (Antes vs. Después), no un plan de acción nuevo. El Bloque 4 es el cierre: celebración de logros + CTA de compartir resultado en Stories.
+
+Nivel del score
+Enfoque del plan de 30 días
+Crítico (0–40)
+“Construye la base” — Semana 1: Activar Linda en Instagram para responder DMs 24/7 y agregar FAQs frecuentes a su base de conocimiento. Semana 2: Publicar primer contenido desde BeweOS (imagen + copy generado por IA). Semana 3: Aprobar propuestas proactivas de contenido cada 3 días y registrar primeros leads en el CRM. Semana 4: Activar campaña de bienvenida automática para nuevos contactos de Instagram.
+Regular (41–60)
+“Dale estructura a lo que ya tienes” — Semana 1: Configurar reglas de comportamiento de Linda (precios, competencia, horarios fuera de atención). Semana 2: Activar contenido proactivo de BeweOS cada 3 días y publicar desde la plataforma. Semana 3: Lanzar primera campaña segmentada por etiquetas de Linda hacia leads calificados del CRM. Semana 4: Activar reengagement automático para leads sin respuesta en 7 días.
+Bueno (61–80)
+“Optimiza y escala” — Semana 1: Revisar etiquetas de Linda en el CRM y crear segmentos por potencialidad (alto / medio). Semana 2: Lanzar 2 campañas diferenciadas por segmento (premium vs. precio). Semana 3: Configurar automatizaciones de retención (reengagement 30 días, cumpleaños, aniversario). Semana 4: Conectar contenido con captación — Linda responde DMs post-publicación con CTA directo al servicio estrella.
+Excelente (81–100)
+“Mantén el liderazgo y diversifica” — Semana 1: Lanzar campaña personalizada hacia contactos de alto potencial del CRM. Semana 2: Configurar reglas avanzadas de Linda (replies de Stories, menciones, escalamiento automático). Semana 3: Activar motor de contenido proactivo completo y medir qué tipo convierte más en DMs. Semana 4: Revisar métricas del panel BeweOS y definir las 2 acciones de mayor impacto para el mes siguiente.
+
+Paso 6 — Conversión: CTA final
+El CTA final varía según la ruta del usuario. No es un bloque genérico — cada ruta tiene un cierre distinto diseñado para el momento emocional específico en que se encuentra el usuario. Ruta Diagnóstico y Ruta Arranque → CTA de free trial (ver detalle abajo). Modo Evolución → CTA de compartir resultado (ver Bloque 4 del Modo Evolución).
+
+"¿Listo para mejorar tu score?"
+
+Prueba Bewe gratis por 15 días y deja que Linda IA transforme tu Instagram
+en una máquina de captar clientes — sin experiencia técnica.
+
+[ Comenzar mi prueba gratis ]   ← botón principal
+[ Ya tengo cuenta BeweOS]  ← botón secundario
+
+Subtexto: Sin tarjeta de crédito. Cancela cuando quieras.
+
+
+
+Resumen visual del flujo
+#
+Paso
+Lo que siente el usuario
+Aplica en
+1
+Llega a la herramienta
+Curiosidad — ¿cómo estará mi Instagram?
+Todas las rutas
+2
+Ingresa username
+Facilidad — solo escribo mi usuario, nada más.
+Todas las rutas
+3
+Pantalla de carga
+Anticipación — algo se está analizando para mí.
+Todas las rutas
+4
+Nivel visible + score borroso + formulario
+Tensión informada — sé si estoy en zona roja o verde pero no veo el número exacto. Quiero saber más.
+Ruta Diagnóstico y Ruta Arranque
+5
+Deja sus datos (formulario)
+Alivio — el formulario ya está ahí, solo lleno 3 campos y listo.
+Ruta Diagnóstico y Ruta Arranque
+6
+Score desbloqueado + resultado
+Claridad — ahora entiendo exactamente dónde estoy y cuáles son mis puntos débiles.
+Ruta Diagnóstico y Ruta Arranque
+7
+Así lo resuelve Linda IA
+Necesidad — veo exactamente cómo BeweOS resuelve mis problemas. Esto es lo que me faltaba.
+Ruta Diagnóstico
+8
+Plan de 30 días
+Dirección — no solo sé qué está mal, sé exactamente qué hacer semana a semana con BeweOS.
+Ruta Diagnóstico y Ruta Arranque
+9
+CTA free trial
+Motivación — tengo la solución exacta enfrente. Quiero probarlo.
+Ruta Diagnóstico y Ruta Arranque
+E
+Modo Evolución — Score comparativo + logros
+Celebración + orgullo — crecí. Quiero mostrárselo a mi red.
+Solo Modo Evolución
+
+
+
+5
+Diseño y Mockups
+
+Especificación por pantalla
+Pantalla 1 — Entrada (página pública)
+Elemento
+Especificación
+Fondo
+Background #CCFBF1 (Aqua Muy Suave). Sin imágenes ni gradientes fuertes.
+Título H1
+Inter Bold 32px. Máximo 2 líneas. Ejemplo: "Descubre si tu Instagram está funcionando."
+Subtítulo
+Inter Regular 16px, color #64748B.
+Input username
+Campo full-rounded, borde Primary 400 en focus. Placeholder: "@tunegocio". Botón adjunto Primary con texto "Analizar".
+Social proof
+Small 14px gris: "+500 negocios ya conocen su score." Debajo del input.
+Logo BeweOS
+Arriba a la izquierda. Sin menú de navegación.
+Pantalla 2 — Carga (momento Proceso de Linda)
+Elemento
+Especificación
+Loader
+Gradiente animado con colores BeweOS (Primary 400 + Secondary 400). Referencia: loader circular con efecto orgánico suave, similar al referente de carga del documento de aplicaciones.
+Foto de perfil
+Avatar del Instagram analizado si disponible. Circular, centrado. Genera personalización.
+@username
+Mostrado debajo del avatar. Inter Medium 16px.
+Mensajes rotativos
+Inter Regular 16px, color #0A2540. Cambian cada 4–5 segundos. Máximo 4 mensajes.
+Fondo
+Mismo #CCFBF1 de la pantalla anterior. Consistencia visual.
+Pantalla 3 — Nivel visible + score borroso + formulario
+Elemento
+Especificación
+Score borroso
+Merriweather Bold, número grande ~96px. Filtro CSS blur(10px). Centrado en tarjeta blanca con sombra suave. Se intuye el número pero no se puede leer.
+Etiqueta de nivel
+Visible con color semántico. Pill badge con texto: Crítico / Regular / Bueno / Excelente. NO está borrosa — es el único elemento real que el usuario ve antes del formulario.
+Título visible
+Inter SemiBold 20px: "Tu score de Instagram". Visible, sobre el score borroso.
+Formulario
+Card rounded, fondo blanco, sombra suave. Título H3: "Desbloquea tu análisis — es gratis". 3 inputs full-rounded: Nombre, Email, Teléfono. Botón Primary large full-width: "Ver mi resultado →".
+Texto de apoyo
+Small 14px #64748B debajo del botón: "Sin spam. Sin compromisos."
+Fondo página
+#CCFBF1. La card del formulario resalta sobre el fondo.
+Pantalla 4 — Resultado completo
+Bloque
+Especificación visual
+Score desbloqueado
+Merriweather Bold ~96px. Color semántico según nivel: Error #F87171 Crítico, Warning #FBBF24 Regular, Info #38BDF8 Bueno, Success #4ADE80 Excelente. Transición suave desde blur. Aplica en Ruta Diagnóstico y Ruta Arranque. En Modo Evolución se muestra como par de círculos Antes/Ahora (ver B1 Modo Evolución).
+Señales del perfil (métricas + salud)
+Ruta Diagnóstico: 3 cards de métricas (ER, CR, RVR) con barra de progreso vs benchmark + etiqueta Bajo/Medio/Alto, seguidas de 5 indicadores de salud (frecuencia, mix, recencia, consistencia, tendencia) como iconos + valor + etiqueta. Modo Evolución: comparativa Antes/Ahora para cada métrica y señal. Ruta Arranque: tabla educativa de las 3 métricas (qué miden + por qué importan).
+Posición vs. sector
+Card destacada. Fondo Primary 100 (#DFEDFE). Percentil en H2 SemiBold + frase de consecuencia real según nivel (urgente para Crítico/Regular, motivadora para Bueno/Excelente). Solo Ruta Diagnóstico.
+Puntos críticos / logros
+Ruta Diagnóstico: 3 cards informativas con los indicadores más débiles — nombre del problema + significado en lenguaje de negocio + consecuencia real hoy. Modo Evolución: 3 cards de celebración con los mayores avances conectados explícitamente a Linda IA. Ruta Arranque: no aplica en este bloque.
+Así lo resuelve Linda IA / Plan de arranque
+Ruta Diagnóstico: tabla comparativa Sin BeweOS vs. Con Linda IA por cada problema crítico. Cards tipo Sugerencia. Nombre de Linda en Merriweather italic. Ruta Arranque: plan semanal de 4 semanas con promesa de primer score al final. Modo Evolución: no aplica este bloque (sustituido por Lo que sigue).
+Plan de 30 días / Lo que sigue
+Ruta Diagnóstico: plan semanal de 4 semanas adaptado al nivel de score (4 versiones: Crítico, Regular, Bueno, Excelente). Ruta Arranque: incluido en bloque anterior. Modo Evolución: tips personalizados Variante A (creció) o Variante B (no creció) según comparativa de scores.
+CTA final
+Ruta Diagnóstico y Ruta Arranque: sección con fondo #0A2540. Título H1 blanco. Botón principal “Comenzar mi prueba gratis” + botón secundario “Ya tengo cuenta BeweOS”. Modo Evolución: botón principal “Compartir mi resultado” (imagen antes/después para Stories) + botón secundario “Volver a auditar en 30 días”.
+
+Estados de error
+Error
+Tratamiento visual
+Perfil privado
+Card centered. Ícono Solar candado. Body 16px mensaje claro. Input nuevo debajo. Sin abandonar la página.
+Username no existe
+Mismo patrón. Mensaje: "No encontramos este perfil. Verifica que el username sea correcto."
+Error de carga / timeout
+Mensaje: "Algo salió mal al analizar el perfil." Botón Secondary "Intentar de nuevo".
+
+
+
+
+Resultados:
+
+
+6
+Lógica de Negocio y Fórmulas
+
+
+Este punto define exactamente cómo se calcula el score, qué significa cada métrica,
+cuáles son los valores de referencia (benchmarks) del sector y cuáles son las reglas de validación.
+Todo el cálculo se basa en datos públicos extraídos por Apify — sin necesidad de login del usuario.
+
+Reglas de validación previas al cálculo
+Antes de calcular el score, el sistema valida que el perfil cumpla las siguientes condiciones. Si no las cumple, se muestra un mensaje de error y no se genera score:
+Condición
+Regla
+Perfil público
+El perfil de Instagram debe ser público. Si es privado, Apify no puede extraer datos y se muestra error.
+Username existente
+El username ingresado debe corresponder a un perfil real en Instagram.
+Criterio de suficiencia de datos
+El sistema evalúa 4 condiciones por métrica, no un número fijo de posts. Se enruta a Ruta Diagnóstico si se cumplen todas: (1) ER calculable: ≥6 posts con likes o comentarios no nulos. (2) CR calculable: ≥6 posts con likes > 0. (3) RVR calculable: ≥3 Reels con views > 0. (4) Recencia: al menos 1 post en los últimos 90 días (perfil activo). Si alguna condición falla pero el perfil tiene datos parciales → Ruta Arranque con advertencia de confianza baja. Si ninguna se cumple → error, no se genera resultado. La ventaja sobre el criterio rígido de “10 posts” es que valida calidad de datos por métrica, no solo cantidad total de publicaciones.
+Datos disponibles
+Los posts extraídos deben contener datos de likes y comentarios. Si todos los posts tienen métricas en 0 (perfil inactivo), no se calcula el score.
+"Delta" (Crecimiento)
+Si existe un registro en Supabase para el username consultado, calcular la diferencia absoluta y porcentual entre el Score/Métricas actuales y el registro más antiguo (el 'Antes').
+
+Las 3 métricas del score
+Métrica 1 — Engagement Rate (ER) · Peso: 40%
+Mide qué tan activa es la audiencia del negocio en relación a sus seguidores. Es la métrica más importante porque refleja si el contenido genera resonancia real.
+Campo
+Detalle
+Fórmula
+ER = (Suma de likes + comentarios de los últimos 10 posts) / Seguidores × 100
+Datos fuente
+likesCount + commentsCount por post (Apify) · followersCount (Apify)
+Unidad
+Porcentaje (%)
+Ejemplo
+Perfil con 5,000 seguidores. Últimos 10 posts suman 800 likes y 60 comentarios. ER = (800+60) / 5,000 × 100 = 17.2%
+Limitación
+No separa calidad de interacción ni intención comercial. Un post viral sin relación con el negocio eleva el ER igual que uno que genera consultas reales. Tampoco distingue entre likes orgánicos y los generados por giveaways o contenido polémico.
+
+Métrica 2 — Comment Rate (CR) · Peso: 35%
+Mide la profundidad de la conversación generada. Los comentarios requieren más esfuerzo del usuario que un like, por lo que son un indicador más fuerte de conexión real con la audiencia. En 2025, el algoritmo de Instagram prioriza los comentarios sobre los likes.
+Campo
+Detalle
+Fórmula
+CR = Promedio de (commentsCount / likesCount) por post, calculado sobre los últimos 10 posts
+Datos fuente
+commentsCount + likesCount por post (Apify)
+Unidad
+Ratio (número entre 0 y 1)
+Ejemplo
+Post 1: 10 comentarios / 200 likes = 0.05 · Post 2: 15 comentarios / 180 likes = 0.083 · CR promedio = 0.067
+Nota
+Si un post tiene 0 likes se excluye del cálculo para evitar división por cero.
+Limitación
+Puede verse inflado por contenido polémico, concursos o giveaways que generan comentarios masivos sin relación con intención de compra. Un CR alto no siempre indica una audiencia calificada.
+
+Métrica 3 — Reels View Rate (RVR) · Peso: 25%
+Mide el alcance del contenido en video en relación a la base de seguidores. Los Reels son el formato con mayor distribución orgánica en Instagram actualmente — un RVR alto indica que el contenido está llegando más allá de los seguidores existentes.
+Campo
+Detalle
+Fórmula
+RVR = (Suma de videoViewCount de posts tipo Video/Reel) / Seguidores × 100
+Datos fuente
+videoViewCount por post · type = 'Video' o 'Clips' (Apify) · followersCount (Apify)
+Unidad
+Porcentaje (%)
+Ejemplo
+Perfil con 5,000 seguidores. 3 Reels con 2,000 + 3,500 + 1,800 vistas = 7,300 vistas totales. RVR = 7,300 / 5,000 × 100 = 146%
+Nota
+Si el perfil no tiene posts de tipo Video o Reels, RVR = 0 y su peso se redistribuye: ER sube a 57% y CR a 43%.
+Limitación
+Las vistas no equivalen a intención de compra. Un Reel viral por tendencia puede generar muchas vistas sin atraer clientes reales al negocio. Además, el RVR depende de que el perfil tenga Reels publicados — perfiles sin video quedan penalizados aunque tengan buen engagement.
+Métricas adicionales de diagnóstico (contexto complementario)
+Las 3 métricas del score (ER, CR, RVR) son el núcleo de la auditoría, pero no son el todo. Estas métricas adicionales se obtienen de datos públicos vía Apify y se muestran como contexto complementario fuera del score — enriquecen el diagnóstico sin afectar el cálculo principal.
+Métrica
+Qué aporta al diagnóstico
+Cómo se obtiene (Apify)
+Frecuencia de publicación
+Mide constancia operativa. Un negocio que publica 1 vez al mes vs. uno que publica 3 veces por semana tienen perfiles muy distintos aunque tengan el mismo ER.
+Posts por semana: contar posts en los últimos 30 días ÷ 4. Datos: timestamp de cada post (Apify).
+Mix de formatos
+Detecta dependencia de un solo formato vs. estrategia balanceada. Solo fotos = sin alcance orgánico de Reels. Solo Reels = sin profundidad de carrusel.
+Distribución por tipo de post: contar Image / Video / Clips / Sidecar en los últimos 20 posts. Dato: posts[].type (Apify).
+Recencia
+Indica si el perfil está activo o abandonado. Un perfil sin publicaciones en 60+ días tiene scores históricos inflados que no reflejan la realidad actual.
+Días desde el último post: timestamp del post más reciente vs. fecha actual. Dato: posts[0].timestamp (Apify).
+Consistencia temporal
+Mide regularidad real, evitando sesgo por picos aislados. Un perfil con 1 post viral y 3 meses de silencio no es consistente, aunque tenga ER alto.
+Desviación entre intervalos de publicación: calcular días entre posts consecutivos y medir variabilidad. Dato: timestamps de los últimos 15 posts (Apify).
+Tendencia reciente
+Detecta si el perfil está mejorando o deteriorando en tiempo real. Más útil que el score absoluto para un negocio que ya está tomando acción.
+Comparar ER/CR promedio de los 5 posts más recientes vs. los 5 anteriores. Pendiente positiva = mejorando. Dato: posts[] ordenados por fecha (Apify).
+
+Cálculo del score final (0–100)
+El score final normaliza las 3 métricas contra los benchmarks del sector para producir un número entre 0 y 100, donde 100 representa el máximo rendimiento de referencia para ese nicho.
+Paso
+Operación
+1. Calcular cada métrica
+Calcular ER, CR y RVR del perfil usando las fórmulas anteriores.
+2. Normalizar vs. benchmark
+Dividir cada métrica entre su benchmark de referencia (ver tabla de benchmarks). El resultado es un valor entre 0 y 1 (se limita a 1 si supera el benchmark).
+3. Aplicar pesos
+Score = (ER_norm × 0.40) + (CR_norm × 0.35) + (RVR_norm × 0.25)
+4. Escalar a 100
+Score_final = Score × 100. Se redondea al entero más cercano.
+5. Limitar rango
+El score mínimo es 1 y el máximo es 100. Un score de 100 no significa perfección, significa que iguala o supera el benchmark de referencia.
+
+Ejemplo completo de cálculo:
+Métrica
+Valor del perfil · Benchmark · Normalizado · Ponderado
+ER (40%)
+17.2% · Benchmark 3.5% · Min(1, 17.2/3.5) = 1.0 · 1.0 × 0.40 = 0.40
+CR (35%)
+0.067 · Benchmark 0.05 · Min(1, 0.067/0.05) = 1.0 · 1.0 × 0.35 = 0.35
+RVR (25%)
+146% · Benchmark 20% · Min(1, 146/20) = 1.0 · 1.0 × 0.25 = 0.25
+Score final
+(0.40 + 0.35 + 0.25) × 100 = 100 — Excelente
+
+Niveles del score
+Nivel
+Rango · Color · Mensaje al usuario
+Crítico
+0–40 · Rojo #F87171 · "Tu perfil necesita atención urgente. Estás por debajo del promedio del sector en las métricas clave."
+Regular
+41–60 · Naranja #FBBF24 · "Tu perfil tiene potencial pero hay puntos débiles claros que frenan tu crecimiento."
+Bueno
+61–80 · Azul info #38BDF8 · "Tu perfil tiene buen desempeño. Con ajustes específicos puedes llegar al siguiente nivel."
+Excelente
+81–100 · Verde #4ADE80 · "Tu perfil está por encima del promedio del sector. Sigue así y escala lo que funciona."
+
+Benchmarks de referencia por sector
+Los benchmarks se basan en estudios publicados por fuentes especializadas en análisis de redes sociales (2025). Se usan como referencia para normalizar el score — representan el umbral de "rendimiento sólido" para negocios pequeños y medianos del sector.
+Sector BeweOS
+ER benchmark · CR benchmark · RVR benchmark
+Belleza (peluquería, barbería, estética, spa, uñas)
+3.5% · 0.05 · 20%
+Bienestar (yoga, pilates, danza, música, artes marciales)
+3.2% · 0.04 · 18%
+Fitness (gimnasio, entrenador personal, crossfit)
+3.0% · 0.04 · 22%
+Salud (clínica, psicología, nutrición, fisioterapia, odonto)
+2.5% · 0.03 · 15%
+General (nicho no identificado)
+2.8% · 0.04 · 18%
+
+Fuentes de los benchmarks
+Fuente
+Dato respaldado
+Dash Social — Beauty Industry Benchmarks 2025 (n=2,967 cuentas Instagram, ene–jun 2025)
+Engagement rate en belleza: 3.9% promedio. Se usa 3.5% como umbral conservador para pequeños negocios.
+Socialinsider — Instagram Benchmarks 2026 (análisis de 35M posts, ene–dic 2025)
+ER general en Instagram: 0.48% para grandes marcas. Pequeños negocios (nano/micro) promedian 2–4%. Carousels: 0.55% ER estable.
+Sprout Social / Socialinsider — Reels View Rate (2024–2025)
+Cuentas con 1k–5k seguidores: Reels view rate de 20%. Cuentas 5k–10k: 10.2%. Se usa 20% como benchmark para cuentas pequeñas (target de BeweOS).
+InfluenceFlow — Instagram Benchmark Guide 2026
+Fashion & beauty: 2.8–4.5% ER. Fitness: nivel medio del sector.
+Planable / Socialinsider — Comment Rate 2025–2026
+Instagram promedia 24 comentarios por post. Ratio comentarios/likes saludable en sectores de servicio: 4–6%. CR 0.05 equivale a 5% — umbral de conversación activa.
+impulze.ai — Instagram Engagement Benchmarks 2025
+Promedio general: 1.85%. Nichos de belleza, bienestar y fitness consistentemente por encima del promedio. Por encima de 1.85% = buen engagement.
+
+Reglas adicionales y casos edge
+Caso
+Regla
+Perfil sin Reels
+RVR = 0. Los pesos se redistribuyen: ER 57% y CR 43%. Se muestra como punto débil en el resultado.
+Post con 0 likes
+Se excluye del cálculo de CR para evitar división por cero.
+Score mayor a 100 normalizado
+Se limita a 1.0 antes de aplicar pesos. Un perfil que triplica el benchmark no obtiene más de 100.
+Nicho no identificado
+Si businessCategoryName de Apify no coincide con ningún sector de BeweOS, se usa el benchmark General.
+Menos de 10 posts
+Se enruta al Modo Arranque. El resultado borroso muestra un "Plan de Crecimiento" en lugar de un score. No hay cálculo de fórmulas.
+Todos los posts con 0 métricas
+Igual que "Menos de 10 posts": Se asume perfil inactivo/nuevo y se enruta al Modo Arranque.
+
+
+7
+Requerimientos Técnicos 
+
+7.1 Stack Tecnológico
+Herramienta
+Propósito · Uso en esta herramienta
+Apify
+Extracción de datos públicos de Instagram.Se usa el actor "Instagram Profile Scraper" para obtener datos del perfil auditado. No requiere login del usuario — solo el username público. Es el punto de entrada de todos los datos que alimentan el cálculo del score.
+Next.js + React
+Framework frontend y de servidor para la herramienta web.La herramienta es una página web pública construida en Next.js. El frontend muestra el flujo completo y el servidor de Next.js actúa como intermediario entre el frontend y las APIs externas (Apify, Supabase, HubSpot), protegiendo las API keys.
+Cursor
+Editor de código con asistencia de IA para desarrollo acelerado.Usado para el desarrollo frontend (React/Next.js), implementación de la lógica de cálculo del score, integración de APIs y debugging asistido por IA.
+Supabase
+Base de datos PostgreSQL como servicio.Almacena las auditorías completadas, los leads capturados, y las tablas de benchmarks por sector. 
+
+Propósito adicional: "Actuar como sistema de memoria temporal para la comparativa. El API route consultará el último registro del username en la tabla de auditorías. Si la fecha de creación del registro anterior es mayor a 30 días, se habilita el payload de 'Evolución' para el frontend.
+HubSpot
+CRM para gestión de leads generados.Cada usuario que completa el formulario de desbloqueo se registra automáticamente como contacto en HubSpot con propiedades enriquecidas: username analizado, score obtenido, nivel del score, sector/nicho, métricas individuales (ER, CR, RVR) y puntos débiles identificados. Integración vía API de HubSpot.
+N8N
+Orquestación de workflows entre sistemas.Cuando un usuario completa el formulario, N8N ejecuta el workflow de lead capture: recibe el trigger desde la herramienta, formatea los datos según los campos de HubSpot, crea o actualiza el contacto en HubSpot con propiedades personalizadas.
+GitHub
+Control de versiones y colaboración en código.Repositorio central de la herramienta. Workflow: desarrollo en branches de feature → merge a develop para testing → deploy a producción desde main branch. Historial completo para trazabilidad y rollback.
+Vercel
+Deployment y hosting de la aplicación web.Despliegue automático desde GitHub. Cada push a main dispara build y deploy automático. Provee SSL automático, CDN global y preview deployments para testing en ramas de desarrollo. Variables de entorno (API keys de Apify, Supabase, HubSpot) configuradas en el dashboard de Vercel.
+
+7.2 APIs externas
+API
+Endpoint / Método · Datos que aporta · Restricciones
+Apify — Instagram Profile Scraper
+POST https://api.apify.com/v2/acts/apify~instagram-profile-scraper/run-syncInput: { usernames: '@username'] }Output: JSON con profile data + últimos posts.Datos clave: followersCount, posts.likesCount, posts.commentsCount, posts[.videoViewCount, posts.type.
+Restricciones: Solo funciona con perfiles públicos. Tiempo de respuesta: 10–30 segundos. Costo por ejecución — revisar plan de Apify según volumen esperado.
+HubSpot — Contacts API
+POST https://api.hubapi.com/crm/v3/objects/contactsCrea o actualiza contacto con propiedades personalizadas: instagram_username, score_final, score_nivel, sector, er_value, cr_value, rvr_value.Restricciones: Requiere API Key de HubSpot con permisos de escritura en CRM. Deduplicación por email.
+N8N — Webhook trigger
+POST a webhook interno de N8N.Recibe el payload completo de la auditoría y el lead.Creacontacto en HubSpot.Restricciones: N8N debe estar disponible en el momento del submit del formulario. Implementar retry logic en caso de fallo.
+
+7.3 Restricciones técnicas
+Restricción
+Detalle
+Sin autenticación de usuario
+La herramienta no requiere ni permite login. No hay sesión de usuario. El resultado se muestra una sola vez en la misma sesión del navegador.
+Solo perfiles públicos
+Apify no puede extraer datos de perfiles privados. Esta limitación es inherente a la herramienta y está comunicada al usuario en el mensaje de error.
+Dependencia de Apify
+Si Apify falla o el perfil no está disponible, la herramienta no puede generar el score. Se deben implementar mensajes de error claros y un botón de reintento.
+Variables de entorno en Vercel
+Las API keys de Apify, Supabase y HubSpot NO deben estar en el código fuente. Se configuran como variables de entorno en el dashboard de Vercel y se acceden únicamente desde server-side (API routes de Next.js).
+GDPR / Datos personales
+Nombre, email y teléfono del lead son datos personales. Se requiere texto de consentimiento antes del submit del formulario y política de privacidad enlazada.
+
+
+8
+Métricas de Éxito y KPIs
+
+
+Esta herramienta es un experimento de generación de demanda — su éxito se mide en dos dimensiones:
+(1) conversión del flujo (¿cuántos usuarios completan la auditoría y dejan sus datos?)
+(2) impacto en negocio (¿cuántos leads generados se convierten en pruebas activas de BeweOS?).
+
+Métrica estrella (North Star Metric proxy)
+% de usuarios que completan la auditoría y activan la prueba gratuita de 15 días de BeweOS. Esta es la métrica que define si el experimento funciona como canal de adquisición.
+
+KPIs del funnel
+KPI
+Definición · Fórmula · Objetivo v0.1
+Tasa de inicio
+% de usuarios que ingresan un username y hacen clic en Analizar sobre el total de visitas a la página.Fórmula: (usuarios que hacen clic en Analizar / visitas únicas) × 100Objetivo: ≥ 60%Baseline: sin datos — primera medición en los primeros 30 días.
+Tasa de score generado
+% de usuarios que inician el análisis y reciben el score borroso (el perfil era válido y el análisis completó sin error).Fórmula: (análisis completados exitosamente / intentos iniciados) × 100Objetivo: ≥ 75%Razón del 25% de margen: perfiles privados, usernames inválidos, errores de Apify.
+Tasa de conversión a lead
+% de usuarios que ven el score borroso y completan el formulario (nombre, email, teléfono).Fórmula: (formularios completados / scores borrosos mostrados) × 100Objetivo: ≥ 40%Esta es la métrica más crítica del experimento — valida si el mecanismo de blur genera suficiente tensión para motivar la acción.
+Tasa de activación de prueba
+% de leads capturados que activan la prueba gratuita de 15 días de BeweOS.Fórmula: (trials activados / leads capturados) × 100Objetivo: ≥ 15%Se mide con seguimiento en HubSpot — los leads capturados reciben un flujo automatizado de onboarding.
+Leads calificados por semana
+Número absoluto de leads capturados por semana (con email válido y sector de BeweOS).Objetivo semanas 1–2: ≥ 20 leads/semanaObjetivo semanas 3–4: ≥ 50 leads/semanaDepende del volumen de tráfico enviado a la herramienta desde campañas y redes sociales.
+
+Funnel resumido con objetivos
+Etapa
+Tasa objetivo · Ejemplo con 100 visitas
+Visitas a la página
+100 usuarios (base)
+Inician análisis (≥60%)
+60 usuarios hacen clic en Analizar
+Score generado (≥75%)
+45 usuarios reciben score borroso
+Completan formulario (≥40%)
+18 leads capturados
+Activan prueba (≥15%)
+~3 trials activos de BeweOS
+
+Seguimiento y herramientas de medición
+Herramienta
+Qué mide
+Vercel Analytics
+Visitas únicas, páginas vistas, tiempo en página, tasa de rebote.
+Supabase
+Auditorías iniciadas, completadas, leads capturados. Fuente de verdad para los KPIs del funnel.
+HubSpot
+Leads registrados, seguimiento de contacto, conversiones a trial. Pipeline de ventas asociado.
+Revisión manual
+Semana 1 y 2: revisión diaria de métricas para detectar problemas rápido. Semana 3 en adelante: revisión semanal.
+
+
+9
+Riesgos y Dependencias
+
+Dependencias críticas
+La herramienta depende de servicios externos para funcionar. Si alguno de estos falla, el impacto es directo sobre la experiencia del usuario o sobre la captura de leads:
+Dependencia
+Impacto si falla · Mitigación
+Apify — Instagram Profile Scraper
+Impacto ALTO: Sin Apify no se puede generar ningún score. La herramienta queda inoperable.Mitigación: Implementar mensaje de error amigable con botón de reintento. Monitorear el status de Apify. Evaluar actor alternativo (RapidAPI Instagram) como backup si el volumen justifica el costo.
+Instagram (cambios de política)
+Impacto ALTO: Instagram puede restringir o bloquear el scraping de perfiles públicos en cualquier momento, lo que dejaría a Apify sin datos.Mitigación: Este riesgo es inherente al enfoque de datos públicos y no tiene mitigación técnica directa. Si ocurre, se evalúa migrar a la API oficial de Instagram (requiere aprobación de Meta).
+N8N
+Impacto MEDIO: Si N8N falla al momento del submit del formulario, el lead no se registra en HubSpot. El usuario igual ve el resultado completo (el desbloqueo no depende de N8N). Agregar retry automático en el workflow de N8N.
+HubSpot
+Impacto BAJO: Si HubSpot falla, el lead queda en Supabase pero no en el CRM. No se pierde el dato.Mitigación: N8N reintenta la creación del contacto en HubSpot con backoff exponencial. Revisión manual semanal de leads en Supabase vs HubSpot para detectar discrepancias.
+Vercel
+Impacto ALTO: Si Vercel tiene un outage, la herramienta no está disponible.Mitigación: Vercel tiene SLA de 99.99% de uptime. Monitorear con alertas de disponibilidad (ej. UptimeRobot). En caso de outage prolongado, evaluar despliegue de emergencia en otro proveedor.
+
+Riesgos del producto
+Riesgo
+Probabilidad · Impacto · Mitigación
+El blur no genera suficiente tensión para convertir
+Probabilidad MEDIA — es una hipótesis de diseño no validada aún.Impacto ALTO — si la tasa de conversión a lead es < 20%, el experimento no funciona.Mitigación: Medir la tasa de conversión a lead en la primera semana. Si es baja, probar variantes: cambiar el copy del formulario, ajustar el nivel de blur, o mostrar un dato parcial adicional (ej. solo el nivel sin el número).
+El score no se percibe como creíble o útil
+Probabilidad MEDIA — el usuario puede pensar que el número es genérico o inventado.Impacto ALTO — sin credibilidad, el resultado no crea pain point real.Mitigación: Mostrar los datos reales del perfil (seguidores, posts analizados) junto al score para dar contexto. Incluir la fuente de los benchmarks en el resultado. Usar lenguaje específico, no genérico.
+Tráfico insuficiente para validar el experimento
+Probabilidad MEDIA — la herramienta necesita tráfico activo para generar datos.Impacto MEDIO — sin tráfico no se puede medir si el experimento funciona.Mitigación: Definir plan de distribución antes del lanzamiento: posts en redes de BeweOS, email a base existente, posible pauta pagada. Objetivo mínimo: 200 visitas en las primeras 2 semanas.
+Abuso de la herramienta (scraping masivo o spam)
+Probabilidad BAJA — la herramienta es pública sin autenticación.Impacto MEDIO — puede generar costos no esperados en Apify y datos basura en Supabase.Mitigación: Rate limiting por IP en el API route de Next.js (máximo 5 análisis por IP por hora). Regla anti-abuso por email (máximo 1 auditoría gratuita por email cada 30 días).
+Perfiles sin Reels penalizan el score injustamente
+Probabilidad ALTA — muchos negocios pequeños no publican Reels.Impacto MEDIO — un score bajo por ausencia de Reels puede generar frustración si el usuario siente que el resultado no es justo.Mitigación: Ya está definido en el punto 6: si no hay Reels, el peso de RVR se redistribuye entre ER y CR. Además, mostrar en el resultado que la ausencia de Reels es en sí misma un punto débil con recomendación específica.
+
+Riesgos técnicos
+Riesgo
+Probabilidad · Impacto · Mitigación
+Tiempo de respuesta de Apify > 30 segundos
+Probabilidad MEDIA — depende de la carga del actor y del tamaño del perfil.Impacto MEDIO — el usuario puede abandonar si la carga es demasiado larga.Mitigación: Mostrar mensajes rotativos en la pantalla de carga para retener al usuario. Implementar timeout de 45 segundos — si Apify no responde, mostrar error con reintento.
+Datos inconsistentes de Apify (campos vacíos o nulos)
+Probabilidad MEDIA — algunos perfiles pueden tener campos faltantes en el JSON.Impacto BAJO — puede causar errores en el cálculo si no se manejan correctamente.Mitigación: Validar y sanear todos los campos antes del cálculo. Aplicar valores por defecto (0) para campos nulos. Posts con métricas en 0 se excluyen del cálculo de CR.
+
